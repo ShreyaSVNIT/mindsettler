@@ -1,0 +1,20 @@
+# ENV FILES
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Node
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Python / Django
+__pycache__/
+*.pyc
+venv/
+
+# OS
+.DS_Store
