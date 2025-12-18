@@ -3,11 +3,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 
-from .authentication import CsrfExemptSessionAuthentication
 
 
 class LoginAPIView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [AllowAny]
 
     def post(self, request):
@@ -31,7 +29,6 @@ class LoginAPIView(APIView):
 
 
 class LogoutAPIView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
 
     def post(self, request):
         logout(request)

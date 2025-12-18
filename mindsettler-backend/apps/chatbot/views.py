@@ -6,13 +6,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 
-from apps.users.authentication import CsrfExemptSessionAuthentication
 from apps.bookings.serializers import SessionRequestSerializer
 from apps.bookings.services import has_active_request
 
 
 class ChatbotIntentView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):

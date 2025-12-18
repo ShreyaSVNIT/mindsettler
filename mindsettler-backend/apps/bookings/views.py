@@ -3,14 +3,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 
-from apps.users.authentication import CsrfExemptSessionAuthentication
 from .models import SessionRequest
 from .serializers import SessionRequestSerializer
 from .services import has_active_request
 
 
 class MySessionRequestsView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -20,7 +18,6 @@ class MySessionRequestsView(APIView):
 
 
 class SessionRequestCreateView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
