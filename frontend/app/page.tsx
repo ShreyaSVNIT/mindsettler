@@ -1,3 +1,5 @@
+import JourneyRoadmap from "@/components/JourneyRoadmap";
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-bg-app px-6 py-16">
@@ -16,6 +18,7 @@ export default function Home() {
           This is a temporary homepage to verify routing and design setup.
         </p>
       </div>
+      <JourneyRoadmap />
     </main>
   );
 }
