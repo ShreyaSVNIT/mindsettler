@@ -1,9 +1,8 @@
-from .models import SessionRequest
+from .models import Booking
 
-ACTIVE_STATUSES = ("pending", "approved")
 
-def has_active_request(user):
-    return SessionRequest.objects.filter(
+def has_active_booking(user):
+    return Booking.objects.filter(
         user=user,
-        status__in=ACTIVE_STATUSES
+        status__in=["PENDING", "CONFIRMED"]
     ).exists()

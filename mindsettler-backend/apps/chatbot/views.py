@@ -1,40 +1,57 @@
-from django.shortcuts import render
-
-# Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
 from rest_framework.exceptions import ValidationError
 
-from apps.bookings.serializers import SessionRequestSerializer
-from apps.bookings.services import has_active_request
+from apps.users.models import AppUser
+from apps.bookings.models import Booking
+from apps.bookings.serializers import BookingSerializer
+from apps.bookings.services import has_active_booking
 
 
 class ChatbotIntentView(APIView):
-    permission_classes = [IsAuthenticated]
+    """
+    Handle chatbot intents like booking a session
+    """
 
     def post(self, request):
         intent = request.data.get("intent")
-        requested_slot = request.data.get("requested_slot")
 
         if intent != "book_session":
             raise ValidationError("Unsupported intent")
 
-        if not requested_slot:
-            raise ValidationError("requested_slot is required")
+        email = request.data.get("email")
+        name = request.data.get("name", "")
+        phone = request.data.get("phone", "")
 
-        if has_active_request(request.user):
-            return Response({
-                "message": "You already have an active session request."
-            }, status=400)
+        if not email:
+            raise ValidationError("Email is required for booking")
 
-        serializer = SessionRequestSerializer(data={
-            "requested_slot": requested_slot
-        })
+        # create or fetch user
+        user, _ = AppUser.objects.get_or_create(
+            email=email,
+            defaults={
+                "full_name": name,
+                "phone": phone,
+            }
+        )
+
+        # prevent multiple active bookings
+        if has_active_booking(user):
+            return Response(
+                {"message": "You already have an active booking."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = BookingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=request.user)
+        booking = serializer.save(user=user)
 
-        return Response({
-            "message": "Session booked successfully via chatbot",
-            "data": serializer.data
-        }, status=201)
+        return Response(
+            {
+                "message": "Session booked successfully via chatbot",
+                "acknowledgement_id": booking.acknowledgement_id,
+                "status": booking.status,
+            },
+            status=status.HTTP_201_CREATED
+        )

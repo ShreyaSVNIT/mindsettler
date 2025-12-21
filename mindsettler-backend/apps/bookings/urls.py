@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import MySessionRequestsView, SessionRequestCreateView
+from .views import BookingCreateView, MyBookingsView
 
 urlpatterns = [
-    path("my-requests/", MySessionRequestsView.as_view()),
-    path("request/", SessionRequestCreateView.as_view()),
+    path("create/", BookingCreateView.as_view()),
+    path("my/", MyBookingsView.as_view()),
 ]

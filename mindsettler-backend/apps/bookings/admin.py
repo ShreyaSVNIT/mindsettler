@@ -1,12 +1,17 @@
 from django.contrib import admin
-
-# Register your models here.
-from django.contrib import admin
-from .models import SessionRequest
+from .models import Booking
 
 
-@admin.register(SessionRequest)
-class SessionRequestAdmin(admin.ModelAdmin):
-    list_display = ("user", "requested_slot", "status", "created_at")
-    list_filter = ("status",)
-    search_fields = ("user__username",)
+@admin.register(Booking)
+class BookingAdmin(admin.ModelAdmin):
+    list_display = (
+        "acknowledgement_id",
+        "user",
+        "session_type",
+        "preferred_date",
+        "preferred_time",
+        "status",
+        "created_at",
+    )
+    list_filter = ("status", "session_type")
+    search_fields = ("acknowledgement_id", "user__email")
