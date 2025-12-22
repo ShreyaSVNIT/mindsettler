@@ -30,7 +30,6 @@ export default function RootLayout({
           className="
             pt-[var(--header-h)]
             min-h-[100dvh]
-            overflow-x-hidden
           "
         >
           {children}
