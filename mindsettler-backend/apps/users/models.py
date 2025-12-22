@@ -1,11 +1,16 @@
+# users/models.py
 from django.db import models
 
-# Create your models here.
-from django.contrib.auth.models import AbstractUser
-from django.db import models
+class AppUser(models.Model):
 
-class User(AbstractUser):
+    full_name = models.CharField(max_length=120)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=15)
+
     is_verified = models.BooleanField(default=False)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
-        return self.username
+        return self.email

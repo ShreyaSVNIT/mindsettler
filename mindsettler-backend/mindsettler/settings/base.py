@@ -47,9 +47,10 @@ INSTALLED_APPS = [
     "apps.core",
     "rest_framework",
     "corsheaders",
+    "apps.psychologists",
+    "apps.corporates",
 ]
 
-AUTH_USER_MODEL = "users.User"
 
 MIDDLEWARE = [
      "corsheaders.middleware.CorsMiddleware",

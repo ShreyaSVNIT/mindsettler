@@ -1,15 +1,17 @@
 from rest_framework import serializers
-from .models import SessionRequest
+from .models import Booking
 
 
-class SessionRequestSerializer(serializers.ModelSerializer):
+class BookingSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SessionRequest
-        fields = (
-            "id",
-            "requested_slot",
+        model = Booking
+        fields = "__all__"
+        read_only_fields = (
+            "user",
             "status",
-            "admin_comment",
+            "acknowledgement_id",
+            "consent_given",
+            "consent_given_at",
+            "consent_corporate",
             "created_at",
         )
-        read_only_fields = ("status", "admin_comment", "created_at")

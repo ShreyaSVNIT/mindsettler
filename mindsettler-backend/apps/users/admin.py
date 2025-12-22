@@ -1,15 +1,26 @@
 from django.contrib import admin
-
-# Register your models here.
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import AppUser
 
 
-@admin.register(User)
-class CustomUserAdmin(UserAdmin):
-    fieldsets = UserAdmin.fieldsets + (
-        ("Verification", {"fields": ("is_verified",)}),
+@admin.register(AppUser)
+class AppUserAdmin(admin.ModelAdmin):
+    list_display = (
+        "full_name",
+        "email",
+        "phone",
+        "is_verified",
+        "created_at",
     )
-    list_display = ("username", "email", "is_verified", "is_staff", "is_active")
-    list_filter = ("is_verified", "is_staff")
+
+    search_fields = (
+        "email",
+        "full_name",
+        "phone",
+    )
+
+    list_filter = (
+        "is_verified",
+        "created_at",
+    )
+
+    ordering = ("-created_at",)
