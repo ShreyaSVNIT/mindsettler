@@ -1,9 +1,12 @@
+import HeroSection from "@/components/HeroSection";
+// import WaveDivider from "@/components/WaveDivider";
+import MentalHealthBasics from "@/components/MentalHealthBasics";
 import JourneyRoadmap from "@/components/JourneyRoadmap";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-bg-app px-6 py-16">
-      <div className="max-w-3xl mx-auto">
+      {/* <div className="max-w-3xl mx-auto">
         <h1 className="text-5xl font-title text-primary mb-6">
           MindSettler
         </h1>
@@ -17,7 +20,10 @@ export default function Home() {
         <p className="text-text-body">
           This is a temporary homepage to verify routing and design setup.
         </p>
-      </div>
+      </div> */}
+      <HeroSection />
+      {/* <WaveDivider /> */}
+      <MentalHealthBasics />
       <JourneyRoadmap />
     </main>
   );

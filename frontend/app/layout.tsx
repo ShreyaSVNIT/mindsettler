@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Imbue, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Footer from "../components/Footer";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 
 const imbue = Imbue({
@@ -16,7 +16,6 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-
 export default function RootLayout({
   children,
 }: {
@@ -26,9 +25,19 @@ export default function RootLayout({
     <html lang="en" className={`${imbue.variable} ${playfair.variable}`}>
       <body className="bg-bg-app text-text-body font-body antialiased">
         <Header />
-        {children}
+
+        <main
+          className="
+            pt-[var(--header-h)]
+            min-h-[100dvh]
+            overflow-x-hidden
+          "
+        >
+          {children}
+        </main>
+
         <Footer />
-      </body> 
+      </body>
     </html>
   );
 }
