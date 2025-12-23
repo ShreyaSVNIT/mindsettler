@@ -31,11 +31,11 @@ const HeroSection = () => {
           loop
           muted
           playsInline
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-110"
           style={{ filter: 'contrast(1.05) brightness(0.85)' }}
         >
           <source 
-            src="https://res.cloudinary.com/dqz1ffhyo/video/upload/q_auto:best,f_auto/hero-section.mp4" 
+            src="https://res.cloudinary.com/dqz1ffhyo/video/upload/v1766503247/WhatsApp_Video_2025-12-23_at_13.54.39_Precise_Proteus_tuqnir.mp4" 
             type="video/mp4" 
           />
         </video>
