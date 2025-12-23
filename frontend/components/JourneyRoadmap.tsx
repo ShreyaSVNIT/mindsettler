@@ -9,6 +9,7 @@ import {
   useMotionValueEvent,
   useInView
 } from "framer-motion";
+import MagneticButton from "./Button";
 
 /* ---------------------------------- */
 /* Timeline Section */
@@ -58,14 +59,13 @@ const TimelineSection: React.FC<SectionProps> = ({
           {description}
         </p>
 
-        <motion.button
+        <motion.div
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 0.45 }}
-          className="uppercase tracking-[0.3em] text-xs border-b-2 border-[var(--color-primary)] pb-1 hover:text-[var(--color-primary-hover)] hover:border-[var(--color-primary-hover)] transition-all"
         >
-          Begin This Phase
-        </motion.button>
+          <MagneticButton text="Begin This Phase" />
+        </motion.div>
       </motion.div>
     </div>
   );

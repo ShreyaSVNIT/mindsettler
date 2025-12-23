@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
+import MagneticButton from './Button';
 
 const HeroSection = () => {
   const scrollToNextSection = () => {
@@ -67,28 +68,7 @@ const HeroSection = () => {
         </p>
 
         {/* CALL TO ACTION */}
-        <button
-          style={{ backgroundColor: '#F9D1D5' }}
-          className="
-            group
-            rounded-full
-            px-12
-            py-5
-            font-body
-            text-[#453859]
-            font-bold
-            tracking-widest
-            uppercase
-            text-sm
-            transition-all
-            duration-500
-            hover:scale-105
-            hover:shadow-[0_0_60px_rgba(249,209,213,0.5)]
-            active:scale-95
-          "
-        >
-          Explore Further
-        </button>
+        <MagneticButton text="Explore Further" />
       </div>
 
       {/* CENTERED SCROLL INDICATOR */}

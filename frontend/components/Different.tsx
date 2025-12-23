@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import styles from "./different.module.css";
+import MagneticButton from "./Button";
 
 export default function Different() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,9 +61,7 @@ export default function Different() {
                 complexities from the comfort of your own space.
               </p>
 
-              <button className={styles.btn}>
-                <span>✻</span> BOOK A SESSION <span>✻</span>
-              </button>
+              <MagneticButton text="BOOK A SESSION" />
             </div>
              <div className={styles.archSide}>
                 <div className={styles.arch}>

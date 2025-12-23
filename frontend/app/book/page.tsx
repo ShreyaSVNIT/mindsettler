@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import MagneticButton from "@/components/Button"
 
 /* ---------------- Zod Schema ---------------- */
 
@@ -84,7 +85,9 @@ export default function BookPage() {
           <textarea {...register("message")} />
         </div>
 
-        <button type="submit">Continue</button>
+        <div onClick={handleSubmit(onSubmit)}>
+          <MagneticButton text="Continue" />
+        </div>
       </form>
     </main>
   )

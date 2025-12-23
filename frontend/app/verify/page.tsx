@@ -1,6 +1,7 @@
 "use client"
 
 import { useForm } from "react-hook-form"
+import MagneticButton from "@/components/Button"
 
 type VerifyFormData = {
   otp: string
@@ -23,7 +24,9 @@ export default function VerifyPage() {
           <input {...register("otp")} />
         </div>
 
-        <button type="submit">Verify</button>
+        <div onClick={handleSubmit(onSubmit)}>
+          <MagneticButton text="Verify" />
+        </div>
       </form>
     </main>
   )
