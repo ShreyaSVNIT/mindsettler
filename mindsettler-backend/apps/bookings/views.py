@@ -155,3 +155,34 @@ class ResendVerificationEmailView(APIView):
             },
             status=status.HTTP_200_OK
         )
+class BookingTrackView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request):
+        ack_id = request.query_params.get("acknowledgement_id", "").strip()
+
+        if not ack_id:
+            raise ValidationError("Acknowledgement ID is required")
+
+        try:
+            booking = Booking.objects.get(
+                acknowledgement_id=ack_id,
+                email_verified=True,
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError(
+                "Invalid acknowledgement ID or booking not verified"
+            )
+
+        return Response(
+            {
+                "acknowledgement_id": booking.acknowledgement_id,
+                "status": booking.status,
+                "session_type": booking.session_type,
+                "preferred_date": booking.preferred_date,
+                "preferred_time": booking.preferred_time,
+                "created_at": booking.created_at,
+            },
+            status=status.HTTP_200_OK,
+        )
