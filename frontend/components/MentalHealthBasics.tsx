@@ -19,105 +19,104 @@ const mentalHealthBasics: TermData[] = [
   { letter: 'G', term: 'Grief', hindi: 'दुःख', explanation: 'The heavy process of navigating loss' },
   { letter: 'H', term: 'Healing', hindi: 'उपचारात्मक', explanation: 'The journey toward feeling whole again' },
   { letter: 'I', term: 'Identity', hindi: 'पहचान', explanation: 'Your sense of who you are' },
-  { letter: 'J', term: 'Jealousy', hindi: 'जलन', explanation: 'Feeling insecure about losing someones attention' },
-  { letter: 'K', term: 'Kindness', hindi: 'दया', explanation: 'Gentle to self and others' },
-  { letter: 'L', term: 'Loneliness', hindi: 'अकेलापन', explanation: 'Feeling disconnected, reminds need for connection.' },
+  { letter: 'J', term: 'Jealousy', hindi: 'जलन', explanation: 'Feeling insecure about losing attention' },
+  { letter: 'K', term: 'Kindness', hindi: 'दया', explanation: 'Gentleness toward self and others' },
+  { letter: 'L', term: 'Loneliness', hindi: 'अकेलापन', explanation: 'A quiet need for connection' },
   { letter: 'M', term: 'Mindfulness', hindi: 'सचेतन', explanation: 'Being fully present in the moment' },
-  { letter: 'N', term: 'Nervousness', hindi: 'घबराहट', explanation: 'Temporary unease before important things' },
-  { letter: 'O', term: 'Overthinking', hindi: 'बहुत ज़्यादा सोचना', explanation: 'Thinking too much about the same thing' },
-  { letter: 'P', term: 'Pleasure', hindi: 'आनंद', explanation: 'Enjoyment or satisfaction from positive experiences' },
-  { letter: 'Q', term: 'Queer', hindi: 'विचित्र', explanation: 'An umbrella term for diverse sexualities' },
-  { letter: 'R', term: 'Resistance', hindi: 'प्रतिरोध', explanation: 'Hesitating or pushing back against change' },
-  { letter: 'S', term: 'Stress', hindi: 'तनाव', explanation: 'Feeling overwhelmed by lifes heavy pressures' },
-  { letter: 'T', term: 'Trauma', hindi: 'सदमा', explanation: 'Lasting emotional pain from distressing events' },
-  { letter: 'U', term: 'Uncertain', hindi: 'संदेहयुक्त', explanation: 'Not knowing what might happen next' },
-  { letter: 'V', term: 'Vulnerable', hindi: 'नाजुक', explanation: 'Opening up and showing your true self' },
-  { letter: 'W', term: 'Worth', hindi: 'लायक', explanation: 'Believing in your own inherent value' },
-  { letter: 'X', term: 'Xenophobia', hindi: 'विदेशी लोगों को न पसन्द करना', explanation: 'Fear or hatred of perceived strangers' },
-  { letter: 'Y', term: 'Yourself', hindi: 'स्वयं', explanation: 'The core person who you are' },
-  { letter: 'Z', term: 'Zen', hindi: 'सुकुन', explanation: 'A state of calm, peaceful focus' }
+  { letter: 'N', term: 'Nervousness', hindi: 'घबराहट', explanation: 'Temporary unease before important moments' },
+  { letter: 'O', term: 'Overthinking', hindi: 'बहुत ज़्यादा सोचना', explanation: 'Thoughts looping endlessly' },
+  { letter: 'P', term: 'Pleasure', hindi: 'आनंद', explanation: 'Moments of joy and satisfaction' },
+  { letter: 'Q', term: 'Queer', hindi: 'विचित्र', explanation: 'A spectrum of identities and love' },
+  { letter: 'R', term: 'Resistance', hindi: 'प्रतिरोध', explanation: 'Pushing back against change' },
+  { letter: 'S', term: 'Stress', hindi: 'तनाव', explanation: 'Mental and emotional overload' },
+  { letter: 'T', term: 'Trauma', hindi: 'सदमा', explanation: 'Lingering emotional wounds' },
+  { letter: 'U', term: 'Uncertain', hindi: 'संदेहयुक्त', explanation: 'Living with the unknown' },
+  { letter: 'V', term: 'Vulnerable', hindi: 'नाजुक', explanation: 'Allowing yourself to be seen' },
+  { letter: 'W', term: 'Worth', hindi: 'लायक', explanation: 'Your inherent value' },
+  { letter: 'X', term: 'Xenophobia', hindi: 'विदेशी लोगों से भय', explanation: 'Fear of the unfamiliar' },
+  { letter: 'Y', term: 'Yourself', hindi: 'स्वयं', explanation: 'Your truest self' },
+  { letter: 'Z', term: 'Zen', hindi: 'सुकून', explanation: 'Deep calm and clarity' }
 ];
 
-const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => {
-  return (
-    <div className="relative w-full h-full transition-all duration-700 ease-out group"
-      style={{ perspective: '1000px' }}>
-      <div className="relative w-full h-full transition-transform duration-700 ease-out group-hover:rotate-y-180"
-        style={{ transformStyle: 'preserve-3d' }}>
-        {/* Front side */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-2 sm:p-3"
+const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => (
+  <div className="w-full h-full breathing-hex group">
+    <div className="relative w-full h-full" style={{ perspective: '1200px' }}>
+      <div
+        className="relative w-full h-full transition-transform duration-700 ease-out group-hover:rotate-y-180"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* FRONT */}
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center p-3"
           style={{
             backgroundColor: 'var(--color-bg-app)',
             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
-          }}>
-          <div className="flex flex-col items-center justify-center text-center">
-            <div className="text-xl sm:text-2xl md:text-3xl font-title mb-1" style={{ color: 'var(--color-primary)' }}>
-              {data.letter}
-            </div>
-            <div className="font-body text-xs sm:text-sm" style={{ color: 'var(--color-text-body)' }}>
-              {data.term}
-            </div>
-            <div className="font-body text-xs opacity-75 mt-0.5" style={{ color: 'var(--color-text-body)' }}>
-              ({data.hindi})
-            </div>
+            backfaceVisibility: 'hidden'
+          }}
+        >
+          <div className="font-title text-3xl mb-1 text-[var(--color-primary)]">
+            {data.letter}
           </div>
+          <div className="font-body text-sm font-medium">{data.term}</div>
+          <div className="font-body text-xs opacity-60">({data.hindi})</div>
         </div>
 
-        {/* Back side */}
-        <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-3"
+        {/* BACK */}
+        <div
+          className="absolute inset-0 flex items-center justify-center p-4"
           style={{
             backgroundColor: 'var(--color-bg-subtle)',
             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
             backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)'
-          }}>
-          <p className="font-body text-xs sm:text-sm leading-relaxed text-center" style={{ color: 'var(--color-text-body)' }}>
+          }}
+        >
+          <p className="font-body text-[11px] md:text-xs text-center leading-tight">
             {data.explanation}
           </p>
         </div>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
-const MentalHealthBasics: React.FC = () => {
-  // Create rows for honeycomb pattern - more balanced
+export default function MentalHealthBasics() {
+  // Balanced rows for a centered look
   const rows = [
-    mentalHealthBasics.slice(0, 6),   // A-F (6)
-    mentalHealthBasics.slice(6, 13),  // G-M (7)
-    mentalHealthBasics.slice(13, 19), // N-S (6)
-    mentalHealthBasics.slice(19, 26)  // T-Z (7)
+    mentalHealthBasics.slice(0, 7),
+    mentalHealthBasics.slice(7, 13),
+    mentalHealthBasics.slice(13, 20),
+    mentalHealthBasics.slice(20, 26)
   ];
 
   return (
-    <section 
-      className="py-12 md:py-16 px-4 md:px-8"
-      style={{ backgroundColor: 'var(--color-bg-card)' }}
-    >
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-10 md:mb-12">
-          <h2 className="font-title text-2xl md:text-3xl mb-3" style={{ color: 'var(--color-text-body)' }}>
-            The Language Of Feelings
+    <section className="relative py-24 px-6 overflow-hidden bg-[var(--color-bg-card)]">
+      <div className="relative max-w-7xl mx-auto flex flex-col items-center">
+        {/* TITLE - Centered for symmetry */}
+        <div className="max-w-3xl mb-20 text-center">
+          <p className="uppercase tracking-widest text-xs mb-4 opacity-70 font-body">
+            Emotional Alphabet
+          </p>
+          <h2 className="font-title text-4xl md:text-5xl leading-tight mb-6">
+            When feelings don’t scream,<br />
+            they <em>whisper</em>.
           </h2>
-          <p className="font-body text-base md:text-lg max-w-2xl mx-auto opacity-80" style={{ color: 'var(--color-text-body)' }}>
-            The journey from Anxiety to Zen
+          <p className="font-body text-lg opacity-80">
+            A gentle A–Z of emotions — explore, pause, breathe.
           </p>
         </div>
 
-        {/* Honeycomb Grid */}
-        <div className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3">
-          {rows.map((row, rowIndex) => (
-            <div 
-              key={rowIndex}
-              className={`flex justify-center gap-1 sm:gap-2 md:gap-3 ${rowIndex % 2 === 1 ? 'ml-7 sm:ml-8 md:ml-9' : ''}`}
+        {/* GRID - Centered with equal side spacing */}
+        <div className="flex flex-col items-center gap-4 w-full">
+          {rows.map((row, i) => (
+            <div
+              key={i}
+              className="flex flex-wrap justify-center gap-3 md:gap-4 w-full"
             >
-              {row.map((term) => (
-                <div 
+              {row.map(term => (
+                <div
                   key={term.letter}
-                  className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36"
+                  className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40"
                 >
                   <HexagonCard data={term} />
                 </div>
@@ -125,22 +124,18 @@ const MentalHealthBasics: React.FC = () => {
             </div>
           ))}
         </div>
-
       </div>
 
-      {/* Add CSS for the flip animation */}
       <style>{`
-        .group:hover .group-hover\\:rotate-y-180 {
-          transform: rotateY(180deg);
+        @keyframes breathe {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.04); }
+          100% { transform: scale(1); }
         }
-        @media (max-width: 768px) {
-          .group:active .group-hover\\:rotate-y-180 {
-            transform: rotateY(180deg);
-          }
+        .breathing-hex {
+          animation: breathe 5.5s ease-in-out infinite;
         }
       `}</style>
     </section>
   );
-};
-
-export default MentalHealthBasics;
+}
