@@ -103,13 +103,17 @@ class Booking(models.Model):
     )
 
     acknowledgement_id = models.CharField(
-        max_length=20,
-        unique=True,
-    )
-
+    max_length=20,
+    unique=True,
+    null=True,
+    blank=True,
+)
     created_at = models.DateTimeField(auto_now_add=True)
 
-
+    def generate_acknowledgement_id(self):
+     self.acknowledgement_id = f"MS-{uuid.uuid4().hex[:8].upper()}"
+     self.save(update_fields=["acknowledgement_id"])
+     
     def give_consent(self, corporate=None):
         self.consent_given = True
         self.consent_given_at = timezone.now()

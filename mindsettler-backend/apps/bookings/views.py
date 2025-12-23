@@ -53,14 +53,13 @@ class BookingCreateView(APIView):
             consent_given_at=timezone.now(),
         )
         send_booking_verification_email(booking)
-
         return Response(
-            {
-                "acknowledgement_id": booking.acknowledgement_id,
-                "status": booking.status,
-            },
-            status=status.HTTP_201_CREATED,
-        )
+    {
+        "message": "Verification email sent. Please verify to confirm booking."
+    },
+    status=status.HTTP_201_CREATED,
+)
+
 
 
 class MyBookingsView(APIView):
@@ -109,6 +108,11 @@ class VerifyBookingEmailView(APIView):
 
         booking.verify_email()
 
+        if not booking.acknowledgement_id:
+            booking.generate_acknowledgement_id()
+
         return Response({
-            "message": "Email verified successfully"
-        })
+         "message": "Email verified successfully",
+        "acknowledgement_id": booking.acknowledgement_id
+        })    
+
