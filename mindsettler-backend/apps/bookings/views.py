@@ -186,3 +186,32 @@ class BookingTrackView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+class GetAcknowledgementIdView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        email = request.data.get("email", "").strip().lower()
+
+        if not email:
+            raise ValidationError("Email is required")
+
+        try:
+            booking = Booking.objects.get(
+                user__email=email,
+                email_verified=True,
+                status="PENDING",
+                acknowledgement_id__isnull=False,
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError(
+                "No pending verified booking found for this email"
+            )
+
+        return Response(
+            {
+                "acknowledgement_id": booking.acknowledgement_id,
+                "status": booking.status,
+            },
+            status=status.HTTP_200_OK,
+        )

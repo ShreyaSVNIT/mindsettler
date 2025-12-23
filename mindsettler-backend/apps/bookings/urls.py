@@ -5,6 +5,7 @@ from .views import (
     VerifyBookingEmailView,
     ResendVerificationEmailView,
     BookingTrackView,
+    GetAcknowledgementIdView,
     
 )
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path("verify-email/", VerifyBookingEmailView.as_view()),
     path('resend-verification/', ResendVerificationEmailView.as_view()),
     path('track/',BookingTrackView.as_view()),
+    path('get-ack-id/',GetAcknowledgementIdView.as_view())
 ]
