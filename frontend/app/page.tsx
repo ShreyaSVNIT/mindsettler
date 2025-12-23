@@ -3,6 +3,7 @@ import HeroSection from "@/components/HeroSection";
 import MentalHealthBasics from "@/components/MentalHealthBasics";
 import JourneyRoadmap from "@/components/JourneyRoadmap";
 import Different from "@/components/Different";
+import MusicPlayer from "@/components/MusicPlayer";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
       <MentalHealthBasics />
       <Different /> 
       <JourneyRoadmap />
+      <MusicPlayer />
     </main>
   );
 }

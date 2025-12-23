@@ -1,8 +1,17 @@
 'use client';
 
 import React from 'react';
+import { ChevronDown } from 'lucide-react'; // Optional: install lucide-react or use a simple SVG
 
 const HeroSection = () => {
+  const scrollToNextSection = () => {
+    // Finds the next section after the hero and scrolls it into view
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: 'smooth',
+    });
+  };
+
   return (
     <section
       className="
@@ -107,30 +116,46 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* SCROLL TO DISCOVER - BOTTOM RIGHT */}
-      <div className="absolute bottom-10 right-10 z-20 flex flex-col items-center gap-4">
-        <span className="font-body text-[10px] uppercase tracking-[0.3em] text-white/50 vertical-text">
+      {/* CENTERED SCROLL INDICATOR (As per provided image) */}
+      <div className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-3">
+        <span className="font-body text-[11px] uppercase tracking-[0.2em] text-white/80">
           Scroll to Discover
         </span>
-        <div className="relative h-24 w-[1px] bg-white/20 overflow-hidden">
-            {/* THE GLOWING RADIANT LINE */}
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-[#F9D1D5] to-transparent animate-scroll-line shadow-[0_0_8px_#F9D1D5]" />
-        </div>
+        <button 
+          onClick={scrollToNextSection}
+          className="
+            group
+            relative
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-white/30
+            bg-white/10
+            backdrop-blur-sm
+            transition-all
+            duration-300
+            hover:border-white/80
+            hover:bg-white/20
+          "
+        >
+          <div className="animate-bounce-slow">
+            <ChevronDown size={20} color="white" strokeWidth={1.5} />
+          </div>
+        </button>
       </div>
 
       <style>{`
-        .vertical-text {
-          writing-mode: vertical-rl;
-          text-orientation: mixed;
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(-10%); }
+          50% { transform: translateY(15%); }
         }
 
-        @keyframes scroll-line {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(100%); }
-        }
-
-        .animate-scroll-line {
-          animation: scroll-line 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        .animate-bounce-slow {
+          animation: bounce-slow 2s infinite ease-in-out;
         }
       `}</style>
     </section>
