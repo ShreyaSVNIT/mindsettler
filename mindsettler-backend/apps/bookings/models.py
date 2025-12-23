@@ -4,7 +4,13 @@ from apps.users.models import AppUser
 from apps.psychologists.models import Psychologist
 from apps.corporates.models import Corporate
 import uuid
+import random
+import string
 
+def generate_acknowledgement_id():
+    return "MS-" + "".join(
+        random.choices(string.ascii_uppercase + string.digits, k=8)
+    )
 
 class Booking(models.Model):
 
@@ -103,6 +109,7 @@ class Booking(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+
     def give_consent(self, corporate=None):
         self.consent_given = True
         self.consent_given_at = timezone.now()
@@ -121,6 +128,19 @@ class Booking(models.Model):
         self.save(
             update_fields=["email_verified", "email_verified_at"]
         )
+    
+    def save(self, *args, **kwargs):
+        if not self.acknowledgement_id:
+        # Ensure uniqueness (retry-safe)
+            while True:
+                ack_id = generate_acknowledgement_id()
+                if not Booking.objects.filter(
+                acknowledgement_id=ack_id
+            ).exists():
+                    self.acknowledgement_id = ack_id
+                    break
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.acknowledgement_id
