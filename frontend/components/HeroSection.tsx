@@ -29,11 +29,10 @@ const HeroSection = () => {
             type="video/mp4" 
           />
         </video>
-        {/* DARKER OVERLAY FOR TEXT READABILITY */}
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      {/* MAIN CONTENT - CENTERED AS THE MAIN CHARACTER */}
+      {/* MAIN CONTENT */}
       <div className="relative z-10 px-6 max-w-5xl flex flex-col items-center">
         
         {/* TOP SUBTITLE */}
@@ -43,32 +42,34 @@ const HeroSection = () => {
 
         {/* DECORATIVE WRAPPER FOR TITLE */}
         <div className="relative mb-10">
-          {/* Decorative Swirl SVG (Inspired by the reference image) */}
+          {/* Decorative Swirl SVG */}
           <svg 
-            className="absolute -top-16 -left-12 -right-12 h-[calc(100%+8rem)] w-[calc(100%+6rem)] text-[#F9D1D5]/30 pointer-events-none"
+            className="absolute -top-16 -left-12 -right-12 h-[calc(100%+8rem)] w-[calc(100%+6rem)] text-[var(--color-primary)]/20 pointer-events-none"
             viewBox="0 0 400 200" 
             fill="none" 
             xmlns="http://www.w3.org/2000/svg"
           >
             <path d="M10 150Q100 20 200 100T390 50" stroke="currentColor" strokeWidth="0.5" />
             <path d="M20 170Q150 50 380 160" stroke="currentColor" strokeWidth="0.5" />
-            <circle cx="200" cy="100" r="80" stroke="currentColor" strokeWidth="0.2" opacity="0.5" />
+            <circle cx="200" cy="100" r="80" stroke="currentColor" strokeWidth="0.2" opacity="0.3" />
           </svg>
 
-          <h1 className="font-title leading-[1.1] text-white text-[clamp(3rem,10vw,7.5rem)] drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-            Embark on an <br />
-            <span style={{ color: '#F9D1D5' }} className="italic">Inner Odyssey</span>
+          {/* SIMPLIFIED HEADING */}
+          <h1 className="font-title leading-none text-white text-[clamp(3.5rem,12vw,9rem)] drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            Mind<span style={{ color: 'var(--color-bg-app)' }}>Settler</span>
           </h1>
         </div>
 
         {/* REFINED SUPPORTING TEXT */}
-        <p className="font-body leading-relaxed text-white/80 text-[clamp(1rem,1.8vw,1.5rem)] max-w-[50ch] mb-12">
+        <p className="font-body leading-relaxed text-white/80 text-[clamp(1rem,1.8vw,1.5rem)] max-w-[50ch] mb-12 animate-fade-in" style={{ animationDelay: '0.3s' }}>
           Discover a sanctuary for <span className="text-white">emotional well-being</span>. 
           Expert psycho-education designed to help you navigate life's quieter, more profound moments.
         </p>
 
         {/* CALL TO ACTION */}
-        <MagneticButton text="Explore Further" />
+        <div className="animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <MagneticButton text="Explore Further" />
+        </div>
       </div>
 
       {/* CENTERED SCROLL INDICATOR */}
@@ -92,12 +93,12 @@ const HeroSection = () => {
             backdrop-blur-md
             transition-all
             duration-500
-            hover:border-[#F9D1D5]/50
-            hover:bg-[#F9D1D5]/10
+            hover:border-[var(--color-primary)]/50
+            hover:bg-[var(--color-primary)]/10
           "
         >
           <div className="animate-bounce-slow">
-            <ChevronDown size={24} color="white" strokeWidth={1} className="group-hover:text-[#F9D1D5] transition-colors" />
+            <ChevronDown size={24} color="white" strokeWidth={1} className="group-hover:text-[var(--color-primary)] transition-colors" />
           </div>
         </button>
       </div>
@@ -109,7 +110,7 @@ const HeroSection = () => {
         }
 
         @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
+          from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
@@ -118,7 +119,7 @@ const HeroSection = () => {
         }
 
         .animate-fade-in {
-          animation: fade-in 1.5s ease-out forwards;
+          animation: fade-in 1.2s ease-out forwards;
         }
       `}</style>
     </section>
