@@ -116,3 +116,102 @@ class VerifyBookingEmailView(APIView):
         "acknowledgement_id": booking.acknowledgement_id
         })    
 
+from django.utils import timezone
+from datetime import timedelta
+
+class ResendVerificationEmailView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        email = request.data.get("email", "").strip().lower()
+
+        if not email:
+            raise ValidationError("Email is required")
+
+        try:
+            booking = Booking.objects.get(
+                user__email=email,
+                email_verified=False
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError(
+                "No unverified booking found for this email"
+            )
+
+        if booking.last_verification_email_sent_at:
+            diff = timezone.now() - booking.last_verification_email_sent_at
+            if diff < timedelta(seconds=60):
+                remaining = 60 - int(diff.total_seconds())
+                raise ValidationError(
+                    f"Please wait {remaining} seconds before resending verification email."
+                )
+
+        send_booking_verification_email(booking)
+
+        return Response(
+            {
+                "message": "Verification email resent successfully"
+            },
+            status=status.HTTP_200_OK
+        )
+class BookingTrackView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request):
+        ack_id = request.query_params.get("acknowledgement_id", "").strip()
+
+        if not ack_id:
+            raise ValidationError("Acknowledgement ID is required")
+
+        try:
+            booking = Booking.objects.get(
+                acknowledgement_id=ack_id,
+                email_verified=True,
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError(
+                "Invalid acknowledgement ID or booking not verified"
+            )
+
+        return Response(
+            {
+                "acknowledgement_id": booking.acknowledgement_id,
+                "status": booking.status,
+                "session_type": booking.session_type,
+                "preferred_date": booking.preferred_date,
+                "preferred_time": booking.preferred_time,
+                "created_at": booking.created_at,
+            },
+            status=status.HTTP_200_OK,
+        )
+class GetAcknowledgementIdView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        email = request.data.get("email", "").strip().lower()
+
+        if not email:
+            raise ValidationError("Email is required")
+
+        try:
+            booking = Booking.objects.get(
+                user__email=email,
+                email_verified=True,
+                status="PENDING",
+                acknowledgement_id__isnull=False,
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError(
+                "No pending verified booking found for this email"
+            )
+
+        return Response(
+            {
+                "acknowledgement_id": booking.acknowledgement_id,
+                "status": booking.status,
+            },
+            status=status.HTTP_200_OK,
+        )
