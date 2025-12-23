@@ -116,3 +116,42 @@ class VerifyBookingEmailView(APIView):
         "acknowledgement_id": booking.acknowledgement_id
         })    
 
+from django.utils import timezone
+from datetime import timedelta
+
+class ResendVerificationEmailView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        email = request.data.get("email", "").strip().lower()
+
+        if not email:
+            raise ValidationError("Email is required")
+
+        try:
+            booking = Booking.objects.get(
+                user__email=email,
+                email_verified=False
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError(
+                "No unverified booking found for this email"
+            )
+
+        if booking.last_verification_email_sent_at:
+            diff = timezone.now() - booking.last_verification_email_sent_at
+            if diff < timedelta(seconds=60):
+                remaining = 60 - int(diff.total_seconds())
+                raise ValidationError(
+                    f"Please wait {remaining} seconds before resending verification email."
+                )
+
+        send_booking_verification_email(booking)
+
+        return Response(
+            {
+                "message": "Verification email resent successfully"
+            },
+            status=status.HTTP_200_OK
+        )

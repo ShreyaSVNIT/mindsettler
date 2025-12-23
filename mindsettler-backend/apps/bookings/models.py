@@ -109,11 +109,16 @@ class Booking(models.Model):
     blank=True,
 )
     created_at = models.DateTimeField(auto_now_add=True)
+    last_verification_email_sent_at = models.DateTimeField(
+    null=True,
+    blank=True,
+    help_text="Last time verification email was sent"
+)
 
     def generate_acknowledgement_id(self):
      self.acknowledgement_id = f"MS-{uuid.uuid4().hex[:8].upper()}"
      self.save(update_fields=["acknowledgement_id"])
-     
+
     def give_consent(self, corporate=None):
         self.consent_given = True
         self.consent_given_at = timezone.now()

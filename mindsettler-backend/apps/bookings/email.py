@@ -2,6 +2,7 @@ import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from django.conf import settings
+from django.utils import timezone
 
 
 def send_booking_verification_email(booking):
@@ -39,3 +40,6 @@ def send_booking_verification_email(booking):
 
     sg = SendGridAPIClient(os.environ["SENDGRID_API_KEY"])
     sg.send(message)
+    booking.last_verification_email_sent_at = timezone.now()
+    booking.save(update_fields=["last_verification_email_sent_at"])
+
