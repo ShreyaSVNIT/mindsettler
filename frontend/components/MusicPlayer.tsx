@@ -7,7 +7,7 @@ interface MusicPlayerProps {
   youtubeUrl?: string;
 }
 
-const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/shorts/4rQFnfkuxQE' }: MusicPlayerProps) => {
+const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU&t=4s' }: MusicPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
