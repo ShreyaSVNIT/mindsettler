@@ -4,7 +4,6 @@ import React, { useState, useRef } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import MagneticButton from '@/components/Button';
-import WaveDivider from '@/components/WaveDivider';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
 
 interface CardProps {
@@ -60,18 +59,11 @@ const Card = ({ i, title, description, progress, range, targetScale }: CardProps
   );
 };
 
-export default function AboutPage() {
+export default function AboutTestPage() {
   const containerRef = useRef(null);
   
-  // Separate scroll tracking for the entire page (for decorative elements)
-  const { scrollYProgress: pageScrollProgress } = useScroll();
-  const y1 = useTransform(pageScrollProgress, [0, 1], [0, -100]);
-  const y2 = useTransform(pageScrollProgress, [0, 1], [0, 100]);
-  const rotate = useTransform(pageScrollProgress, [0, 1], [0, 360]);
-  
-  // Separate scroll tracking for the values section (for stacking cards)
-  // This tracks the ENTIRE values section for proper parallax effect
-  const { scrollYProgress: valuesScrollProgress } = useScroll({
+  // This scroll progress tracks the ENTIRE values section
+  const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
   });
@@ -120,18 +112,15 @@ export default function AboutPage() {
     }
   };
 
-  return (
-    <main className="min-h-screen bg-[var(--color-bg-subtle)] relative overflow-hidden">
-      {/* Floating Decorative Elements */}
-      <motion.div
-        style={{ y: y1, rotate }}
-        className="absolute top-20 right-10 w-32 h-32 rounded-full bg-[var(--color-bg-app)] opacity-20 blur-3xl"
-      />
-      <motion.div
-        style={{ y: y2 }}
-        className="absolute top-96 left-10 w-40 h-40 rounded-full bg-[var(--color-primary)] opacity-10 blur-3xl"
-      />
+  const values = [
+    { title: 'Complete Confidentiality', description: 'Your stories, your struggles, your victories—they all stay between you and your therapist. Always.' },
+    { title: 'Empathy First', description: 'We listen without judgment. Every session is a safe space where you can be your most authentic self.' },
+    { title: 'Personalized Care', description: 'No two journeys are the same. We match you with therapists who truly understand your unique needs.' },
+    { title: 'Evidence-Based', description: 'Our therapists use proven techniques backed by research and decades of clinical experience.' },
+  ];
 
+  return (
+    <main className="min-h-screen bg-[var(--color-bg-subtle)]">
       {/* Hero Section - Artistic Layout */}
       <section className="relative py-40 px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
@@ -179,9 +168,15 @@ export default function AboutPage() {
               className="relative"
             >
               <div className="relative">
+                {/* Decorative boxes */}
                 <div className="absolute -top-8 -left-8 w-full h-full bg-[var(--color-bg-app)] rounded-[3rem] -z-10" />
                 <div className="absolute -bottom-8 -right-8 w-full h-full border-4 border-[var(--color-primary)] opacity-20 rounded-[3rem] -z-10" />
-                <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl">
+                <div className="absolute -top-4 -right-4 w-32 h-32 border-4 border-[var(--color-primary)] rounded-2xl -z-5 opacity-30" />
+                <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-[var(--color-primary)] rounded-full -z-5 opacity-10" />
+                <div className="absolute top-1/2 -right-8 w-16 h-16 border-2 border-[var(--color-text-body)] rounded-lg -z-5 opacity-20 rotate-12" />
+                
+                {/* Main image container */}
+                <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10">
                   <Image
                     src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e"
                     alt="Mental wellness"
@@ -233,7 +228,7 @@ export default function AboutPage() {
       <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-subtle)" />
 
       {/* Our Story - Timeline */}
-      <section className="py-32 px-6">
+      <section className="py-32 px-6 bg-[var(--color-bg-subtle)]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-20">
             <motion.p
@@ -302,10 +297,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-card)" />
-
-      {/* Values - Stacking Cards */}
-      <section className="py-24 px-6 bg-[var(--color-bg-card)]">
+      {/* Title before cards */}
+      <section className="py-24 px-6 bg-[var(--color-bg-subtle)]">
         <div className="max-w-5xl mx-auto text-center mb-20">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -316,29 +309,30 @@ export default function AboutPage() {
             What We <span className="text-[var(--color-primary)] italic">Believe In</span>
           </motion.h2>
         </div>
+      </section>
 
-        <section ref={containerRef} className="relative px-4">
-          {[
-            { title: 'Complete Confidentiality', description: 'Your stories, your struggles, your victories—they all stay between you and your therapist. Always.' },
-            { title: 'Empathy First', description: 'We listen without judgment. Every session is a safe space where you can be your most authentic self.' },
-            { title: 'Personalized Care', description: 'No two journeys are the same. We match you with therapists who truly understand your unique needs.' },
-            { title: 'Evidence-Based', description: 'Our therapists use proven techniques backed by research and decades of clinical experience.' },
-          ].map((value, index, arr) => {
-            const start = index * (1 / arr.length);
-            const targetScale = 1 - ((arr.length - index) * 0.05);
-            
-            return (
-              <Card 
-                key={index} 
-                i={index} 
-                {...value} 
-                progress={valuesScrollProgress} 
-                range={[start, 1]} 
-                targetScale={targetScale}
-              />
-            );
-          })}
-        </section>
+      <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-card)" />
+
+      {/* IMPORTANT: The ref is on the wrapper. 
+          The wrapper MUST have a total height relative to card count.
+      */}
+      <section ref={containerRef} className="relative bg-[var(--color-bg-card)] px-4">
+        {values.map((value, index) => {
+          // Calculation for the range: [start_scroll_percent, end_scroll_percent]
+          const start = index * (1 / values.length);
+          const targetScale = 1 - ((values.length - index) * 0.05);
+          
+          return (
+            <Card 
+              key={index} 
+              i={index} 
+              {...value} 
+              progress={scrollYProgress} 
+              range={[start, 1]} 
+              targetScale={targetScale}
+            />
+          );
+        })}
       </section>
 
       <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-card)" />
