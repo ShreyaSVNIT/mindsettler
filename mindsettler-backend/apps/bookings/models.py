@@ -128,6 +128,17 @@ class Booking(models.Model):
         blank=True,
         help_text="Admin suggested alternate slots",
     )
+    ADMIN_DECISION_CHOICES = [
+    ("PENDING", "Pending"),
+    ("APPROVED", "Approved"),
+    ("REJECTED", "Rejected"),
+]
+
+    admin_decision = models.CharField(
+    max_length=20,
+    choices=ADMIN_DECISION_CHOICES,
+    default="PENDING",
+    )
 
     # ─────────────────────────
     # CONSENT (PER BOOKING)
@@ -157,6 +168,12 @@ class Booking(models.Model):
         null=True,
         blank=True,
         help_text="Last time verification email was sent"
+    )
+    # Booking model
+    last_access_verified_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Last time user verified email to access this booking"
     )
 
     # ─────────────────────────

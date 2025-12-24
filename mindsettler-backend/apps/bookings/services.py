@@ -1,20 +1,16 @@
 from .models import Booking
 
 
-def has_active_booking(user):
-    """
-    True if user has a verified, active booking
-    """
-    return Booking.objects.filter(
+def has_active_booking(user, exclude=None):
+    qs = Booking.objects.filter(
         user=user,
-        email_verified=True,
-        status__in=[
-            "PENDING",
-            "APPROVED",
-            "CONFIRMED",
-        ],
-    ).exists()
+        status__in=["PENDING", "APPROVED", "CONFIRMED"]
+    )
 
+    if exclude is not None:
+        qs = qs.exclude(id=exclude.id)
+
+    return qs.exists()
 ACTIVE_STATUSES = {"DRAFT", "PENDING", "APPROVED", "CONFIRMED"}
 
 def get_active_booking(user):
@@ -86,3 +82,20 @@ def cancel_booking(booking):
 def validate_payment_mode(mode, payment_mode):
     if mode == "ONLINE" and payment_mode != "ONLINE":
         raise ValueError("Online sessions require online payment")
+    
+def apply_admin_decision(booking):
+    if booking.admin_decision == "APPROVED":
+        approve_booking(
+            booking,
+            approved_start=booking.approved_slot_start,
+            approved_end=booking.approved_slot_end,
+            psychologist=booking.psychologist,
+            corporate=booking.corporate,
+        )
+
+    elif booking.admin_decision == "REJECTED":
+        reject_booking(
+            booking,
+            reason=booking.rejection_reason,
+            alternate_slots=booking.alternate_slots,
+        )

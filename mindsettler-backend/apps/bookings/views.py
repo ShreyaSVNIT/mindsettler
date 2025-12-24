@@ -38,23 +38,29 @@ class BookingDraftCreateView(APIView):
         # If user already has an active booking, return it
         active = get_active_booking(user)
         if active:
-            if not active.email_verified:
+            needs_verification = (
+                not active.last_access_verified_at or
+                timezone.now() - active.last_access_verified_at > timedelta(minutes=10)
+            )
+
+            if needs_verification:
                 send_booking_verification_email(active)
                 return Response(
                     {
-                        "message": "You already have a pending request. Verification email resent."
+                        "message": "Verification required to access your booking. Email sent."
                     },
                     status=200,
                 )
 
             return Response(
                 {
-                    "message": "You already have an active booking.",
+                    "message": "Active booking found",
                     "status": active.status,
                     "acknowledgement_id": active.acknowledgement_id,
                 },
                 status=200,
-            )
+            )       
+       
         validate_payment_mode(
             request.data.get("mode"),
             request.data.get("payment_mode"),
@@ -93,6 +99,8 @@ class BookingDraftCreateView(APIView):
             {"message": "Verification email sent. Please verify to submit booking."},
             status=201,
         )
+from django.utils import timezone
+
 class VerifyEmailView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -110,16 +118,9 @@ class VerifyEmailView(APIView):
         except Booking.DoesNotExist:
             raise ValidationError("Invalid or expired verification link")
 
-        # Idempotent verification
-        if booking.email_verified:
-            return Response({
-                "message": "Email already verified",
-                "status": booking.status,
-                "acknowledgement_id": booking.acknowledgement_id,
-            })
-
-        # Prevent multiple active bookings
-        if has_active_booking(booking.user):
+        #  Prevent multiple active bookings (except self)
+        active = has_active_booking(booking.user, exclude=booking)
+        if active:
             booking.status = "REJECTED"
             booking.rejection_reason = "Another active booking exists"
             booking.save(update_fields=["status", "rejection_reason"])
@@ -128,22 +129,35 @@ class VerifyEmailView(APIView):
                 "message": "Another active booking exists. This request was rejected."
             })
 
-        # Verify email
-        booking.verify_email()
+        # Mark email ownership verified (once)
+        if not booking.email_verified:
+            booking.verify_email()
 
-        # Submit booking
-        booking.status = "PENDING"
+        # Mark THIS access as verified
+        booking.last_access_verified_at = timezone.now()
+
+        # Submit booking if draft
+        if booking.status == "DRAFT":
+            booking.status = "PENDING"
 
         if not booking.acknowledgement_id:
             booking.generate_acknowledgement_id()
 
-        booking.save(update_fields=["status", "acknowledgement_id"])
+        booking.save(
+            update_fields=[
+                "email_verified",
+                "email_verified_at",
+                "last_access_verified_at",
+                "status",
+                "acknowledgement_id",
+            ]
+        )
 
         return Response({
-            "message": "Email verified successfully. Booking submitted.",
+            "message": "Email verified successfully",
             "acknowledgement_id": booking.acknowledgement_id,
             "status": booking.status,
-        })    
+        })
 class AdminApproveBookingView(APIView):
     permission_classes = [IsAdminUser]
     def post(self, request, booking_id):

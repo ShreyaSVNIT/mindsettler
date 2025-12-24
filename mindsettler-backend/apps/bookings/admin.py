@@ -8,11 +8,9 @@ from apps.bookings.services import approve_booking
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
 
-    # ─────────────────────────
-    # LIST VIEW
-    # ─────────────────────────
+    # ───────── LIST VIEW ─────────
     list_display = (
-        "id",
+        "acknowledgement_id",
         "user",
         "status",
         "preferred_period",
@@ -20,58 +18,37 @@ class BookingAdmin(admin.ModelAdmin):
         "created_at",
     )
 
-    list_filter = (
-        "status",
-        "mode",
-        "preferred_period",
-    )
+    list_filter = ("status", "mode", "preferred_period")
+    search_fields = ("user__email", "acknowledgement_id")
 
-    search_fields = (
-        "user__email",
-        "acknowledgement_id",
-    )
-
-    # ─────────────────────────
-    # READ-ONLY SAFETY
-    # ─────────────────────────
+    # ───────── READ ONLY ─────────
     readonly_fields = (
         "user",
-        "email_verified",
-        "email_verified_at",
-        "consent_given",
-        "consent_given_at",
+        "status",
         "acknowledgement_id",
-        "status",            # ❗ status can only change via actions
+        "email_verified",
         "created_at",
         "updated_at",
     )
-
-    # ─────────────────────────
-    # FORM LAYOUT
-    # ─────────────────────────
+    # ───────── FORM ─────────
     fieldsets = (
         ("User", {
-            "fields": (
-                "user",
-                "email_verified",
-                "email_verified_at",
-            )
+            "fields": ("user", "email_verified", "email_verified_at")
         }),
-
         ("User Preferences", {
             "fields": (
+                "preferred_date",
                 "preferred_period",
                 "preferred_time_start",
                 "preferred_time_end",
                 "mode",
                 "payment_mode",
                 "user_message",
-                "preferred_date",
             )
         }),
-
         ("Admin Decision", {
             "fields": (
+                "admin_decision",       
                 "approved_slot_start",
                 "approved_slot_end",
                 "psychologist",
@@ -79,9 +56,8 @@ class BookingAdmin(admin.ModelAdmin):
                 "rejection_reason",
                 "alternate_slots",
             )
-        }),
-
-        ("System", {
+        }),    
+    ("System", {
             "fields": (
                 "status",
                 "acknowledgement_id",
@@ -91,37 +67,25 @@ class BookingAdmin(admin.ModelAdmin):
         }),
     )
 
-    # ─────────────────────────
-    # IMMUTABLE STATE PROTECTION
-    # ─────────────────────────
-    def save_model(self, request, obj, form, change):
-        if change:
-            old = Booking.objects.get(pk=obj.pk)
+    # ───────── ACTIONS ─────────
+    actions = ("approve_selected",)
 
-            if old.status in {"COMPLETED", "CANCELLED", "REJECTED"}:
-                raise ValidationError(
-                    "This booking is in a terminal state and cannot be modified."
-                )
-
-        super().save_model(request, obj, form, change)
-
-    # ─────────────────────────
-    # ADMIN ACTIONS
-    # ─────────────────────────
     @admin.action(description="Approve selected bookings")
-    def approve_bookings(self, request, queryset):
+    def approve_selected(self, request, queryset):
+        approved = 0
+
         for booking in queryset:
             if booking.status != "PENDING":
                 messages.warning(
                     request,
-                    f"Booking {booking.id} is not pending and was skipped."
+                    f"{booking.acknowledgement_id}: Not pending, skipped."
                 )
                 continue
 
             if not booking.approved_slot_start or not booking.approved_slot_end:
                 messages.error(
                     request,
-                    f"Booking {booking.id} must have approved slot start & end."
+                    f"{booking.acknowledgement_id}: Approved slot missing."
                 )
                 continue
 
@@ -133,33 +97,30 @@ class BookingAdmin(admin.ModelAdmin):
                     psychologist=booking.psychologist,
                     corporate=booking.corporate,
                 )
+                approved += 1
+
             except Exception as e:
                 messages.error(
                     request,
-                    f"Booking {booking.id} failed to approve: {str(e)}"
+                    f"{booking.acknowledgement_id}: {str(e)}"
                 )
-                continue
 
-        self.message_user(
-            request,
-            "Approval action completed. Check messages for details."
-        )
+        if approved:
+            self.message_user(
+                request,
+                f"{approved} booking(s) approved successfully.",
+                level=messages.SUCCESS,
+            )
 
-    @admin.action(description="Mark selected bookings as completed")
-    def mark_completed(self, request, queryset):
-        for booking in queryset:
-            if booking.status != "CONFIRMED":
-                continue
+    # ───────── SAFETY ─────────
+def save_model(self, request, obj, form, change):
+    if change:
+        old = Booking.objects.get(pk=obj.pk)
 
-            booking.status = "COMPLETED"
-            booking.save(update_fields=["status"])
+        if old.status in {"COMPLETED", "CANCELLED"}:
+            raise ValidationError("Finalized booking cannot be modified")
 
-        self.message_user(
-            request,
-            "Selected bookings marked as completed."
-        )
+        if obj.admin_decision != old.admin_decision:
+            apply_admin_decision(obj)
 
-    actions = [
-        approve_bookings,
-        mark_completed,
-    ]
+    super().save_model(request, obj, form, change)
