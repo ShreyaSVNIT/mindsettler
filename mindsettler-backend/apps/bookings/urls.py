@@ -7,6 +7,8 @@ from .views import (
     CancelBookingView,
     AdminApproveBookingView,
     AdminRejectBookingView,
+    RequestCancellationView,
+    VerifyCancellationView,
 )
 
 urlpatterns = [
@@ -14,7 +16,8 @@ urlpatterns = [
     path("draft/", BookingDraftCreateView.as_view(), name="booking-draft"),
     path("verify-email/", VerifyEmailView.as_view(), name="booking-verify-email"),
     path("confirm/", ConfirmBookingView.as_view(), name="booking-confirm"),
-    path("cancel/", CancelBookingView.as_view(), name="booking-cancel"),
+        path("request-cancellation/", RequestCancellationView.as_view()),
+    path("verify-cancellation/", VerifyCancellationView.as_view()),
 
     # Admin actions
     path(

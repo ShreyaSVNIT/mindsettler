@@ -2,9 +2,7 @@ from django.contrib import admin, messages
 from django.core.exceptions import ValidationError
 
 from .models import Booking
-from apps.bookings.services import (
-    apply_admin_decision,
-)
+from apps.bookings.services import apply_admin_decision
 
 
 @admin.register(Booking)
@@ -17,7 +15,6 @@ class BookingAdmin(admin.ModelAdmin):
         "acknowledgement_id",
         "user",
         "status",
-        "admin_decision",
         "preferred_date",
         "preferred_period",
         "mode",
@@ -26,7 +23,6 @@ class BookingAdmin(admin.ModelAdmin):
 
     list_filter = (
         "status",
-        "admin_decision",
         "mode",
         "preferred_period",
     )
@@ -35,6 +31,8 @@ class BookingAdmin(admin.ModelAdmin):
         "user__email",
         "acknowledgement_id",
     )
+
+    ordering = ("-created_at",)
 
     # ─────────────────────────
     # READ-ONLY (SYSTEM OWNED)
@@ -77,7 +75,6 @@ class BookingAdmin(admin.ModelAdmin):
 
         ("Admin Decision", {
             "fields": (
-                "admin_decision",          
                 "approved_slot_start",
                 "approved_slot_end",
                 "psychologist",
@@ -98,24 +95,113 @@ class BookingAdmin(admin.ModelAdmin):
     )
 
     # ─────────────────────────
-    # SAVE LOGIC (CRITICAL)
+    # IMMUTABLE STATE PROTECTION
     # ─────────────────────────
     def save_model(self, request, obj, form, change):
         if change:
             old = Booking.objects.get(pk=obj.pk)
 
-            # 🚫 Terminal state protection
             if old.status in {"COMPLETED", "CANCELLED"}:
                 raise ValidationError(
                     "This booking is finalized and cannot be modified."
                 )
 
-            # 🎯 Admin decision changed → apply system logic
-            if obj.admin_decision != old.admin_decision:
-                try:
-                    apply_admin_decision(obj)
-                except Exception as e:
-                    messages.error(request, str(e))
-                    return
-
         super().save_model(request, obj, form, change)
+
+    # ─────────────────────────
+    # ADMIN ACTIONS
+    # ─────────────────────────
+    @admin.action(description="Approve selected bookings")
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            if booking.status != "PENDING":
+                messages.warning(
+                    request,
+                    f"{booking.acknowledgement_id}: Not pending, skipped."
+                )
+                continue
+
+            if not booking.approved_slot_start or not booking.approved_slot_end:
+                messages.error(
+                    request,
+                    f"{booking.acknowledgement_id}: Approved slot required."
+                )
+                continue
+
+            try:
+                apply_admin_decision(
+                    booking=booking,
+                    decision="APPROVED",
+                    approved_start=booking.approved_slot_start,
+                    approved_end=booking.approved_slot_end,
+                    psychologist=booking.psychologist,
+                    corporate=booking.corporate,
+                )
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"{booking.acknowledgement_id}: {str(e)}"
+                )
+
+        self.message_user(request, "Approval action completed.")
+
+    @admin.action(description="Approve selected bookings")
+    def approve_bookings(self, request, queryset):
+        for booking in queryset:
+            if booking.status != "PENDING":
+                messages.warning(
+                    request,
+                    f"{booking.acknowledgement_id}: Not pending, skipped."
+                )
+                continue
+
+            if not booking.approved_slot_start or not booking.approved_slot_end:
+                messages.error(
+                    request,
+                    f"{booking.acknowledgement_id}: Approved slot required."
+                )
+                continue
+
+            try:
+                apply_admin_decision(
+                    booking=booking,
+                    decision="APPROVED",
+                    approved_start=booking.approved_slot_start,
+                    approved_end=booking.approved_slot_end,
+                    psychologist=booking.psychologist,
+                    corporate=booking.corporate,
+                )
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"{booking.acknowledgement_id}: {str(e)}"
+                )
+
+        self.message_user(request, "Approval action completed.")
+
+    @admin.action(description="Reject selected bookings")
+    def reject_bookings(self, request, queryset):
+        for booking in queryset:
+            if booking.status != "PENDING":
+                continue
+
+            if not booking.rejection_reason:
+                messages.error(
+                    request,
+                    f"{booking.acknowledgement_id}: Rejection reason required."
+                )
+                continue
+
+            apply_admin_decision(
+                booking=booking,
+                decision="REJECTED",
+                reason=booking.rejection_reason,
+                alternate_slots=booking.alternate_slots,
+            )
+
+        self.message_user(request, "Rejection action completed.")
+
+    actions = [
+        approve_bookings,
+        reject_bookings,
+    ]   
