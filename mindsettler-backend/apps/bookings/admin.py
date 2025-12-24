@@ -2,39 +2,67 @@ from django.contrib import admin, messages
 from django.core.exceptions import ValidationError
 
 from .models import Booking
-from apps.bookings.services import approve_booking
+from apps.bookings.services import (
+    apply_admin_decision,
+)
 
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
 
-    # ───────── LIST VIEW ─────────
+    # ─────────────────────────
+    # LIST VIEW
+    # ─────────────────────────
     list_display = (
         "acknowledgement_id",
         "user",
         "status",
+        "admin_decision",
+        "preferred_date",
         "preferred_period",
         "mode",
         "created_at",
     )
 
-    list_filter = ("status", "mode", "preferred_period")
-    search_fields = ("user__email", "acknowledgement_id")
+    list_filter = (
+        "status",
+        "admin_decision",
+        "mode",
+        "preferred_period",
+    )
 
-    # ───────── READ ONLY ─────────
+    search_fields = (
+        "user__email",
+        "acknowledgement_id",
+    )
+
+    # ─────────────────────────
+    # READ-ONLY (SYSTEM OWNED)
+    # ─────────────────────────
     readonly_fields = (
         "user",
         "status",
         "acknowledgement_id",
         "email_verified",
+        "email_verified_at",
+        "consent_given",
+        "consent_given_at",
         "created_at",
         "updated_at",
     )
-    # ───────── FORM ─────────
+
+    # ─────────────────────────
+    # FORM LAYOUT
+    # ─────────────────────────
     fieldsets = (
         ("User", {
-            "fields": ("user", "email_verified", "email_verified_at")
+            "fields": (
+                "user",
+                "email_verified",
+                "email_verified_at",
+            )
         }),
+
         ("User Preferences", {
             "fields": (
                 "preferred_date",
@@ -46,9 +74,10 @@ class BookingAdmin(admin.ModelAdmin):
                 "user_message",
             )
         }),
+
         ("Admin Decision", {
             "fields": (
-                "admin_decision",       
+                "admin_decision",          
                 "approved_slot_start",
                 "approved_slot_end",
                 "psychologist",
@@ -56,8 +85,9 @@ class BookingAdmin(admin.ModelAdmin):
                 "rejection_reason",
                 "alternate_slots",
             )
-        }),    
-    ("System", {
+        }),
+
+        ("System", {
             "fields": (
                 "status",
                 "acknowledgement_id",
@@ -67,60 +97,25 @@ class BookingAdmin(admin.ModelAdmin):
         }),
     )
 
-    # ───────── ACTIONS ─────────
-    actions = ("approve_selected",)
+    # ─────────────────────────
+    # SAVE LOGIC (CRITICAL)
+    # ─────────────────────────
+    def save_model(self, request, obj, form, change):
+        if change:
+            old = Booking.objects.get(pk=obj.pk)
 
-    @admin.action(description="Approve selected bookings")
-    def approve_selected(self, request, queryset):
-        approved = 0
-
-        for booking in queryset:
-            if booking.status != "PENDING":
-                messages.warning(
-                    request,
-                    f"{booking.acknowledgement_id}: Not pending, skipped."
-                )
-                continue
-
-            if not booking.approved_slot_start or not booking.approved_slot_end:
-                messages.error(
-                    request,
-                    f"{booking.acknowledgement_id}: Approved slot missing."
-                )
-                continue
-
-            try:
-                approve_booking(
-                    booking,
-                    approved_start=booking.approved_slot_start,
-                    approved_end=booking.approved_slot_end,
-                    psychologist=booking.psychologist,
-                    corporate=booking.corporate,
-                )
-                approved += 1
-
-            except Exception as e:
-                messages.error(
-                    request,
-                    f"{booking.acknowledgement_id}: {str(e)}"
+            # 🚫 Terminal state protection
+            if old.status in {"COMPLETED", "CANCELLED"}:
+                raise ValidationError(
+                    "This booking is finalized and cannot be modified."
                 )
 
-        if approved:
-            self.message_user(
-                request,
-                f"{approved} booking(s) approved successfully.",
-                level=messages.SUCCESS,
-            )
+            # 🎯 Admin decision changed → apply system logic
+            if obj.admin_decision != old.admin_decision:
+                try:
+                    apply_admin_decision(obj)
+                except Exception as e:
+                    messages.error(request, str(e))
+                    return
 
-    # ───────── SAFETY ─────────
-def save_model(self, request, obj, form, change):
-    if change:
-        old = Booking.objects.get(pk=obj.pk)
-
-        if old.status in {"COMPLETED", "CANCELLED"}:
-            raise ValidationError("Finalized booking cannot be modified")
-
-        if obj.admin_decision != old.admin_decision:
-            apply_admin_decision(obj)
-
-    super().save_model(request, obj, form, change)
+        super().save_model(request, obj, form, change)
