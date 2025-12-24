@@ -11,74 +11,119 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/shorts/4rQFnfkuxQE'
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const playerRef = useRef<any>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // Extract video ID from YouTube URL
   const getVideoId = (url: string) => {
-    const match = url.match(/(?:shorts\/|v=|\/embed\/)([a-zA-Z0-9_-]+)/);
+    const match = url.match(/(?:shorts\/|v=|\/embed\/|youtu\.be\/)([a-zA-Z0-9_-]+)/);
     return match ? match[1] : null;
   };
 
   const videoId = getVideoId(youtubeUrl);
 
   useEffect(() => {
-    // Load YouTube IFrame API
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    if (!videoId) {
+      setError('Invalid YouTube URL');
+      return;
+    }
 
     // Initialize player when API is ready
-    (window as any).onYouTubeIframeAPIReady = () => {
-      playerRef.current = new (window as any).YT.Player('youtube-player', {
-        videoId: videoId,
-        playerVars: {
-          autoplay: 0,
-          controls: 0,
-          loop: 1,
-          playlist: videoId,
-          playsinline: 1,
-        },
-        events: {
-          onReady: () => setIsLoaded(true),
-          onStateChange: (event: any) => {
-            if (event.data === (window as any).YT.PlayerState.PLAYING) {
-              setIsPlaying(true);
-            } else if (event.data === (window as any).YT.PlayerState.PAUSED) {
-              setIsPlaying(false);
-            }
+    const initializePlayer = () => {
+      try {
+        playerRef.current = new (window as any).YT.Player('youtube-player', {
+          videoId: videoId,
+          playerVars: {
+            autoplay: 0,
+            controls: 0,
+            loop: 1,
+            playlist: videoId,
+            playsinline: 1,
+            enablejsapi: 1,
+            origin: window.location.origin,
           },
-        },
-      });
+          events: {
+            onReady: (event: any) => {
+              console.log('YouTube player ready');
+              setIsLoaded(true);
+              setError(null);
+            },
+            onStateChange: (event: any) => {
+              if (event.data === (window as any).YT.PlayerState.PLAYING) {
+                setIsPlaying(true);
+              } else if (event.data === (window as any).YT.PlayerState.PAUSED) {
+                setIsPlaying(false);
+              }
+            },
+            onError: (event: any) => {
+              console.error('YouTube player error:', event.data);
+              setError('Failed to load video');
+              setIsLoaded(false);
+            },
+          },
+        });
+      } catch (err) {
+        console.error('Error initializing player:', err);
+        setError('Failed to initialize player');
+      }
     };
 
+    // Check if API is already loaded
+    if ((window as any).YT && (window as any).YT.Player) {
+      initializePlayer();
+      return;
+    }
+
+    // Load YouTube IFrame API only if not already loaded
+    if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      tag.async = true;
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+    }
+
+    (window as any).onYouTubeIframeAPIReady = initializePlayer;
+
     return () => {
-      if (playerRef.current) {
-        playerRef.current.destroy();
+      if (playerRef.current && typeof playerRef.current.destroy === 'function') {
+        try {
+          playerRef.current.destroy();
+        } catch (err) {
+          console.error('Error destroying player:', err);
+        }
       }
     };
   }, [videoId]);
 
   const togglePlay = () => {
-    if (!playerRef.current) return;
+    if (!playerRef.current || !isLoaded) return;
     
-    if (isPlaying) {
-      playerRef.current.pauseVideo();
-    } else {
-      playerRef.current.playVideo();
+    try {
+      if (isPlaying) {
+        playerRef.current.pauseVideo();
+      } else {
+        playerRef.current.playVideo();
+      }
+    } catch (err) {
+      console.error('Error toggling play:', err);
     }
   };
 
   const toggleMute = () => {
-    if (!playerRef.current) return;
+    if (!playerRef.current || !isLoaded) return;
     
-    if (isMuted) {
-      playerRef.current.unMute();
-      setIsMuted(false);
-    } else {
-      playerRef.current.mute();
-      setIsMuted(true);
+    try {
+      if (isMuted) {
+        playerRef.current.unMute();
+        setIsMuted(false);
+      } else {
+        playerRef.current.mute();
+        setIsMuted(true);
+      }
+    } catch (err) {
+      console.error('Error toggling mute:', err);
     }
   };
 
