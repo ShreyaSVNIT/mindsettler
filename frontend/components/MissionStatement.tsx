@@ -3,10 +3,10 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import styles from "./different.module.css";
+import styles from "./missionStatement.module.css";
 import MagneticButton from "./Button";
 
-export default function Different() {
+export default function MissionStatement() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -61,17 +61,17 @@ export default function Different() {
                 complexities from the comfort of your own space.
               </p>
 
-              <MagneticButton text="BOOK A SESSION" />
+              <div className={styles.buttonWrapper}>
+                <MagneticButton text="BOOK A SESSION" />
+              </div>
             </div>
-             <div className={styles.archSide}>
-                <div className={styles.arch}>
-                   <div className={styles.timeline}>
-                    <div className={styles.verticalLine} />
-                    <TimelineItem title="Discovery" desc="Identify your needs with our matching tool" />
-                    <TimelineItem title="Selection" desc="Choose from accredited psychotherapists" />
-                    <TimelineItem title="Connection" desc="Secure, 1-on-1 video wellness sessions" />
-                    <TimelineItem title="Growth" desc="Continuous support on your path to clarity" />
-                  </div>
+             <div className={styles.timelineSide}>
+                <div className={styles.timeline}>
+                  <div className={styles.verticalLine} />
+                  <TimelineItem title="Discovery" desc="Identify your needs with our matching tool" />
+                  <TimelineItem title="Selection" desc="Choose from accredited psychotherapists" />
+                  <TimelineItem title="Connection" desc="Secure, 1-on-1 video wellness sessions" />
+                  <TimelineItem title="Growth" desc="Continuous support on your path to clarity" />
                 </div>
              </div>
           </motion.div>

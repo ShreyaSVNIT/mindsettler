@@ -2,8 +2,8 @@ import HeroSection from "@/components/HeroSection";
 // import WaveDivider from "@/components/WaveDivider";
 import MentalHealthBasics from "@/components/MentalHealthBasics";
 import JourneyRoadmap from "@/components/JourneyRoadmap";
-import Different from "@/components/Different";
 import MusicPlayer from "@/components/MusicPlayer";
+import MissionStatement from "@/components/MissionStatement";
 
 export default function Home() {
   return (
@@ -26,7 +26,7 @@ export default function Home() {
       <HeroSection />
       {/* <WaveDivider /> */}
       <MentalHealthBasics />
-      <Different /> 
+      <MissionStatement /> 
       <JourneyRoadmap />
       <MusicPlayer />
     </main>
