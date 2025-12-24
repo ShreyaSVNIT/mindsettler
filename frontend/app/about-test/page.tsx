@@ -1,10 +1,39 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from 'framer-motion';
 import MagneticButton from '@/components/Button';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
+
+// Animated Counter Component
+const AnimatedCounter = ({ value, inView }: { value: string, inView: boolean }) => {
+  const [count, setCount] = useState(0);
+  const numericValue = parseInt(value.replace(/\D/g, '')) || 0;
+  const suffix = value.replace(/[0-9]/g, '');
+
+  useEffect(() => {
+    if (!inView) return;
+    
+    let start = 0;
+    const duration = 2000;
+    const increment = numericValue / (duration / 16);
+    
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= numericValue) {
+        setCount(numericValue);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(start));
+      }
+    }, 16);
+    
+    return () => clearInterval(timer);
+  }, [inView, numericValue]);
+
+  return <span>{count}{suffix}</span>;
+};
 
 interface CardProps {
   i: number;
@@ -17,6 +46,7 @@ interface CardProps {
 
 const Card = ({ i, title, description, progress, range, targetScale }: CardProps) => {
   const container = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
   
   // This helps the card know when it's in view
   const { scrollYProgress } = useScroll({
@@ -36,24 +66,51 @@ const Card = ({ i, title, description, progress, range, targetScale }: CardProps
           // This creates the "stacked" edges at the top
           top: `calc(5vh + ${i * 28}px)`, 
         }}
-        className="relative h-[450px] w-full max-w-[900px] rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-white/10 origin-top overflow-hidden"
+        className="relative h-[450px] w-full max-w-[900px] rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-white/10 origin-top overflow-hidden group"
+        onHoverStart={() => setIsHovered(true)}
+        onHoverEnd={() => setIsHovered(false)}
+        whileHover={{ y: -10 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         <div className="relative z-10 flex flex-col md:flex-row h-full gap-10">
           <div className="flex-1 flex flex-col justify-center">
-            <h3 className="font-title text-4xl text-[var(--color-text-body)] mb-6">{title}</h3>
-            <p className="font-body text-lg opacity-80 leading-relaxed">
+            <motion.h3 
+              className="font-title text-4xl text-[var(--color-text-body)] mb-6"
+              animate={isHovered ? { x: 10 } : { x: 0 }}
+            >
+              {title}
+            </motion.h3>
+            <motion.p 
+              className="font-body text-lg opacity-80 leading-relaxed"
+              animate={isHovered ? { x: 10 } : { x: 0 }}
+              transition={{ delay: 0.05 }}
+            >
               <span className="text-4xl font-title text-[var(--color-primary)] mr-1">{description[0]}</span>
               {description.substring(1)}
-            </p>
+            </motion.p>
           </div>
           
-          <div className="hidden md:flex flex-1 items-center justify-center opacity-10 select-none">
+          <div className="hidden md:flex flex-1 items-center justify-center opacity-10 select-none group-hover:opacity-20 transition-opacity duration-300">
              <span className="text-[12rem] font-title text-[var(--color-primary)]">0{i+1}</span>
           </div>
         </div>
         
-        {/* Subtle accent wash */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent pointer-events-none" />
+        {/* Animated gradient wash */}
+        <motion.div 
+          className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent pointer-events-none"
+          animate={isHovered ? { opacity: 1 } : { opacity: 0.5 }}
+        />
+        
+        {/* Edge glow on hover */}
+        <motion.div
+          className="absolute inset-0 rounded-[2.5rem] pointer-events-none"
+          animate={isHovered ? { 
+            boxShadow: '0 0 80px rgba(249, 209, 213, 0.4), inset 0 0 80px rgba(249, 209, 213, 0.1)' 
+          } : { 
+            boxShadow: '0 0 0px rgba(249, 209, 213, 0)' 
+          }}
+          transition={{ duration: 0.3 }}
+        />
       </motion.div>
     </div>
   );
@@ -61,6 +118,19 @@ const Card = ({ i, title, description, progress, range, targetScale }: CardProps
 
 export default function AboutTestPage() {
   const containerRef = useRef(null);
+  const heroRef = useRef(null);
+  
+  // Subtle parallax for hero
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start']
+  });
+
+  // Elegant subtle movements
+  const imageY = useTransform(heroScrollProgress, [0, 1], [0, -150]);
+  const textY = useTransform(heroScrollProgress, [0, 1], [0, 100]);
+  const scale = useTransform(heroScrollProgress, [0, 0.5], [1, 1.05]);
+  const imageOpacity = useTransform(heroScrollProgress, [0, 0.8, 1], [1, 0.8, 0]);
   
   // This scroll progress tracks the ENTIRE values section
   const { scrollYProgress } = useScroll({
@@ -76,7 +146,7 @@ export default function AboutTestPage() {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'submitting'>('idle');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({
@@ -88,7 +158,7 @@ export default function AboutTestPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
+    setSubmitStatus('submitting');
 
     try {
       const response = await fetch('/api/contact', {
@@ -121,11 +191,13 @@ export default function AboutTestPage() {
 
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)]">
-      {/* Hero Section - Artistic Layout */}
-      <section className="relative py-40 px-6 overflow-hidden">
-        <div className="max-w-7xl mx-auto">
+      {/* Hero Section - Elegant Parallax */}
+      <section ref={heroRef} className="relative py-40 px-6 overflow-hidden min-h-screen flex items-center">
+        <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Text Content with subtle parallax */}
             <motion.div
+              style={{ y: textY }}
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
@@ -136,91 +208,240 @@ export default function AboutTestPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="inline-block mb-6"
               >
-                <div className="bg-[var(--color-bg-app)] px-6 py-2 rounded-full">
+                <div className="bg-[var(--color-bg-app)] px-6 py-2 rounded-full border border-[var(--color-primary)]/10">
                   <p className="uppercase tracking-[0.3em] text-xs font-body text-[var(--color-primary)]">
                     ✦ About MindSettler ✦
                   </p>
                 </div>
               </motion.div>
               
-              <h1 className="font-title text-6xl md:text-8xl text-[var(--color-text-body)] mb-8 leading-[0.95]">
+              <motion.h1 
+                className="font-title text-6xl md:text-8xl text-[var(--color-text-body)] mb-8 leading-[0.95]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
                 Where
                 <span className="block text-[var(--color-primary)] italic mt-2">
                   Healing
                 </span>
                 <span className="block mt-2">Meets Hope</span>
-              </h1>
+              </motion.h1>
               
-              <p className="font-body text-xl text-[var(--color-text-body)] opacity-80 leading-relaxed mb-8">
+              <motion.p 
+                className="font-body text-xl text-[var(--color-text-body)] opacity-80 leading-relaxed mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+              >
                 We're not just a platform. We're your companion in the journey toward 
                 understanding yourself, embracing your story, and finding peace in the present.
-              </p>
+              </motion.p>
 
-              <div className="flex flex-wrap gap-4">
+              <motion.div 
+                className="flex flex-wrap gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+              >
                 <MagneticButton text="Start Your Journey" />
-              </div>
+              </motion.div>
             </motion.div>
 
+            {/* Image with elegant reveal and parallax */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              style={{ y: imageY, scale, opacity: imageOpacity }}
               className="relative"
             >
               <div className="relative">
-                {/* Decorative boxes */}
-                <div className="absolute -top-8 -left-8 w-full h-full bg-[var(--color-bg-app)] rounded-[3rem] -z-10" />
-                <div className="absolute -bottom-8 -right-8 w-full h-full border-4 border-[var(--color-primary)] opacity-20 rounded-[3rem] -z-10" />
-                <div className="absolute -top-4 -right-4 w-32 h-32 border-4 border-[var(--color-primary)] rounded-2xl -z-5 opacity-30" />
-                <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-[var(--color-primary)] rounded-full -z-5 opacity-10" />
-                <div className="absolute top-1/2 -right-8 w-16 h-16 border-2 border-[var(--color-text-body)] rounded-lg -z-5 opacity-20 rotate-12" />
+                {/* Subtle background accents */}
+                <motion.div 
+                  className="absolute -inset-4 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent rounded-[3.5rem] blur-2xl"
+                  animate={{ 
+                    scale: [1, 1.05, 1],
+                    opacity: [0.3, 0.5, 0.3]
+                  }}
+                  transition={{ 
+                    duration: 4, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
                 
-                {/* Main image container */}
-                <div className="relative h-[500px] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white/10">
-                  <Image
-                    src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e"
-                    alt="Mental wellness"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+                {/* Main image container with mask reveal */}
+                <motion.div 
+                  className="relative h-[500px] rounded-[3rem] overflow-hidden"
+                  initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
+                  animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+                  transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
+                >
+                  {/* Image wrapper with subtle scale */}
+                  <motion.div
+                    className="relative w-full h-full"
+                    initial={{ scale: 1.2 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
+                  >
+                    <Image
+                      src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e"
+                      alt="Mental wellness"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                    {/* Subtle gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-subtle)]/20 to-transparent" />
+                  </motion.div>
+                  
+                  {/* Elegant border */}
+                  <div className="absolute inset-0 rounded-[3rem] ring-1 ring-white/10" />
+                </motion.div>
+
+                {/* Floating accent elements */}
+                <motion.div
+                  className="absolute -top-6 -right-6 w-24 h-24 rounded-full border border-[var(--color-primary)]/20"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 1.5 }}
+                  style={{ 
+                    boxShadow: '0 0 60px rgba(249, 209, 213, 0.2)'
+                  }}
+                />
+                
+                <motion.div
+                  className="absolute -bottom-8 -left-8 w-32 h-32 rounded-2xl border border-[var(--color-primary)]/10 rotate-12"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.6, delay: 1.7 }}
+                />
               </div>
             </motion.div>
           </div>
         </div>
+
+        {/* Subtle scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <div className="w-5 h-8 border border-[var(--color-text-body)]/20 rounded-full flex justify-center pt-1.5">
+              <motion.div
+                animate={{ opacity: [0, 1, 0], y: [0, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                className="w-1 h-1.5 bg-[var(--color-primary)] rounded-full"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-card)" />
 
-      {/* Stats Section - Creative Numbers */}
-      <section className="py-24 px-6 bg-[var(--color-bg-card)]">
-        <div className="max-w-7xl mx-auto">
+      {/* Stats Section - Animated Counters */}
+      <section className="py-24 px-6 bg-[var(--color-bg-card)] relative overflow-hidden">
+        {/* Animated background gradient */}
+        <motion.div
+          className="absolute inset-0 opacity-30"
+          animate={{
+            background: [
+              'radial-gradient(circle at 20% 50%, rgba(249, 209, 213, 0.1) 0%, transparent 50%)',
+              'radial-gradient(circle at 80% 50%, rgba(249, 209, 213, 0.1) 0%, transparent 50%)',
+              'radial-gradient(circle at 20% 50%, rgba(249, 209, 213, 0.1) 0%, transparent 50%)',
+            ]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid md:grid-cols-4 gap-8">
             {[
               { number: '500+', label: 'Lives Transformed', icon: '✨' },
               { number: '50+', label: 'Licensed Therapists', icon: '🌱' },
               { number: '95%', label: 'Satisfaction Rate', icon: '💫' },
               { number: '24/7', label: 'Support Available', icon: '🌙' },
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, rotate: 2 }}
-                className="text-center p-8 bg-[var(--color-bg-subtle)] rounded-2xl relative overflow-hidden group cursor-pointer"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-hover)] opacity-0 group-hover:opacity-10 transition-opacity duration-500" />
-                <div className="text-5xl mb-4">{stat.icon}</div>
-                <div className="font-title text-5xl text-[var(--color-primary)] mb-2">
-                  {stat.number}
-                </div>
-                <div className="font-body text-sm text-[var(--color-text-body)] opacity-70 uppercase tracking-wider">
-                  {stat.label}
-                </div>
-              </motion.div>
-            ))}
+            ].map((stat, index) => {
+              const ref = useRef(null);
+              const isInView = useInView(ref, { once: true, amount: 0.5 });
+              
+              return (
+                <motion.div
+                  key={index}
+                  ref={ref}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: index * 0.15, ease: [0.21, 1, 0.5, 1] }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -10 }}
+                  className="text-center p-8 bg-[var(--color-bg-subtle)] rounded-2xl relative overflow-hidden group cursor-pointer border border-white/5"
+                >
+                  {/* Animated background on hover */}
+                  <motion.div 
+                    className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  />
+                  
+                  {/* Shimmer effect */}
+                  <motion.div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                    animate={{
+                      backgroundPosition: ['200% 0', '-200% 0']
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(249, 209, 213, 0.1), transparent)',
+                      backgroundSize: '200% 100%'
+                    }}
+                  />
+                  
+                  {/* Icon with bounce animation */}
+                  <motion.div 
+                    className="text-5xl mb-4 relative z-10"
+                    animate={isInView ? { 
+                      scale: [1, 1.2, 1],
+                      rotate: [0, 10, -10, 0]
+                    } : {}}
+                    transition={{ 
+                      duration: 0.6, 
+                      delay: index * 0.15 + 0.3,
+                      ease: "easeOut"
+                    }}
+                  >
+                    {stat.icon}
+                  </motion.div>
+                  
+                  {/* Animated counter */}
+                  <motion.div 
+                    className="font-title text-5xl text-[var(--color-primary)] mb-2 relative z-10"
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={isInView ? { scale: 1, opacity: 1 } : {}}
+                    transition={{ 
+                      duration: 0.6, 
+                      delay: index * 0.15 + 0.5,
+                      type: "spring",
+                      stiffness: 200
+                    }}
+                  >
+                    <AnimatedCounter value={stat.number} inView={isInView} />
+                  </motion.div>
+                  
+                  <div className="font-body text-sm text-[var(--color-text-body)] opacity-70 uppercase tracking-wider relative z-10">
+                    {stat.label}
+                  </div>
+                  
+                  {/* Bottom glow */}
+                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-[var(--color-primary)]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -337,9 +558,13 @@ export default function AboutTestPage() {
 
       <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-card)" />
 
-      {/* Contact Section */}
-      <section className="py-24 px-6 bg-[var(--color-bg-card)]">
-        <div className="max-w-6xl mx-auto">
+      {/* Contact Section - Enhanced */}
+      <section className="py-24 px-6 bg-[var(--color-bg-card)] relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--color-primary)] opacity-5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[var(--color-primary)] opacity-5 blur-[120px] rounded-full" />
+        
+        <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -377,9 +602,17 @@ export default function AboutTestPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
-              className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center hover:shadow-lg transition-shadow duration-300"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center relative overflow-hidden group border border-white/5"
             >
-              <div className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6">
+              {/* Hover glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <motion.div 
+                className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6 relative z-10"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -394,13 +627,13 @@ export default function AboutTestPage() {
                     d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
                   />
                 </svg>
-              </div>
-              <h3 className="font-title text-2xl text-[var(--color-text-body)] mb-3">
+              </motion.div>
+              <h3 className="font-title text-2xl text-[var(--color-text-body)] mb-3 relative z-10">
                 Email
               </h3>
               <a
                 href="mailto:hello@mindsettler.com"
-                className="font-body text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors"
+                className="font-body text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors relative z-10"
               >
                 hello@mindsettler.com
               </a>
@@ -411,9 +644,16 @@ export default function AboutTestPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
-              className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center hover:shadow-lg transition-shadow duration-300"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center relative overflow-hidden group border border-white/5"
             >
-              <div className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <motion.div 
+                className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6 relative z-10"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -428,13 +668,13 @@ export default function AboutTestPage() {
                     d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
                   />
                 </svg>
-              </div>
-              <h3 className="font-title text-2xl text-[var(--color-text-body)] mb-3">
+              </motion.div>
+              <h3 className="font-title text-2xl text-[var(--color-text-body)] mb-3 relative z-10">
                 Phone
               </h3>
               <a
                 href="tel:+911234567890"
-                className="font-body text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors"
+                className="font-body text-[var(--color-primary)] hover:text-[var(--color-primary-hover)] transition-colors relative z-10"
               >
                 +91 123 456 7890
               </a>
@@ -445,9 +685,16 @@ export default function AboutTestPage() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center hover:shadow-lg transition-shadow duration-300"
+              whileHover={{ y: -8, scale: 1.02 }}
+              className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center relative overflow-hidden group border border-white/5"
             >
-              <div className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6">
+              <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <motion.div 
+                className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6 relative z-10"
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.6 }}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -462,18 +709,18 @@ export default function AboutTestPage() {
                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-              </div>
-              <h3 className="font-title text-2xl text-[var(--color-text-body)] mb-3">
+              </motion.div>
+              <h3 className="font-title text-2xl text-[var(--color-text-body)] mb-3 relative z-10">
                 Hours
               </h3>
-              <p className="font-body text-[var(--color-text-body)] opacity-80">
+              <p className="font-body text-[var(--color-text-body)] opacity-80 relative z-10">
                 Monday - Saturday<br />
                 9:00 AM - 8:00 PM IST
               </p>
             </motion.div>
           </div>
 
-          {/* Contact Form */}
+          {/* Contact Form - Enhanced with micro-interactions */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -481,17 +728,28 @@ export default function AboutTestPage() {
             viewport={{ once: true }}
             className="mt-16 max-w-3xl mx-auto"
           >
-            <div className="bg-[var(--color-bg-subtle)] p-8 md:p-12 rounded-3xl shadow-lg">
-              <h3 className="font-title text-3xl text-[var(--color-text-body)] mb-6 text-center">
+            <div className="bg-[var(--color-bg-subtle)] p-8 md:p-12 rounded-3xl shadow-lg border border-white/5 relative overflow-hidden">
+              {/* Animated background gradient */}
+              <motion.div
+                className="absolute inset-0 opacity-20"
+                animate={{
+                  background: [
+                    'radial-gradient(circle at 0% 0%, rgba(249, 209, 213, 0.15) 0%, transparent 50%)',
+                    'radial-gradient(circle at 100% 100%, rgba(249, 209, 213, 0.15) 0%, transparent 50%)',
+                    'radial-gradient(circle at 0% 0%, rgba(249, 209, 213, 0.15) 0%, transparent 50%)',
+                  ]
+                }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+              />
+              
+              <h3 className="font-title text-3xl text-[var(--color-text-body)] mb-6 text-center relative z-10">
                 Send Us a Message
               </h3>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block font-body text-sm text-[var(--color-text-body)] mb-2">
-                      Full Name *
-                    </label>
+                  {/* Name Input - Floating Label */}
+                  <div className="relative group">
                     <input
                       type="text"
                       id="name"
@@ -499,15 +757,21 @@ export default function AboutTestPage() {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-colors font-body bg-white"
+                      className="peer w-full px-4 py-4 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-all duration-300 font-body bg-white placeholder-transparent"
                       placeholder="Your name"
                     />
+                    <label
+                      htmlFor="name"
+                      className="absolute left-4 -top-2.5 bg-white px-2 text-sm text-[var(--color-text-body)] opacity-70 transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:opacity-50 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-[var(--color-primary)] peer-focus:opacity-100"
+                    >
+                      Full Name *
+                    </label>
+                    {/* Focus glow */}
+                    <div className="absolute inset-0 rounded-xl bg-[var(--color-primary)] opacity-0 group-focus-within:opacity-10 blur-xl transition-opacity duration-500 pointer-events-none -z-10" />
                   </div>
 
-                  <div>
-                    <label htmlFor="email" className="block font-body text-sm text-[var(--color-text-body)] mb-2">
-                      Email Address *
-                    </label>
+                  {/* Email Input - Floating Label */}
+                  <div className="relative group">
                     <input
                       type="email"
                       id="email"
@@ -515,31 +779,41 @@ export default function AboutTestPage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-colors font-body bg-white"
+                      className="peer w-full px-4 py-4 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-all duration-300 font-body bg-white placeholder-transparent"
                       placeholder="your@email.com"
                     />
+                    <label
+                      htmlFor="email"
+                      className="absolute left-4 -top-2.5 bg-white px-2 text-sm text-[var(--color-text-body)] opacity-70 transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:opacity-50 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-[var(--color-primary)] peer-focus:opacity-100"
+                    >
+                      Email Address *
+                    </label>
+                    <div className="absolute inset-0 rounded-xl bg-[var(--color-primary)] opacity-0 group-focus-within:opacity-10 blur-xl transition-opacity duration-500 pointer-events-none -z-10" />
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="phone" className="block font-body text-sm text-[var(--color-text-body)] mb-2">
-                    Phone Number
-                  </label>
+                {/* Phone Input - Floating Label */}
+                <div className="relative group">
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-colors font-body bg-white"
+                    className="peer w-full px-4 py-4 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-all duration-300 font-body bg-white placeholder-transparent"
                     placeholder="+91 123 456 7890"
                   />
+                  <label
+                    htmlFor="phone"
+                    className="absolute left-4 -top-2.5 bg-white px-2 text-sm text-[var(--color-text-body)] opacity-70 transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:opacity-50 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-[var(--color-primary)] peer-focus:opacity-100"
+                  >
+                    Phone Number
+                  </label>
+                  <div className="absolute inset-0 rounded-xl bg-[var(--color-primary)] opacity-0 group-focus-within:opacity-10 blur-xl transition-opacity duration-500 pointer-events-none -z-10" />
                 </div>
 
-                <div>
-                  <label htmlFor="message" className="block font-body text-sm text-[var(--color-text-body)] mb-2">
-                    Message *
-                  </label>
+                {/* Message Textarea - Floating Label */}
+                <div className="relative group">
                   <textarea
                     id="message"
                     name="message"
@@ -547,52 +821,95 @@ export default function AboutTestPage() {
                     onChange={handleInputChange}
                     required
                     rows={6}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-colors font-body resize-none bg-white"
+                    className="peer w-full px-4 py-4 rounded-xl border-2 border-[var(--color-border)] focus:border-[var(--color-primary)] outline-none transition-all duration-300 font-body resize-none bg-white placeholder-transparent"
                     placeholder="Tell us how we can help you..."
                   />
+                  <label
+                    htmlFor="message"
+                    className="absolute left-4 -top-2.5 bg-white px-2 text-sm text-[var(--color-text-body)] opacity-70 transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:opacity-50 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-[var(--color-primary)] peer-focus:opacity-100"
+                  >
+                    Message *
+                  </label>
+                  <div className="absolute inset-0 rounded-xl bg-[var(--color-primary)] opacity-0 group-focus-within:opacity-10 blur-xl transition-opacity duration-500 pointer-events-none -z-10" />
+                </div>
+
+                {/* Submit Button with Enhanced Animation */}
+                <div className="flex justify-center pt-4">
+                  <motion.button
+                    type="submit"
+                    disabled={submitStatus === 'submitting'}
+                    className="relative px-12 py-4 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] text-white font-body rounded-xl overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={submitStatus !== 'submitting' ? { scale: 1.05 } : {}}
+                    whileTap={submitStatus !== 'submitting' ? { scale: 0.95 } : {}}
+                  >
+                    {/* Animated gradient overlay */}
+                    <motion.div
+                      className="absolute inset-0"
+                      animate={{
+                        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      style={{
+                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)',
+                        backgroundSize: '200% 100%'
+                      }}
+                    />
+                    
+                    {/* Button text */}
+                    <span className="relative z-10 font-semibold text-lg">
+                      {submitStatus === 'submitting' ? 'Sending...' : 'Send Message'}
+                    </span>
+                    
+                    {/* Ripple effect */}
+                    {submitStatus !== 'submitting' && (
+                      <motion.div
+                        className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                        initial={false}
+                      >
+                        <motion.div
+                          className="absolute top-1/2 left-1/2 w-2 h-2 bg-white rounded-full"
+                          animate={{
+                            scale: [0, 20],
+                            opacity: [0.5, 0]
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeOut"
+                          }}
+                        />
+                      </motion.div>
+                    )}
+                  </motion.button>
                 </div>
 
                 {submitStatus === 'success' && (
-                  <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center"
+                  >
                     <p className="font-body text-green-800">
                       ✓ Thank you! Your message has been sent successfully.
                     </p>
-                  </div>
+                  </motion.div>
                 )}
 
                 {submitStatus === 'error' && (
-                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-center">
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-center"
+                  >
                     <p className="font-body text-red-800">
                       ✗ Something went wrong. Please try again.
                     </p>
-                  </div>
+                  </motion.div>
                 )}
-
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="inline-flex items-center gap-3 bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white font-body px-10 py-4 rounded-full transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                    {!isSubmitting && (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                        className="w-5 h-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                        />
-                      </svg>
-                    )}
-                  </button>
-                </div>
               </form>
             </div>
           </motion.div>
