@@ -95,30 +95,20 @@ def validate_payment_mode(mode, payment_mode):
     
 
 def apply_admin_decision(
-    booking,
     *,
+    booking,
     decision,
     approved_start=None,
     approved_end=None,
     psychologist=None,
     corporate=None,
-    rejection_reason=None,
+    reason=None,
     alternate_slots=None,
 ):
-    """
-    Applies admin decision on a booking.
-    decision: 'APPROVED' or 'REJECTED'
-    """
-
     if booking.status != "PENDING":
-        raise ValidationError("Only pending bookings can be decided.")
+        raise ValidationError("Only pending bookings can be decided")
 
     if decision == "APPROVED":
-        if not approved_start or not approved_end:
-            raise ValidationError(
-                "Approved slot start and end are required."
-            )
-
         booking.status = "APPROVED"
         booking.approved_slot_start = approved_start
         booking.approved_slot_end = approved_end
@@ -126,15 +116,12 @@ def apply_admin_decision(
         booking.corporate = corporate
 
     elif decision == "REJECTED":
-        if not rejection_reason:
-            raise ValidationError("Rejection reason is required.")
-
         booking.status = "REJECTED"
-        booking.rejection_reason = rejection_reason
+        booking.rejection_reason = reason or ""
         booking.alternate_slots = alternate_slots or ""
 
     else:
-        raise ValidationError("Invalid admin decision.")
+        raise ValidationError("Invalid decision")
 
     booking.save()
     return booking
