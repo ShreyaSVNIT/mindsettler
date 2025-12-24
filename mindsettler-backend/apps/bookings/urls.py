@@ -1,19 +1,30 @@
 from django.urls import path
+
 from .views import (
-    BookingCreateView,
-    MyBookingsView,
-    VerifyBookingEmailView,
-    ResendVerificationEmailView,
-    BookingTrackView,
-    GetAcknowledgementIdView,
-    
+    BookingDraftCreateView,
+    VerifyEmailView,
+    ConfirmBookingView,
+    CancelBookingView,
+    AdminApproveBookingView,
+    AdminRejectBookingView,
 )
 
 urlpatterns = [
-    path("create/", BookingCreateView.as_view()),
-    path("my/", MyBookingsView.as_view()),
-    path("verify-email/", VerifyBookingEmailView.as_view()),
-    path('resend-verification/', ResendVerificationEmailView.as_view()),
-    path('track/',BookingTrackView.as_view()),
-    path('get-ack-id/',GetAcknowledgementIdView.as_view())
+    # User flow
+    path("draft/", BookingDraftCreateView.as_view(), name="booking-draft"),
+    path("verify-email/", VerifyEmailView.as_view(), name="booking-verify-email"),
+    path("confirm/", ConfirmBookingView.as_view(), name="booking-confirm"),
+    path("cancel/", CancelBookingView.as_view(), name="booking-cancel"),
+
+    # Admin actions
+    path(
+        "admin/<int:booking_id>/approve/",
+        AdminApproveBookingView.as_view(),
+        name="booking-approve",
+    ),
+    path(
+        "admin/<int:booking_id>/reject/",
+        AdminRejectBookingView.as_view(),
+        name="booking-reject",
+    ),
 ]
