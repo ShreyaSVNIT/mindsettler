@@ -122,10 +122,14 @@ export default function Header() {
           <div className="flex items-center gap-10">
             {/* Desktop Links */}
             <nav className="hidden md:flex gap-10">
-              {['Home', 'Privacy', 'Contact'].map((item) => (
+              {['Home', 'How It Works', 'Privacy', 'Contact'].map((item) => (
                 <Link
                   key={item}
-                  href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+                  href={
+                    item === 'Home' ? '/' :
+                    item === 'How It Works' ? '/how-it-works' :
+                    `/${item.toLowerCase()}`
+                  }
                   className={`
                     font-body
                     text-lg
@@ -220,10 +224,14 @@ export default function Header() {
             space-y-6
           "
         >
-          {['Home', 'Privacy', 'Contact'].map((item) => (
+          {['Home', 'How It Works', 'Privacy', 'Contact'].map((item) => (
             <Link
               key={item}
-              href={item === 'Home' ? '/' : `/${item.toLowerCase()}`}
+              href={
+                item === 'Home' ? '/' :
+                item === 'How It Works' ? '/how-it-works' :
+                `/${item.toLowerCase()}`
+              }
               onClick={() => setMenuOpen(false)}
               className="
                 block
