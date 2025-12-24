@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.exceptions import ValidationError
 from django.utils import timezone
+import uuid
 
 from apps.users.models import AppUser
 from .models import Booking
@@ -16,8 +17,26 @@ from .services import (
     reject_booking,
     has_active_booking,
     
+    
+    
 )
 from apps.bookings.email import send_booking_verification_email
+from datetime import timedelta
+
+
+from datetime import timedelta
+from django.utils import timezone
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import ValidationError
+
+from apps.users.models import AppUser
+from .models import Booking
+from .serializers import BookingSerializer
+from .services import get_active_booking, validate_payment_mode
+from apps.bookings.email import send_booking_verification_email
+
 
 class BookingDraftCreateView(APIView):
     permission_classes = [AllowAny]
@@ -35,15 +54,12 @@ class BookingDraftCreateView(APIView):
 
         user, _ = AppUser.objects.get_or_create(email=email)
 
-        # If user already has an active booking, return it
+        # ─────────────────────────
+        # Existing active booking
+        # ─────────────────────────
         active = get_active_booking(user)
         if active:
-            needs_verification = (
-                not active.last_access_verified_at or
-                timezone.now() - active.last_access_verified_at > timedelta(minutes=10)
-            )
-
-            if needs_verification:
+            if not active.email_verified:
                 send_booking_verification_email(active)
                 return Response(
                     {
@@ -59,15 +75,17 @@ class BookingDraftCreateView(APIView):
                     "acknowledgement_id": active.acknowledgement_id,
                 },
                 status=200,
-            )       
-       
+            )
+
+        # ─────────────────────────
+        # Validate request
+        # ─────────────────────────
         validate_payment_mode(
             request.data.get("mode"),
             request.data.get("payment_mode"),
         )
-        preferred_date = request.data.get("preferred_date")
 
-        if not preferred_date:
+        if not request.data.get("preferred_date"):
             raise ValidationError("Preferred date is required")
 
         serializer = BookingSerializer(data=request.data)
@@ -80,7 +98,9 @@ class BookingDraftCreateView(APIView):
             consent_given_at=timezone.now(),
         )
 
-        # 🔒 Email resend throttling (60s)
+        # ─────────────────────────
+        # Email resend throttle (60s)
+        # ─────────────────────────
         if (
             booking.last_verification_email_sent_at and
             timezone.now() - booking.last_verification_email_sent_at < timedelta(seconds=60)
@@ -99,7 +119,7 @@ class BookingDraftCreateView(APIView):
             {"message": "Verification email sent. Please verify to submit booking."},
             status=201,
         )
-from django.utils import timezone
+
 
 class VerifyEmailView(APIView):
     permission_classes = [AllowAny]
@@ -118,9 +138,11 @@ class VerifyEmailView(APIView):
         except Booking.DoesNotExist:
             raise ValidationError("Invalid or expired verification link")
 
-        #  Prevent multiple active bookings (except self)
-        active = has_active_booking(booking.user, exclude=booking)
-        if active:
+        # ─────────────────────────
+        # Prevent multiple active bookings
+        # ─────────────────────────
+        active = has_active_booking(booking.user)
+        if active and active.id != booking.id:
             booking.status = "REJECTED"
             booking.rejection_reason = "Another active booking exists"
             booking.save(update_fields=["status", "rejection_reason"])
@@ -129,37 +151,32 @@ class VerifyEmailView(APIView):
                 "message": "Another active booking exists. This request was rejected."
             })
 
-        # Mark email ownership verified (once)
+        # ─────────────────────────
+        # Verify email (idempotent)
+        # ─────────────────────────
         if not booking.email_verified:
             booking.verify_email()
 
-        # Mark THIS access as verified
-        booking.last_access_verified_at = timezone.now()
-
-        # Submit booking if draft
+        # ─────────────────────────
+        # Submit booking
+        # ─────────────────────────
         if booking.status == "DRAFT":
             booking.status = "PENDING"
 
         if not booking.acknowledgement_id:
             booking.generate_acknowledgement_id()
 
-        booking.save(
-            update_fields=[
-                "email_verified",
-                "email_verified_at",
-                "last_access_verified_at",
-                "status",
-                "acknowledgement_id",
-            ]
-        )
+        booking.save(update_fields=["status", "acknowledgement_id"])
 
         return Response({
             "message": "Email verified successfully",
             "acknowledgement_id": booking.acknowledgement_id,
             "status": booking.status,
         })
+
 class AdminApproveBookingView(APIView):
     permission_classes = [IsAdminUser]
+
     def post(self, request, booking_id):
         booking = Booking.objects.get(id=booking_id)
 
@@ -167,27 +184,24 @@ class AdminApproveBookingView(APIView):
             booking,
             approved_start=request.data["start"],
             approved_end=request.data["end"],
+            psychologist=request.data.get("psychologist"),
+            corporate=request.data.get("corporate"),
         )
 
-        # send approval mail here
-
-        return Response({"message": "Booking approved"})
-    
+        return Response({"message": "Booking approved. Awaiting user confirmation."})    
 class AdminRejectBookingView(APIView):
     permission_classes = [IsAdminUser]
+
     def post(self, request, booking_id):
         booking = Booking.objects.get(id=booking_id)
 
         reject_booking(
             booking,
-            reason=request.data["reason"],
-            alternate_slots=request.data.get("alternates", ""),
+            reason=request.data.get("reason"),
+            alternate_slots=request.data.get("alternate_slots", ""),
         )
 
-        # send rejection mail here
-
-        return Response({"message": "Booking rejected"})
-    
+        return Response({"message": "Booking rejected and user notified"})    
 class ConfirmBookingView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -195,14 +209,24 @@ class ConfirmBookingView(APIView):
     def post(self, request):
         token = request.data.get("token")
 
-        booking = Booking.objects.get(email_verification_token=token)
+        if not token:
+            raise ValidationError("Confirmation token required")
+
+        try:
+            booking = Booking.objects.get(confirmation_token=token)
+        except Booking.DoesNotExist:
+            raise ValidationError("Invalid or expired token")
+
+        if not booking.email_verified:
+            raise ValidationError("Email verification required")
 
         confirm_booking(booking)
 
         return Response({
-            "acknowledgement_id": booking.acknowledgement_id
-        })
-    
+            "message": "Booking confirmed",
+            "acknowledgement_id": booking.acknowledgement_id,
+        })        
+
 class CancelBookingView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = []
@@ -210,8 +234,88 @@ class CancelBookingView(APIView):
     def post(self, request):
         token = request.data.get("token")
 
-        booking = Booking.objects.get(email_verification_token=token)
+        if not token:
+            raise ValidationError("Verification token is required")
+
+        try:
+            booking = Booking.objects.get(
+                email_verification_token=token
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError("Invalid or expired token")
+
+        if not booking.email_verified:
+            raise ValidationError("Email verification required")
 
         cancel_booking(booking)
 
-        return Response({"message": "Booking cancelled"})
+        return Response({
+            "message": "Booking cancelled successfully",
+            "status": booking.status,
+        })
+
+class RequestCancellationView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request):
+        ack_id = request.data.get("acknowledgement_id")
+
+        if not ack_id:
+            raise ValidationError("Acknowledgement ID required")
+
+        try:
+            booking = Booking.objects.get(
+                acknowledgement_id=ack_id,
+                status="CONFIRMED"
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError("Booking not found or not cancellable")
+
+        if not booking.can_cancel():
+            raise ValidationError(
+                "Cancellations are only allowed 24 hours before the session"
+            )
+
+        booking.cancellation_token = uuid.uuid4()
+        booking.cancellation_requested_at = timezone.now()
+        booking.save(
+            update_fields=["cancellation_token", "cancellation_requested_at"]
+        )
+
+        send_cancellation_verification_email(booking)
+
+        return Response({
+            "message": "Cancellation verification email sent"
+        })    
+
+class VerifyCancellationView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def get(self, request):
+        token = request.query_params.get("token")
+
+        if not token:
+            raise ValidationError("Token required")
+
+        try:
+            booking = Booking.objects.get(
+                cancellation_token=token,
+                status="CONFIRMED"
+            )
+        except Booking.DoesNotExist:
+            raise ValidationError("Invalid or expired cancellation link")
+
+        if not booking.can_cancel():
+            raise ValidationError("Cancellation window has expired")
+
+        cancel_booking(booking)
+
+        booking.cancellation_token = None
+        booking.save(update_fields=["cancellation_token"])
+
+        return Response({
+            "message": "Booking cancelled successfully",
+            "status": booking.status,
+        })
