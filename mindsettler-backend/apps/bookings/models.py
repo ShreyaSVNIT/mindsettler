@@ -185,6 +185,17 @@ class Booking(models.Model):
         null=True,
         blank=True,
     )
+        # 📩 USER CONFIRMATION
+    confirmation_token = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        editable=False,
+    )
+
+    confirmed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
 
     # ─────────────────────────
     # TIMESTAMPS
