@@ -7,6 +7,33 @@ import { Instagram, Linkedin, ArrowRight } from "lucide-react";
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - lastScrollY;
+      
+      // Scroll down = pull left (increase left movement)
+      // Scroll up = pull right (slow down or reverse)
+      setScrollOffset(prev => prev - scrollDelta * 2); // Increased multiplier for more visible effect
+      
+      lastScrollY = currentScrollY;
+    };
+
+    // Damping effect - gradually reduce offset back to 0
+    const dampingInterval = setInterval(() => {
+      setScrollOffset(prev => prev * 0.95); // Reduce by 5% each frame
+    }, 50);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(dampingInterval);
+    };
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,21 +49,26 @@ export default function Footer() {
     <footer className="relative bg-gradient-to-b from-[var(--color-bg-subtle)] to-[var(--color-bg-card)] overflow-hidden">
       {/* Animated Marquee */}
       <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-8 overflow-hidden">
-        <div className="flex whitespace-nowrap animate-marquee">
+        <div 
+          className="flex whitespace-nowrap animate-marquee-base"
+          style={{ 
+            '--scroll-offset': `${scrollOffset}px`,
+          } as React.CSSProperties}
+        >
           {[...Array(3)].map((_, i) => (
             <div key={i} className="flex items-center gap-12 px-6">
-              <span className="text-4xl md:text-5xl font-title font-bold text-[var(--color-primary)] tracking-wider">
+              <span className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider">
                 MINDFUL HEALING
               </span>
-              <span className="text-2xl text-[var(--color-primary)] opacity-40">✦</span>
-              <span className="text-4xl md:text-5xl font-title font-bold text-[var(--color-primary)] tracking-wider">
+              <span className="text-3xl text-[var(--color-primary)] opacity-40">✦</span>
+              <span className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider">
                 COMPASSIONATE CARE
               </span>
-              <span className="text-2xl text-[var(--color-primary)] opacity-40">✦</span>
-              <span className="text-4xl md:text-5xl font-title font-bold text-[var(--color-primary)] tracking-wider">
+              <span className="text-3xl text-[var(--color-primary)] opacity-40">✦</span>
+              <span className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider">
                 TRANSFORMATIVE JOURNEY
               </span>
-              <span className="text-2xl text-[var(--color-primary)] opacity-40">✦</span>
+              <span className="text-3xl text-[var(--color-primary)] opacity-40">✦</span>
             </div>
           ))}
         </div>
@@ -183,16 +215,19 @@ export default function Footer() {
       </div>
 
       <style jsx>{`
-        @keyframes marquee {
+        .animate-marquee-base {
+          --scroll-offset: 0px;
+        }
+        @keyframes marquee-base {
           0% {
-            transform: translateX(0);
+            transform: translateX(calc(0% + var(--scroll-offset)));
           }
           100% {
-            transform: translateX(-33.333%);
+            transform: translateX(calc(-33.333% + var(--scroll-offset)));
           }
         }
-        .animate-marquee {
-          animation: marquee 25s linear infinite;
+        .animate-marquee-base {
+          animation: marquee-base 20s linear infinite;
         }
       `}</style>
     </footer>
