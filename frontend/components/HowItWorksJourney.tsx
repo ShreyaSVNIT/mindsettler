@@ -1,160 +1,236 @@
 // "use client";
 
-// import { motion } from "framer-motion";
-// import { Calendar, CheckCircle, Users, MessageSquare, Star } from "lucide-react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { useState } from "react";
+// import * as React from "react";
+// import {
+//   Calendar,
+//   CheckCircle,
+//   Users,
+//   MessageSquare,
+//   Star,
+//   ArrowRight,
+//   Route,
+// } from "lucide-react";
 
 // const steps = [
 //   {
 //     step: "01",
 //     title: "Book Your Session",
-//     description: "Choose your preferred date, time, and session type. Our easy booking system allows you to select from online or offline options that fit your schedule.",
-//     icon: Calendar
+//     description:
+//       "Choose your preferred date, time, and session type. Our easy booking system allows you to select from online or offline options that fit your schedule.",
+//     icon: Calendar,
 //   },
 //   {
 //     step: "02",
 //     title: "Receive Confirmation",
-//     description: "Get instant confirmation with all session details, preparation materials, and a unique session link or location information.",
-//     icon: CheckCircle
+//     description:
+//       "Get instant confirmation with all session details, preparation materials, and a unique session link or location information.",
+//     icon: CheckCircle,
 //   },
 //   {
 //     step: "03",
 //     title: "Prepare & Connect",
-//     description: "Review the provided resources and join your session at the scheduled time. Our psychologists ensure a comfortable, judgment-free environment.",
-//     icon: Users
+//     description:
+//       "Review the provided resources and join your session at the scheduled time. Our psychologists ensure a comfortable, judgment-free environment.",
+//     icon: Users,
 //   },
 //   {
 //     step: "04",
 //     title: "Engage in Your Session",
-//     description: "Participate in structured psycho-education and support sessions designed to help you understand yourself better and develop coping strategies.",
-//     icon: MessageSquare
+//     description:
+//       "Participate in structured psycho-education and support sessions designed to help you understand yourself better and develop coping strategies.",
+//     icon: MessageSquare,
 //   },
 //   {
 //     step: "05",
 //     title: "Post-Session Support",
-//     description: "Receive follow-up materials, resources, and the option to schedule additional sessions. Your journey continues with ongoing support.",
-//     icon: Star
-//   }
+//     description:
+//       "Receive follow-up materials, resources, and the option to schedule additional sessions. Your journey continues with ongoing support.",
+//     icon: Star,
+//   },
 // ];
 
-// interface StepProps {
-//   step: string;
-//   title: string;
-//   description: string;
-//   icon: React.ComponentType<{ className?: string }>;
-//   reverse?: boolean;
-// }
-
-// const StepSection: React.FC<StepProps> = ({
-//   step,
-//   title,
-//   description,
-//   icon: Icon,
-//   reverse
-// }) => {
-//   return (
-//     <motion.div
-//       className={`flex items-center ${
-//         reverse ? "justify-end" : "justify-start"
-//       } mb-16`}
-//       initial={{ opacity: 0, x: reverse ? 50 : -50 }}
-//       whileInView={{ opacity: 1, x: 0 }}
-//       transition={{ duration: 0.6 }}
-//       viewport={{ once: true }}
-//     >
-//       <div
-//         className={`max-w-lg ${
-//           reverse ? "text-right" : "text-left"
-//         }`}
-//       >
-//         <div className="flex items-center gap-4 mb-4">
-//           <div className="w-12 h-12 bg-[var(--color-primary)] rounded-full flex items-center justify-center">
-//             <Icon className="w-6 h-6 text-white" />
-//           </div>
-//           <span className="font-body text-sm tracking-[0.45em] opacity-60">
-//             STEP {step}
-//           </span>
-//         </div>
-//         <h3 className="font-title text-3xl text-[var(--color-primary)] mb-4">
-//           {title}
-//         </h3>
-//         <p className="font-body text-[var(--color-text-body)] opacity-80 leading-relaxed">
-//           {description}
-//         </p>
-//       </div>
-//     </motion.div>
-//   );
-// };
-
 // export default function HowItWorksJourney() {
-//   return (
-//     <section className="py-20 px-6 relative overflow-hidden">
-//       {/* Background decorative elements */}
-//       <div className="absolute inset-0 opacity-5">
-//         <div className="absolute top-20 left-10 w-32 h-32 bg-[var(--color-primary)] rounded-full blur-3xl"></div>
-//         <div className="absolute bottom-20 right-10 w-40 h-40 bg-[var(--color-primary)] rounded-full blur-3xl"></div>
-//         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-[var(--color-primary)] rounded-full blur-3xl"></div>
-//       </div>
+//   const [active, setActive] = useState(0);
 
-//       {/* Subtle pattern overlay */}
-//       <div className="absolute inset-0 opacity-10">
+//   return (
+//     <section className="relative py-24 overflow-hidden bg-rose-50">
+//       {/* Subtle background pattern */}
+//       <div className="absolute inset-0 opacity-5">
 //         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
 //           <defs>
-//             <pattern id="journey-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-//               <circle cx="20" cy="20" r="1" fill="var(--color-primary)" />
+//             <pattern id="journey-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+//               <circle cx="30" cy="30" r="2" fill="var(--color-primary)" />
 //             </pattern>
 //           </defs>
 //           <rect width="100%" height="100%" fill="url(#journey-pattern)" />
 //         </svg>
 //       </div>
 
-//       <div className="mx-auto max-w-6xl relative z-10">
-//         <motion.h2
-//           className="font-title text-4xl text-center text-[var(--color-primary)] mb-16"
-//           initial={{ opacity: 0, y: 30 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.6 }}
-//           viewport={{ once: true }}
-//         >
-//           Your Complete Journey
-//         </motion.h2>
+//       <div className="relative max-w-7xl mx-auto px-6">
+//         {/* Journey Header */}
+//         <div className="text-center mb-16">
+//           <div className="inline-flex items-center gap-3 mb-4">
+//             <Route className="w-8 h-8 text-[var(--color-primary)]" />
+//             <h2 className="font-title text-3xl md:text-4xl text-[var(--color-primary)]">
+//               Your Mental Health Journey
+//             </h2>
+//           </div>
+//           <p className="font-body text-lg text-gray-600 max-w-2xl mx-auto">
+//             A seamless path from booking to ongoing support
+//           </p>
+//         </div>
 
-//         {/* Timeline line */}
-//         <div className="absolute left-1/2 transform -translate-x-1/2 w-0.5 bg-gradient-to-b from-[var(--color-primary)] via-[var(--color-primary)] to-transparent opacity-30 h-full hidden md:block"></div>
+//         {/* TIMELINE */}
+//         <div className="relative">
+//           {/* Desktop Horizontal Timeline */}
+//           <div className="hidden md:flex items-center justify-between">
+//             {steps.map((step, i) => (
+//               <div key={step.step} className="flex items-center">
+//                 <motion.div
+//                   className="flex flex-col items-center text-center max-w-xs group cursor-pointer"
+//                   onMouseEnter={() => setActive(i)}
+//                   whileHover={{ y: -10 }}
+//                   transition={{ type: "spring", stiffness: 300, damping: 20 }}
+//                 >
+//                   {/* Step Card */}
+//                   <motion.div
+//                     className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex items-center justify-center mb-4 transition-all duration-300 shadow-lg border-2
+//                       ${active === i
+//                         ? "bg-[var(--color-primary)] text-white shadow-xl border-[var(--color-primary)]"
+//                         : "bg-white text-[var(--color-primary)] border-gray-200 group-hover:border-[var(--color-primary)]/50"
+//                       }`}
+//                     whileHover={{ scale: 1.1, rotate: 5 }}
+//                     transition={{ type: "spring", stiffness: 400 }}
+//                   >
+//                     <step.icon className="w-8 h-8 md:w-10 md:h-10" />
+//                   </motion.div>
 
-//         <div className="space-y-8 relative">
-//           {steps.map((step, index) => (
-//             <div key={step.step} className="relative">
-//               {/* Timeline dot */}
-//               <div className="absolute left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--color-primary)] rounded-full hidden md:block" style={{ top: '50%', transform: 'translate(-50%, -50%)' }}>
-//                 <div className="absolute inset-0 bg-[var(--color-primary)] rounded-full animate-ping opacity-20"></div>
+//                   <motion.span
+//                     className={`font-body text-sm tracking-wide font-semibold mb-2 transition-colors duration-300
+//                       ${active === i ? 'text-[var(--color-primary)]' : 'text-gray-500 group-hover:text-[var(--color-primary)]'}`}
+//                     initial={{ opacity: 0, y: 10 }}
+//                     animate={{ opacity: 1, y: 0 }}
+//                     transition={{ delay: i * 0.1 }}
+//                   >
+//                     STEP {step.step}
+//                   </motion.span>
+
+//                   <motion.h3
+//                     className="font-title text-lg md:text-xl text-[var(--color-primary)] mb-2 transition-all duration-300 group-hover:text-[var(--color-primary)]"
+//                     initial={{ opacity: 0, y: 10 }}
+//                     animate={{ opacity: 1, y: 0 }}
+//                     transition={{ delay: i * 0.1 + 0.1 }}
+//                   >
+//                     {step.title}
+//                   </motion.h3>
+
+//                   {/* Description on hover */}
+//                   <AnimatePresence>
+//                     {active === i && (
+//                       <motion.p
+//                         className="font-body text-sm text-gray-600 leading-relaxed"
+//                         initial={{ opacity: 0, height: 0, y: -10 }}
+//                         animate={{ opacity: 1, height: "auto", y: 0 }}
+//                         exit={{ opacity: 0, height: 0, y: -10 }}
+//                         transition={{ duration: 0.3, ease: "easeInOut" }}
+//                       >
+//                         {step.description}
+//                       </motion.p>
+//                     )}
+//                   </AnimatePresence>
+//                 </motion.div>
+
+//                 {/* Arrow between steps */}
+//                 {i < steps.length - 1 && (
+//                   <motion.div
+//                     className="mx-4 md:mx-8 text-[var(--color-primary)] opacity-60"
+//                     whileHover={{ scale: 1.2, x: 5 }}
+//                     transition={{ type: "spring", stiffness: 400 }}
+//                   >
+//                     <ArrowRight className="w-6 h-6 md:w-8 md:h-8" />
+//                   </motion.div>
+//                 )}
 //               </div>
+//             ))}
+//           </div>
 
-//               <StepSection
-//                 step={step.step}
-//                 title={step.title}
-//                 description={step.description}
-//                 icon={step.icon}
-//                 reverse={index % 2 !== 0}
-//               />
-//             </div>
-//           ))}
+//           {/* Mobile Vertical Timeline */}
+//           <div className="md:hidden space-y-8">
+//             {steps.map((step, i) => (
+//               <motion.div
+//                 key={step.step}
+//                 className="flex items-start space-x-4 group cursor-pointer"
+//                 onClick={() => setActive(i)}
+//                 whileTap={{ scale: 0.95 }}
+//                 initial={{ opacity: 0, x: -50 }}
+//                 animate={{ opacity: 1, x: 0 }}
+//                 transition={{ delay: i * 0.2 }}
+//               >
+//                 {/* Step Number/Icon */}
+//                 <motion.div
+//                   className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 shadow-lg border-2
+//                     ${active === i
+//                       ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)]"
+//                       : "bg-white text-[var(--color-primary)] border-gray-200 group-hover:border-[var(--color-primary)]/50"
+//                     }`}
+//                   whileHover={{ scale: 1.1, rotate: 5 }}
+//                   transition={{ type: "spring", stiffness: 400 }}
+//                 >
+//                   <step.icon className="w-5 h-5" />
+//                 </motion.div>
+
+//                 {/* Content */}
+//                 <div className="flex-1">
+//                   <motion.span
+//                     className={`font-body text-xs tracking-wide font-semibold mb-1 block transition-colors duration-300
+//                       ${active === i ? 'text-[var(--color-primary)]' : 'text-gray-500 group-hover:text-[var(--color-primary)]'}`}
+//                   >
+//                     STEP {step.step}
+//                   </motion.span>
+//                   <motion.h3
+//                     className="font-title text-lg text-[var(--color-primary)] mb-2 transition-all duration-300 group-hover:text-[var(--color-primary)]"
+//                   >
+//                     {step.title}
+//                   </motion.h3>
+//                   {/* Description on active */}
+//                   <AnimatePresence>
+//                     {active === i && (
+//                       <motion.p
+//                         className="font-body text-sm text-gray-600 leading-relaxed"
+//                         initial={{ opacity: 0, height: 0, y: -10 }}
+//                         animate={{ opacity: 1, height: "auto", y: 0 }}
+//                         exit={{ opacity: 0, height: 0, y: -10 }}
+//                         transition={{ duration: 0.3, ease: "easeInOut" }}
+//                       >
+//                         {step.description}
+//                       </motion.p>
+//                     )}
+//                   </AnimatePresence>
+//                 </div>
+//               </motion.div>
+//             ))}
+//           </div>
 //         </div>
 //       </div>
 //     </section>
 //   );
 // }
-
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Calendar,
   CheckCircle,
   Users,
   MessageSquare,
   Star,
+  Route,
 } from "lucide-react";
+
+/* -------------------- DATA -------------------- */
 
 const steps = [
   {
@@ -194,111 +270,159 @@ const steps = [
   },
 ];
 
-export default function GuidedOrbitalJourney() {
-  const [active, setActive] = useState(0);
+/* -------------------- MOTION -------------------- */
+
+const smoothSpring = {
+  type: "spring",
+  stiffness: 120,
+  damping: 20,
+};
+
+/* -------------------- COMPONENT -------------------- */
+
+export default function HowItWorksJourney() {
+  const [activeStep, setActiveStep] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  /* Close expanded step on outside click */
+  useEffect(() => {
+    const handler = (e: PointerEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setActiveStep(null);
+      }
+    };
+
+    document.addEventListener("pointerdown", handler);
+    return () => document.removeEventListener("pointerdown", handler);
+  }, []);
 
   return (
-    <section className="relative py-32 overflow-hidden">
-      {/* Ambient background */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,var(--color-primary),transparent_60%)]" />
-      </div>
+    <section
+      className="relative py-28"
+      style={{ backgroundColor: "var(--color-bg-app)" }}
+    >
+      <div ref={containerRef} className="max-w-7xl mx-auto px-6">
+        {/* ---------------- HEADER ---------------- */}
+        <div className="text-center mb-24">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <Route className="w-8 h-8 text-[var(--color-primary)]" />
+            <h2 className="font-title text-3xl md:text-4xl text-[var(--color-primary)]">
+              Your Mental Health Journey
+            </h2>
+          </div>
+          <p className="font-body text-lg text-[var(--color-text-body)] opacity-80 max-w-2xl mx-auto">
+            A seamless path from booking to ongoing support
+          </p>
+        </div>
 
-      <div className="relative max-w-6xl mx-auto">
-        {/* Title */}
-        <h2 className="font-title text-4xl text-center text-[var(--color-primary)] mb-4">
-          Your Complete Journey
-        </h2>
-
-        {/* Helper text */}
-        <p className="font-body text-center text-sm opacity-60 mb-20">
-          Follow the path step by step — hover or tap to explore each phase
-        </p>
-
-        {/* ORBIT SYSTEM */}
-        <div className="relative flex justify-center items-center h-[560px]">
-          {/* Orbit path */}
-          <motion.div
-            className="absolute w-[520px] h-[520px] rounded-full border border-[var(--color-primary)]/30"
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: 120,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-
-          {/* Step Nodes */}
-          {steps.map((step, i) => {
-            const angle = (360 / steps.length) * i - 90;
-            const radius = 260;
-            const x = Math.cos((angle * Math.PI) / 180) * radius;
-            const y = Math.sin((angle * Math.PI) / 180) * radius;
-            const Icon = step.icon;
-
-            const isActive = active === i;
-
-            return (
-              <motion.div
-                key={step.step}
-                className="absolute flex flex-col items-center"
-                style={{ transform: `translate(${x}px, ${y}px)` }}
-                onMouseEnter={() => setActive(i)}
-                whileHover={{ scale: 1.15 }}
-              >
-                {/* Node */}
-                <div
-                  className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300
-                    ${
-                      isActive
-                        ? "bg-[var(--color-primary)] text-white shadow-lg"
-                        : "bg-[var(--color-primary)]/20 text-[var(--color-primary)] opacity-70"
-                    }`}
-                >
-                  <Icon className="w-6 h-6" />
-                </div>
-
-                {/* Step number */}
-                <span className="mt-2 font-body text-xs tracking-widest opacity-50">
-                  STEP {step.step}
-                </span>
-              </motion.div>
-            );
-          })}
-
-          {/* Connector beam */}
-          <motion.div
-            className="absolute w-px h-40 bg-gradient-to-b from-[var(--color-primary)] to-transparent"
-            animate={{ opacity: [0.2, 0.5, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity }}
-            style={{
-              transform: `rotate(${(360 / steps.length) * active}deg) translateY(-130px)`,
-            }}
-          />
-
-          {/* CENTER CONTENT */}
-          <AnimatePresence mode="wait">
+        {/* ---------------- DESKTOP & TABLET (STABLE HEIGHT) ---------------- */}
+        <div className="hidden md:grid grid-cols-5 gap-x-4 lg:gap-x-8 items-start">
+          {steps.map((step, index) => (
             <motion.div
-              key={active}
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.45 }}
-              className="relative z-10 max-w-md bg-white rounded-[32px] px-10 py-9 text-center shadow-md"
+              key={step.step}
+              className="flex flex-col items-center text-center cursor-pointer"
+              onMouseEnter={() => setActiveStep(index)}
+              transition={smoothSpring}
             >
-              <span className="font-body text-xs tracking-[0.35em] opacity-50">
-                STEP {steps[active].step}
+              {/* Icon */}
+              <motion.div
+                className="w-20 h-20 lg:w-24 lg:h-24 rounded-full flex items-center justify-center mb-3 border"
+                style={{
+                  backgroundColor:
+                    activeStep === index
+                      ? "var(--color-primary)"
+                      : "var(--color-bg-card)",
+                  color:
+                    activeStep === index
+                      ? "var(--color-bg-card)"
+                      : "var(--color-primary)",
+                  borderColor: "var(--color-border)",
+                }}
+                whileHover={{ scale: 1.05 }}
+                transition={smoothSpring}
+              >
+                <step.icon className="w-8 h-8 lg:w-10 lg:h-10" />
+              </motion.div>
+
+              <span className="font-body text-xs tracking-wide text-[var(--color-text-body)] opacity-60 mb-1">
+                STEP {step.step}
               </span>
 
-              <h3 className="font-title text-2xl text-[var(--color-primary)] mt-2 mb-4">
-                {steps[active].title}
+              <h3 className="font-title text-base lg:text-lg text-[var(--color-primary)] mb-2">
+                {step.title}
               </h3>
 
-              <p className="font-body text-[var(--color-text-body)] opacity-80 leading-relaxed">
-                {steps[active].description}
-              </p>
+              {/* RESERVED SPACE — prevents layout shift */}
+              <div className="relative w-full h-[140px]">
+                <AnimatePresence>
+                  {activeStep === index && (
+                    <motion.p
+                      className="absolute inset-0 font-body text-xs lg:text-sm leading-relaxed text-[var(--color-text-body)] opacity-80"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                      {step.description}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
-          </AnimatePresence>
+          ))}
+        </div>
+
+        {/* ---------------- MOBILE ---------------- */}
+        <div className="md:hidden space-y-8">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.step}
+              className="flex items-start gap-4 cursor-pointer"
+              onClick={() =>
+                setActiveStep(activeStep === index ? null : index)
+              }
+            >
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center border"
+                style={{
+                  backgroundColor:
+                    activeStep === index
+                      ? "var(--color-primary)"
+                      : "var(--color-bg-card)",
+                  color:
+                    activeStep === index
+                      ? "var(--color-bg-card)"
+                      : "var(--color-primary)",
+                  borderColor: "var(--color-border)",
+                }}
+              >
+                <step.icon className="w-5 h-5" />
+              </div>
+
+              <div className="flex-1">
+                <h3 className="font-title text-lg text-[var(--color-primary)]">
+                  {step.title}
+                </h3>
+
+                <AnimatePresence>
+                  {activeStep === index && (
+                    <motion.p
+                      className="font-body text-sm mt-1 text-[var(--color-text-body)] opacity-80"
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      {step.description}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
