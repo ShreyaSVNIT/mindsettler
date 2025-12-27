@@ -1,77 +1,131 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import Image from "next/image";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import {
+  Calendar,
+  CheckCircle,
+  Users,
+  MessageSquare,
+  Star,
+} from "lucide-react";
 
-const DATA = [
+/* ---------------- DATA ---------------- */
+
+const STEPS = [
   {
     id: 1,
-    title: "Food Service",
-    description: "Deliver meals that look good, travel well and impress customers with attention to detail. We help you customise packaging to match your food's quality.",
-    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2000",
+    title: "Step 01 · Book Your Session",
+    description:
+      "Choose a time that feels right for you. This first step is about choosing yourself.",
+    icon: Calendar,
+    image: "/step1.jpg",
   },
   {
     id: 2,
-    title: "Food Processing",
-    description: "Optimize efficiency and maintain hygiene standards in our bulk custom and polyquality control systems designed for scale.",
-    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2000",
+    title: "Step 02 · Receive Confirmation",
+    description:
+      "Clear details help you feel prepared and reduce uncertainty. We'll send you everything you need.",
+    icon: CheckCircle,
+    image: "/step2.jpg",
   },
   {
     id: 3,
-    title: "Agriculture",
-    description: "Innovative packaging for fresh produce, reducing waste and enhancing quality control from the farm to the table.",
-    image: "https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?q=80&w=2000",
+    title: "Step 03 · Prepare & Connect",
+    description:
+      "Review the shared resources and get ready to open up in a comfortable space of your choice.",
+    icon: Users,
+    image: "/step3.jpg",
+  },
+  {
+    id: 4,
+    title: "Step 04 · Engage in Your Session",
+    description:
+      "Work with your therapist in a safe, confidential, and supportive environment designed for healing.",
+    icon: MessageSquare,
+    image: "/step4.jpg",
+  },
+  {
+    id: 5,
+    title: "Step 05 · Post-Session Support",
+    description:
+      "Continue your journey with personalized follow-ups, resources, and ongoing guidance.",
+    icon: Star,
+    image: "/step5.jpg",
   },
 ];
 
-export default function ParallaxCards() {
-  const [activeId, setActiveId] = useState(1);
-  const containerRef = useRef(null);
+/* ---------------- COMPONENT ---------------- */
 
-  // Parallax Logic: Background moves at a ratio of 0.2 to the scroll
+export default function ParallaxCards() {
+  const [activeId, setActiveId] = useState(3);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
+  const activeStep = STEPS.find((s) => s.id === activeId)!;
 
   return (
-    <section 
-      ref={containerRef} 
-      className="relative w-full h-[140vh] flex items-center justify-center overflow-hidden bg-[#1a1a1a]"
+    <section
+      ref={containerRef}
+      className="
+        relative min-h-screen w-full flex items-center justify-center overflow-hidden
+        pt-28 md:pt-0
+      "
+      style={{ backgroundColor: "var(--color-bg-app)" }}
     >
-      {/* BACKGROUND IMAGE LAYER */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            key={activeId}
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
-            style={{ y: backgroundY }}
-            className="absolute inset-0 w-full h-[120%]"
-          >
-            <img
-              src={DATA.find((item) => item.id === activeId)?.image}
-              className="w-full h-full object-cover brightness-[0.7]"
-              alt="background"
+      {/* ---------- BACKGROUND IMAGE ---------- */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeId}
+          className="absolute inset-0"
+          style={{ y: backgroundY }}
+          initial={{ opacity: 0, scale: 1.03 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
+          <div className="relative w-full h-full">
+            <Image
+              src={activeStep.image}
+              alt=""
+              fill
+              priority
+              className="object-cover"
             />
-          </motion.div>
-        </AnimatePresence>
-      </div>
+          </div>
 
-      {/* CARDS LAYER */}
-      <div className="relative z-10 flex items-center justify-center gap-8 w-full max-w-7xl px-6">
-        {DATA.map((card) => {
-          const isActive = activeId === card.id;
-          
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.35))",
+            }}
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* ---------- CARDS ---------- */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl px-6">
+        {STEPS.map((step) => {
+          const isActive = activeId === step.id;
+          const Icon = step.icon;
+
           return (
             <motion.div
-              key={card.id}
-              onMouseEnter={() => setActiveId(card.id)}
-              layout // This makes the size change fluid
+              key={step.id}
+              onMouseEnter={() => setActiveId(step.id)} // UNCHANGED
+              layout
               initial={false}
               animate={{
                 width: isActive ? 520 : 320,
@@ -79,42 +133,57 @@ export default function ParallaxCards() {
               }}
               transition={{
                 type: "spring",
-                stiffness: 150, // Reduced stiffness for "heavier" feel
-                damping: 25,
-                mass: 1.2
+                stiffness: 100,
+                damping: 30,
+                mass: 1.5,
               }}
-              className={`relative rounded-[40px] overflow-hidden flex flex-col p-10 cursor-pointer shadow-2xl
-                ${isActive ? "bg-[#fcf9f1] text-gray-900" : "bg-white/10 backdrop-blur-xl text-white border border-white/20"}`}
+              className="relative rounded-[40px] overflow-hidden cursor-pointer flex flex-col p-10 shadow-2xl w-full md:w-auto"
+              style={{
+                backgroundColor: isActive
+                  ? "var(--color-bg-card)"
+                  : "rgba(255,255,255,0.55)",
+                border: "1px solid var(--color-border)",
+                backdropFilter: isActive ? "none" : "blur(14px)",
+              }}
             >
-              {/* Card Content */}
               <motion.div layout className="flex flex-col h-full">
-                <motion.h2 
+                {/* ICON */}
+                <motion.div
                   layout="position"
-                  className={`font-medium tracking-tight ${isActive ? "text-4xl mb-6" : "text-2xl mt-auto text-center"}`}
+                  className="w-14 h-14 rounded-full flex items-center justify-center mb-6"
+                  style={{
+                    backgroundColor: "var(--color-bg-app)",
+                    color: "var(--color-primary)",
+                  }}
                 >
-                  {card.title}
-                </motion.h2>
+                  <Icon className="w-7 h-7" />
+                </motion.div>
 
+                {/* TITLE — ONLY VISUAL CHANGE */}
+                <motion.h3
+                  layout="position"
+                  className="font-title text-3xl font-extrabold mb-4"
+                  style={{ color: "var(--color-primary)" }}
+                >
+                  {step.title}
+                </motion.h3>
+
+                {/* DESCRIPTION — UNCHANGED */}
                 <AnimatePresence>
                   {isActive && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
+                    <motion.p
+                      initial={{ opacity: 0, y: 16 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                      className="flex flex-col h-full"
+                      transition={{ duration: 0.45, ease: "easeOut" }}
+                      className="font-body text-lg leading-relaxed"
+                      style={{
+                        color: "var(--color-text-body)",
+                        opacity: 0.9,
+                      }}
                     >
-                      <p className="text-lg leading-relaxed opacity-70">
-                        {card.description}
-                      </p>
-                      
-                      <div className="mt-auto pt-8 border-t border-black/10 flex justify-between items-center">
-                        <span className="text-lg font-semibold uppercase tracking-wider">Tell me more</span>
-                        <div className="p-3 bg-black text-white rounded-full">
-                           <ArrowRight size={24} />
-                        </div>
-                      </div>
-                    </motion.div>
+                      {step.description}
+                    </motion.p>
                   )}
                 </AnimatePresence>
               </motion.div>
