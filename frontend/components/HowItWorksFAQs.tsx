@@ -47,98 +47,11 @@ const faqs = [
   },
 ];
 
-<<<<<<< HEAD
-const FAQItem = ({
-  question,
-  answer,
-  index,
-}: {
-  question: string;
-  answer: string;
-  index: number;
-}) => {
-=======
 const FAQItem = ({ question, answer, index }: { question: string; answer: string; index: number }) => {
->>>>>>> bea15e6 (feat (how it works): enhance FAQs section)
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <motion.div
-<<<<<<< HEAD
-      className="border-b border-[var(--color-border)]/30 last:border-b-0"
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: index * 0.05 }}
-      viewport={{ once: true }}
-    >
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="
-          w-full py-6 px-3
-          flex items-center justify-between
-          text-left rounded-xl
-          transition-colors duration-200
-          hover:bg-[var(--color-primary)]/5
-          group
-        "
-        aria-expanded={isOpen}
-      >
-        <h3
-          className="
-            font-title text-xl md:text-[21px]
-            text-[var(--color-text-body)]
-            leading-snug pr-6
-            group-hover:text-[var(--color-primary)]
-            transition-colors
-          "
-        >
-          {question}
-        </h3>
-
-        <motion.div
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.25, ease: "easeOut" }}
-          className="flex-shrink-0"
-        >
-          <div
-            className="
-              w-9 h-9 rounded-full
-              bg-[var(--color-primary)]/10
-              flex items-center justify-center
-              group-hover:bg-[var(--color-primary)]/20
-              transition-colors
-            "
-          >
-            <ChevronDown className="w-4.5 h-4.5 text-[var(--color-primary)]" />
-          </div>
-        </motion.div>
-      </button>
-
-      <motion.div
-        initial={{ height: 0, opacity: 0 }}
-        animate={{
-          height: isOpen ? "auto" : 0,
-          opacity: isOpen ? 1 : 0,
-        }}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="overflow-hidden"
-      >
-        <div className="relative px-3 pb-6">
-          <div className="absolute left-4 top-0 w-[2px] h-full bg-gradient-to-b from-[var(--color-primary)] to-transparent opacity-30" />
-
-          <p
-            className="
-              font-body
-              text-[16px] md:text-[17px]
-              leading-relaxed
-              text-[var(--color-text-body)]/85
-              pl-6
-            "
-          >
-            {answer}
-          </p>
-        </div>
-=======
       className="mb-4 group"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -229,7 +142,6 @@ const FAQItem = ({ question, answer, index }: { question: string; answer: string
             </motion.div>
           </div>
         </motion.div>
->>>>>>> bea15e6 (feat (how it works): enhance FAQs section)
       </motion.div>
     </motion.div>
   );
@@ -237,48 +149,6 @@ const FAQItem = ({ question, answer, index }: { question: string; answer: string
 
 export default function HowItWorksFAQs() {
   return (
-<<<<<<< HEAD
-    <section className="py-20 px-6 bg-[var(--color-bg-card)]">
-      <div className="mx-auto max-w-3xl">
-        {/* Heading */}
-        <motion.div
-          className="text-center mb-14"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="font-title text-4xl text-[var(--color-primary)] mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="font-body text-lg text-[var(--color-text-body)]/70 max-w-xl mx-auto">
-            Everything you need to know before starting your journey with us
-          </p>
-        </motion.div>
-
-        {/* FAQ Card */}
-        <motion.div
-          className="
-            bg-white/90 backdrop-blur-sm
-            rounded-3xl
-            shadow-sm
-            border border-[var(--color-border)]/20
-            px-4 md:px-8 py-2
-          "
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.1 }}
-          viewport={{ once: true }}
-        >
-          {faqs.map((faq, index) => (
-            <FAQItem
-              key={index}
-              question={faq.question}
-              answer={faq.answer}
-              index={index}
-            />
-          ))}
-=======
     <section className="py-20 px-6 bg-gradient-to-b from-[var(--color-bg-card)] via-[var(--color-bg-subtle)] to-[var(--color-bg-card)] relative overflow-hidden">
       {/* Animated background elements */}
       <motion.div 
@@ -366,7 +236,6 @@ export default function HowItWorksFAQs() {
           >
             Contact Us
           </motion.button>
->>>>>>> bea15e6 (feat (how it works): enhance FAQs section)
         </motion.div>
       </div>
     </section>
