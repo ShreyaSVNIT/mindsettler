@@ -73,7 +73,7 @@ export default function IntegratedHeader() {
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <button 
               onClick={() => setMenuOpen(!menuOpen)} 
-              className={`p-2 hover:scale-110 transition-all relative z-[140] ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}
+              className={`p-2 hover:scale-110 transition-all relative z-[140] ${isAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -90,8 +90,8 @@ export default function IntegratedHeader() {
           </div>
 
           <nav className={`hidden xl:flex items-center px-12 gap-10 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            {['About', 'How It Works', 'Resources'].map((item) => (
-              <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className={`relative text-[15px] uppercase tracking-[0.25em] font-bold hover:text-[var(--color-primary)] transition-colors group/link ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
+            {['About', 'How It Works'].map((item) => (
+              <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className={`relative text-[15px] uppercase tracking-[0.25em] font-bold hover:text-[var(--color-primary)] transition-colors group/link ${isAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}>
                 {item}
                 <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
               </Link>
@@ -106,12 +106,12 @@ export default function IntegratedHeader() {
 
           <div className={`hidden lg:flex items-stretch border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <Link href="/book" className={`flex items-center gap-3 px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              <Calendar size={20} className={isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'} />
-              <span className={`text-[14px] uppercase tracking-[0.15em] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>Book Session</span>
+              <Calendar size={20} className={isAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'} />
+              <span className={`text-[14px] uppercase tracking-[0.15em] font-black ${isAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}>Book Session</span>
             </Link>
             <div className="flex items-center gap-3 px-8">
-              <Phone size={20} className={isAtTop ? 'text-white' : 'text-[var(--color-primary)]'} />
-              <span className={`text-[15px] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>+44 (0)330 311 7799</span>
+              <Phone size={20} className={isAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-primary)]'} />
+              <span className={`text-[15px] font-black ${isAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}>+91 98765 43210</span>
             </div>
           </div>
         </div>
@@ -134,7 +134,7 @@ export default function IntegratedHeader() {
             {/* LEFT SIDE: TEXT LINKS */}
             <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-12 lg:p-24 relative z-10">
               <div className="space-y-4">
-                {['About', 'How It Works', 'Resources'].map((link, i) => (
+                {['About', 'How It Works'].map((link, i) => (
                   <motion.div
                     key={link}
                     initial={{ opacity: 0, y: 40 }}
@@ -166,7 +166,7 @@ export default function IntegratedHeader() {
                 ))}
               </div>
               <div className="mt-20 space-y-2 text-white/90">
-                <p className="text-xl font-medium">+44 (0)330 311 7799</p>
+                <p className="text-xl font-medium">+91 98765 43210</p>
                 <p className="text-xl font-medium underline cursor-pointer">hello@mindsettler.com</p>
               </div>
             </div>

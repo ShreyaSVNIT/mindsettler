@@ -12,7 +12,16 @@ import MagneticButton from "@/components/Button";
 const bookingSchema = z.object({
   email: z.string().email("Invalid email address"),
   consent_given: z.boolean().refine((val) => val === true, {
-    message: "You must accept the terms and conditions",
+    message: "You must accept all policies",
+  }),
+  privacy_policy: z.boolean().refine((val) => val === true, {
+    message: "You must accept the privacy policy",
+  }),
+  non_refund_policy: z.boolean().refine((val) => val === true, {
+    message: "You must accept the non-refund policy",
+  }),
+  confidentiality_policy: z.boolean().refine((val) => val === true, {
+    message: "You must accept the confidentiality policy",
   }),
   preferred_date: z.string().min(1, "Preferred date is required"),
   preferred_period: z.enum(["MORNING", "EVENING", "CUSTOM"], {
@@ -74,6 +83,9 @@ export default function BookPage() {
       mode: "ONLINE",
       payment_mode: "ONLINE",
       consent_given: false,
+      privacy_policy: false,
+      non_refund_policy: false,
+      confidentiality_policy: false,
     },
   });
 
@@ -105,7 +117,7 @@ export default function BookPage() {
         payload.preferred_time_end = data.preferred_time_end;
       }
 
-      const response = await fetch("/api/bookings/draft/", {
+      const response = await fetch("http://127.0.0.1:8000/api/bookings/draft/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,9 +163,34 @@ export default function BookPage() {
               <span className="text-[var(--color-primary)] italic">healing journey.</span>
             </h1>
             
-            <p className="font-body text-lg md:text-xl text-[var(--color-text-body)]/70 mb-12 max-w-2xl mx-auto">
+            <p className="font-body text-lg md:text-xl text-[var(--color-text-body)]/70 mb-8 max-w-2xl mx-auto">
               Choose your session type to get started. It only takes a few minutes to share your details and move things forward.
             </p>
+
+            {/* Session Info Cards */}
+            <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto mb-12">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-[var(--color-primary)]/20">
+                <div className="text-2xl mb-2">⏱️</div>
+                <div className="font-body text-sm text-[var(--color-text-body)]/90">
+                  <span className="font-bold block mb-1">Session Duration</span>
+                  60 minutes per session
+                </div>
+              </div>
+              <div className="bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-primary)]/5 backdrop-blur-sm rounded-2xl p-4 border-2 border-[var(--color-primary)]/40">
+                <div className="text-2xl mb-2">✨</div>
+                <div className="font-body text-sm text-[var(--color-text-body)]/90">
+                  <span className="font-bold block mb-1 text-[var(--color-primary)]">First Session</span>
+                  Introductory assessment & goal setting
+                </div>
+              </div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-[var(--color-primary)]/20">
+                <div className="text-2xl mb-2">🏢</div>
+                <div className="font-body text-sm text-[var(--color-text-body)]/90">
+                  <span className="font-bold block mb-1">Location</span>
+                  Online platform or offline studio
+                </div>
+              </div>
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <div onClick={() => {
@@ -470,9 +507,67 @@ export default function BookPage() {
                 />
               </div>
 
-              {/* Consent Checkbox */}
-              <div className="bg-[var(--color-primary)]/5 p-5 rounded-2xl border border-[var(--color-primary)]/10">
-                <label className="flex items-start gap-3 cursor-pointer">
+              {/* Policy Consent Checkboxes */}
+              <div className="bg-[var(--color-primary)]/5 p-5 rounded-2xl border border-[var(--color-primary)]/10 space-y-4">
+                <p className="font-body text-sm font-semibold text-[var(--color-text-body)] mb-3">
+                  Please review and accept all policies <span className="text-[var(--color-primary)]">*</span>
+                </p>
+                
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    {...register("privacy_policy")}
+                    className="mt-1 w-5 h-5 rounded border-2 border-[var(--color-primary)]/40 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                    disabled={bookingStatus === "submitting"}
+                  />
+                  <span className="font-body text-sm text-[var(--color-text-body)]/90">
+                    I have read and agree to the{" "}
+                    <a href="/privacy-policy" target="_blank" className="text-[var(--color-primary)] underline font-semibold hover:text-[var(--color-primary)]/80">
+                      Privacy Policy
+                    </a>
+                  </span>
+                </label>
+                {errors.privacy_policy && (
+                  <p className="text-[var(--color-primary)] text-xs mt-1 font-body ml-8">{errors.privacy_policy.message}</p>
+                )}
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    {...register("non_refund_policy")}
+                    className="mt-1 w-5 h-5 rounded border-2 border-[var(--color-primary)]/40 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                    disabled={bookingStatus === "submitting"}
+                  />
+                  <span className="font-body text-sm text-[var(--color-text-body)]/90">
+                    I have read and agree to the{" "}
+                    <a href="/non-refund-policy" target="_blank" className="text-[var(--color-primary)] underline font-semibold hover:text-[var(--color-primary)]/80">
+                      Non-Refund Policy
+                    </a>
+                  </span>
+                </label>
+                {errors.non_refund_policy && (
+                  <p className="text-[var(--color-primary)] text-xs mt-1 font-body ml-8">{errors.non_refund_policy.message}</p>
+                )}
+
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    {...register("confidentiality_policy")}
+                    className="mt-1 w-5 h-5 rounded border-2 border-[var(--color-primary)]/40 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
+                    disabled={bookingStatus === "submitting"}
+                  />
+                  <span className="font-body text-sm text-[var(--color-text-body)]/90">
+                    I have read and agree to the{" "}
+                    <a href="/confidentiality-policy" target="_blank" className="text-[var(--color-primary)] underline font-semibold hover:text-[var(--color-primary)]/80">
+                      Confidentiality Policy
+                    </a>
+                  </span>
+                </label>
+                {errors.confidentiality_policy && (
+                  <p className="text-[var(--color-primary)] text-xs mt-1 font-body ml-8">{errors.confidentiality_policy.message}</p>
+                )}
+
+                <label className="flex items-start gap-3 cursor-pointer group pt-3 border-t border-[var(--color-primary)]/20">
                   <input
                     type="checkbox"
                     {...register("consent_given")}
@@ -480,28 +575,20 @@ export default function BookPage() {
                     disabled={bookingStatus === "submitting"}
                   />
                   <span className="font-body text-sm text-[var(--color-text-body)]/90">
-                    I agree to the{" "}
-                    <a href="/privacy-policy" className="text-[var(--color-primary)] underline font-semibold hover:text-[var(--color-primary)]/80">
-                      privacy policy
-                    </a>{" "}
-                    and{" "}
-                    <a href="/confidentiality-policy" className="text-[var(--color-primary)] underline font-semibold hover:text-[var(--color-primary)]/80">
-                      confidentiality policy
-                    </a>
-                    . <span className="text-[var(--color-primary)]">*</span>
+                    I confirm that I have read and accepted all the above policies and consent to booking a session
                   </span>
                 </label>
                 {errors.consent_given && (
-                  <p className="text-[var(--color-primary)] text-sm mt-2 font-body ml-8">{errors.consent_given.message}</p>
+                  <p className="text-[var(--color-primary)] text-xs mt-1 font-body ml-8">{errors.consent_given.message}</p>
                 )}
               </div>
 
               {/* Submit Button */}
-              <div className="pt-4">
+              <div className="pt-4 flex justify-center">
                 {bookingStatus === "submitting" ? (
                   <button
                     disabled
-                    className="w-full bg-[var(--color-primary)]/50 text-white font-body font-semibold py-4 rounded-full transition-all cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
+                    className="bg-[var(--color-primary)]/50 text-white font-body font-semibold px-12 py-4 rounded-full transition-all cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
                   >
                     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
@@ -510,8 +597,8 @@ export default function BookPage() {
                     Submitting...
                   </button>
                 ) : (
-                  <div onClick={handleSubmit(onSubmit)} className="w-full flex justify-center">
-                    <MagneticButton text="Book Session" className="w-full" />
+                  <div onClick={handleSubmit(onSubmit)}>
+                    <MagneticButton text="Book Session" />
                   </div>
                 )}
               </div>

@@ -1,39 +1,12 @@
 'use client';
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Instagram, Linkedin, ArrowRight } from "lucide-react";
 
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [agreed, setAgreed] = useState(false);
-  const [scrollOffset, setScrollOffset] = useState(0);
-
-  useEffect(() => {
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrollDelta = currentScrollY - lastScrollY;
-      
-      // Scroll down = pull left (increase left movement)
-      // Scroll up = pull right (slow down or reverse)
-      setScrollOffset(prev => prev - scrollDelta * 2); // Increased multiplier for more visible effect
-      
-      lastScrollY = currentScrollY;
-    };
-
-    // Damping effect - gradually reduce offset back to 0
-    const dampingInterval = setInterval(() => {
-      setScrollOffset(prev => prev * 0.95); // Reduce by 5% each frame
-    }, 50);
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearInterval(dampingInterval);
-    };
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,14 +22,9 @@ export default function Footer() {
     <footer className="relative bg-gradient-to-b from-[var(--color-bg-subtle)] to-[var(--color-bg-card)] overflow-hidden">
       {/* Animated Marquee */}
       <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-8 overflow-hidden">
-        <div 
-          className="flex whitespace-nowrap animate-marquee-base"
-          style={{ 
-            '--scroll-offset': `${scrollOffset}px`,
-          } as React.CSSProperties}
-        >
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center gap-12 px-6">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="flex items-center gap-12 px-6 flex-shrink-0">
               <span className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider">
                 MINDFUL HEALING
               </span>
@@ -139,8 +107,8 @@ export default function Footer() {
                 Online Platform<br />
                 India
               </p>
-              <a href="tel:+911234567890" className="hover:text-[var(--color-primary)] transition-colors text-[15px]">
-                +44 (0)330 311 7799
+              <a href="tel:+919876543210" className="hover:text-[var(--color-primary)] transition-colors text-[15px]">
+                +91 98765 43210
               </a>
               <a href="mailto:hello@mindsettler.com" className="hover:text-[var(--color-primary)] transition-colors underline decoration-1 underline-offset-4 text-[15px]">
                 hello@mindsettler.com
@@ -215,19 +183,17 @@ export default function Footer() {
       </div>
 
       <style jsx>{`
-        .animate-marquee-base {
-          --scroll-offset: 0px;
-        }
-        @keyframes marquee-base {
+        @keyframes marquee {
           0% {
-            transform: translateX(calc(0% + var(--scroll-offset)));
+            transform: translateX(0);
           }
           100% {
-            transform: translateX(calc(-33.333% + var(--scroll-offset)));
+            transform: translateX(-25%);
           }
         }
-        .animate-marquee-base {
-          animation: marquee-base 20s linear infinite;
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+          will-change: transform;
         }
       `}</style>
     </footer>

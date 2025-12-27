@@ -217,26 +217,6 @@ export default function HowItWorksFAQs() {
             <FAQItem key={index} question={faq.question} answer={faq.answer} index={index} />
           ))}
         </div>
-
-        {/* CTA at bottom */}
-        <motion.div
-          className="mt-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <p className="font-body text-[var(--color-text-body)]/70 mb-4">
-            Still have questions?
-          </p>
-          <motion.button
-            className="px-8 py-3 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-hover)] text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-            whileHover={{ scale: 1.05, y: -2 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Contact Us
-          </motion.button>
-        </motion.div>
       </div>
     </section>
   );

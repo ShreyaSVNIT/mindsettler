@@ -32,37 +32,39 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     // Initialize player when API is ready
     const initializePlayer = () => {
       try {
-        playerRef.current = new (window as any).YT.Player('youtube-player', {
-          videoId: videoId,
-          playerVars: {
-            autoplay: 0,
-            controls: 0,
-            loop: 1,
-            playlist: videoId,
-            playsinline: 1,
-            enablejsapi: 1,
-            origin: window.location.origin,
-          },
-          events: {
-            onReady: (event: any) => {
-              console.log('YouTube player ready');
-              setIsLoaded(true);
-              setError(null);
+        if (!playerRef.current) {
+          playerRef.current = new (window as any).YT.Player('youtube-player', {
+            videoId: videoId,
+            playerVars: {
+              autoplay: 0,
+              controls: 0,
+              loop: 1,
+              playlist: videoId,
+              playsinline: 1,
+              enablejsapi: 1,
+              origin: window.location.origin,
             },
-            onStateChange: (event: any) => {
-              if (event.data === (window as any).YT.PlayerState.PLAYING) {
-                setIsPlaying(true);
-              } else if (event.data === (window as any).YT.PlayerState.PAUSED) {
-                setIsPlaying(false);
-              }
+            events: {
+              onReady: (event: any) => {
+                console.log('YouTube player ready');
+                setIsLoaded(true);
+                setError(null);
+              },
+              onStateChange: (event: any) => {
+                if (event.data === (window as any).YT.PlayerState.PLAYING) {
+                  setIsPlaying(true);
+                } else if (event.data === (window as any).YT.PlayerState.PAUSED) {
+                  setIsPlaying(false);
+                }
+              },
+              onError: (event: any) => {
+                console.error('YouTube player error:', event.data);
+                setError('Failed to load video');
+                setIsLoaded(false);
+              },
             },
-            onError: (event: any) => {
-              console.error('YouTube player error:', event.data);
-              setError('Failed to load video');
-              setIsLoaded(false);
-            },
-          },
-        });
+          });
+        }
       } catch (err) {
         console.error('Error initializing player:', err);
         setError('Failed to initialize player');
@@ -81,15 +83,24 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       tag.src = 'https://www.youtube.com/iframe_api';
       tag.async = true;
       const firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
+      if (firstScriptTag && firstScriptTag.parentNode) {
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+      } else {
+        document.head.appendChild(tag);
+      }
     }
 
-    (window as any).onYouTubeIframeAPIReady = initializePlayer;
+    // Set up the callback for when API loads
+    (window as any).onYouTubeIframeAPIReady = () => {
+      console.log('YouTube API ready');
+      initializePlayer();
+    };
 
     return () => {
       if (playerRef.current && typeof playerRef.current.destroy === 'function') {
         try {
           playerRef.current.destroy();
+          playerRef.current = null;
         } catch (err) {
           console.error('Error destroying player:', err);
         }

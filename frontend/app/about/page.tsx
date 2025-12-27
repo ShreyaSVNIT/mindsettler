@@ -50,60 +50,21 @@ const StoryCard = ({ card, index, total, scrollYProgress }: {
   total: number; 
   scrollYProgress: any;
 }) => {
-  // 1. Calculate the exact point this card hits the center
-  // If total is 6, center points are 0, 0.2, 0.4, 0.6, 0.8, 1
-  const centerPoint = index / (total - 1);
-  
-  // 2. Define a small buffer for the flip (0.1 of the total scroll)
-  // This ensures the flip happens ONLY near the center
-  const buffer = 0.1; 
-
-  const rotateY = useTransform(
-    scrollYProgress,
-    [
-      centerPoint - buffer, // Still approaching (show back)
-      centerPoint,          // Perfect center (show front)
-      centerPoint + buffer  // Leaving (show back again)
-    ],
-    [180, 0, -180] 
-  );
-
   return (
-    <div className="relative w-[350px] h-[450px] flex-shrink-0" style={{ perspective: "1500px" }}>
-      <motion.div
-        style={{ 
-          rotateY, 
-          transformStyle: "preserve-3d"
-        }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="relative w-full h-full"
-      >
-        {/* FRONT SIDE (Content) - Visible at 0 degrees */}
-        <div 
-          className="absolute inset-0 w-full h-full bg-white border-2 border-[var(--color-primary)] p-8 flex flex-col justify-center items-center rounded-2xl shadow-xl"
-          style={{ backfaceVisibility: "hidden" }}
-        >
-          <div className="inline-block mb-4 bg-[var(--color-primary)]/10 px-4 py-2 rounded-full">
-            <span className="text-xs font-body text-[var(--color-primary)] tracking-wider uppercase font-semibold">{card.year}</span>
-          </div>
-          <h3 className="text-2xl font-title text-[var(--color-primary)] mb-4">{card.title}</h3>
-          <p className="text-center text-gray-600 leading-relaxed text-sm">{card.description}</p>
-        </div>
-
-        {/* BACK SIDE (Number) - Visible at 180 degrees */}
-        <div 
-          className="absolute inset-0 w-full h-full bg-[var(--color-primary)] flex items-center justify-center rounded-2xl shadow-xl"
-          style={{ 
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)"
-          }}
-        >
-          <span className="text-[120px] font-title text-white/40 italic">
-            {card.id}
-          </span>
-        </div>
-      </motion.div>
-    </div>
+    <motion.div 
+      className="relative w-[350px] h-[450px] flex-shrink-0 bg-white border-2 border-[var(--color-primary)] p-8 flex flex-col justify-center items-center rounded-2xl shadow-xl"
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      whileHover={{ y: -10, scale: 1.02 }}
+    >
+      <div className="inline-block mb-4 bg-[var(--color-primary)]/10 px-4 py-2 rounded-full">
+        <span className="text-xs font-body text-[var(--color-primary)] tracking-wider uppercase font-semibold">{card.year}</span>
+      </div>
+      <h3 className="text-2xl font-title text-[var(--color-primary)] mb-4">{card.title}</h3>
+      <p className="text-center text-gray-600 leading-relaxed text-sm">{card.description}</p>
+    </motion.div>
   );
 };
 

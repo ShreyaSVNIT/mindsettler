@@ -76,14 +76,16 @@ export default function HowItWorksCTA() {
             <p className="font-body text-xl text-[var(--color-text-body)] opacity-80 mb-8 max-w-2xl mx-auto">
               Take the first step towards better mental wellness today. Our team is here to support you every step of the way.
             </p>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link href="/book">
-                <MagneticButton text="Begin This Phase" />
-              </Link>
-            </motion.div>
+            <div className="flex justify-center">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Link href="/book">
+                  <MagneticButton text="Begin This Phase" />
+                </Link>
+              </motion.div>
+            </div>
           </motion.div>
         </motion.div>
       </div>
