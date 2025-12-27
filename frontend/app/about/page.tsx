@@ -44,6 +44,69 @@ interface CardProps {
   targetScale: number;
 }
 
+const StoryCard = ({ card, index, total, scrollYProgress }: { 
+  card: { id: number; year: string; title: string; description: string }; 
+  index: number; 
+  total: number; 
+  scrollYProgress: any;
+}) => {
+  // 1. Calculate the exact point this card hits the center
+  // If total is 6, center points are 0, 0.2, 0.4, 0.6, 0.8, 1
+  const centerPoint = index / (total - 1);
+  
+  // 2. Define a small buffer for the flip (0.1 of the total scroll)
+  // This ensures the flip happens ONLY near the center
+  const buffer = 0.1; 
+
+  const rotateY = useTransform(
+    scrollYProgress,
+    [
+      centerPoint - buffer, // Still approaching (show back)
+      centerPoint,          // Perfect center (show front)
+      centerPoint + buffer  // Leaving (show back again)
+    ],
+    [180, 0, -180] 
+  );
+
+  return (
+    <div className="relative w-[350px] h-[450px] flex-shrink-0" style={{ perspective: "1500px" }}>
+      <motion.div
+        style={{ 
+          rotateY, 
+          transformStyle: "preserve-3d"
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        className="relative w-full h-full"
+      >
+        {/* FRONT SIDE (Content) - Visible at 0 degrees */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-white border-2 border-[var(--color-primary)] p-8 flex flex-col justify-center items-center rounded-2xl shadow-xl"
+          style={{ backfaceVisibility: "hidden" }}
+        >
+          <div className="inline-block mb-4 bg-[var(--color-primary)]/10 px-4 py-2 rounded-full">
+            <span className="text-xs font-body text-[var(--color-primary)] tracking-wider uppercase font-semibold">{card.year}</span>
+          </div>
+          <h3 className="text-2xl font-title text-[var(--color-primary)] mb-4">{card.title}</h3>
+          <p className="text-center text-gray-600 leading-relaxed text-sm">{card.description}</p>
+        </div>
+
+        {/* BACK SIDE (Number) - Visible at 180 degrees */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-[var(--color-primary)] flex items-center justify-center rounded-2xl shadow-xl"
+          style={{ 
+            backfaceVisibility: "hidden",
+            transform: "rotateY(180deg)"
+          }}
+        >
+          <span className="text-[120px] font-title text-white/40 italic">
+            {card.id}
+          </span>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const Card = ({ i, title, description, progress, range, targetScale }: CardProps) => {
   const container = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -119,6 +182,7 @@ const Card = ({ i, title, description, progress, range, targetScale }: CardProps
 export default function AboutPage() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
+  const storyContainerRef = useRef(null);
   
   // Subtle parallax for hero
   const { scrollYProgress: heroScrollProgress } = useScroll({
@@ -136,6 +200,12 @@ export default function AboutPage() {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
+  });
+
+  // Story section scroll progress - track vertical scroll for horizontal movement
+  const { scrollYProgress: storyScrollProgress } = useScroll({
+    target: storyContainerRef,
+    offset: ["start start", "end end"]
   });
 
   // Contact form state
@@ -188,6 +258,50 @@ export default function AboutPage() {
     { title: 'Personalized Care', description: 'No two journeys are the same. We match you with therapists who truly understand your unique needs.' },
     { title: 'Evidence-Based', description: 'Our therapists use proven techniques backed by research and decades of clinical experience.' },
   ];
+
+  const storyCards = [
+    { 
+      id: 6, 
+      year: 'The Foundation',
+      title: 'Understanding Mental Health', 
+      description: 'We recognized that mental wellness is not a luxury—it\'s a necessity. Our journey began with a simple question: How can we make therapy accessible to everyone?' 
+    },
+    { 
+      id: 5, 
+      year: 'The Beginning',
+      title: 'A Vision Born from Empathy', 
+      description: 'MindSettler was founded on the belief that mental wellness should be accessible, judgment-free, and deeply personal. We saw too many people suffering in silence, and we knew we had to change that.' 
+    },
+    { 
+      id: 4, 
+      year: 'Building Trust',
+      title: 'Creating Safe Spaces', 
+      description: 'We built a platform where confidentiality isn\'t just a promise—it\'s our foundation. Every conversation, every session, every breakthrough stays between you and your therapist.' 
+    },
+    { 
+      id: 3, 
+      year: 'The Mission',
+      title: 'Breaking Down Barriers', 
+      description: 'We built a platform that removes the stigma around seeking help. No waiting rooms, no awkward encounters—just you, your therapist, and a safe digital space designed for healing.' 
+    },
+    { 
+      id: 2, 
+      year: 'Growth & Impact',
+      title: 'Reaching More Hearts', 
+      description: 'From our first session to thousands of lives touched, we\'ve grown not just in size but in our commitment to making mental wellness a priority for everyone.' 
+    },
+    { 
+      id: 1, 
+      year: 'Today',
+      title: 'Growing Together', 
+      description: 'Every session, every breakthrough, every moment of clarity—these are the victories we celebrate. We\'re here not just as a service, but as your partner in wellness.' 
+    },
+  ];
+
+  // Adjust x movement based on total cards
+  // (total - 1) * 20% provides smoother, more controlled movement
+  const totalCards = storyCards.length;
+  const x = useTransform(storyScrollProgress, [0, 1], ["0%", `-${(totalCards - 1) * 20}%`]);
 
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)]">
@@ -448,73 +562,43 @@ export default function AboutPage() {
 
       <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-subtle)" />
 
-      {/* Our Story - Timeline */}
-      <section className="py-32 px-6 bg-[var(--color-bg-subtle)]">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-20">
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="uppercase tracking-[0.3em] text-xs mb-4 opacity-60 font-body"
-            >
-              Our Journey
-            </motion.p>
-            <motion.h2
+      {/* Our Story - Vertical Scroll Drives Horizontal Movement */}
+      <section ref={storyContainerRef} className="relative h-[400vh] bg-[var(--color-bg-app)]">
+        {/* Sticky Wrapper - stays in view while scrolling down */}
+        <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+          
+          {/* Header - Stays until cards are over */}
+          <div className="text-center mb-12 z-20 px-6">
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="font-title text-5xl md:text-6xl text-[var(--color-text-body)]"
             >
-              The <span className="text-[var(--color-primary)] italic">Story</span> Behind Us
-            </motion.h2>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
+                <span className="text-[var(--color-primary)] text-[10px] tracking-[0.4em] uppercase font-body font-light">
+                  Our Journey
+                </span>
+                <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
+              </div>
+              <h2 className="font-title text-5xl md:text-6xl text-[var(--color-text-body)]">
+                The <span className="text-[var(--color-primary)] italic">Story</span> Behind Us
+              </h2>
+            </motion.div>
           </div>
 
-          <div className="space-y-24">
-            {[
-              {
-                year: 'The Beginning',
-                title: 'A Vision Born from Empathy',
-                description: 'MindSettler was founded on the belief that mental wellness should be accessible, judgment-free, and deeply personal. We saw too many people suffering in silence, and we knew we had to change that.',
-                position: 'left',
-              },
-              {
-                year: 'The Mission',
-                title: 'Breaking Down Barriers',
-                description: 'We built a platform that removes the stigma around seeking help. No waiting rooms, no awkward encounters—just you, your therapist, and a safe digital space designed for healing.',
-                position: 'right',
-              },
-              {
-                year: 'Today',
-                title: 'Growing Together',
-                description: 'Every session, every breakthrough, every moment of clarity—these are the victories we celebrate. We\'re here not just as a service, but as your partner in wellness.',
-                position: 'left',
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: item.position === 'left' ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                viewport={{ once: true }}
-                className={`flex ${item.position === 'right' ? 'justify-end' : ''}`}
-              >
-                <div className={`max-w-xl ${item.position === 'right' ? 'text-right' : ''}`}>
-                  <div className="inline-block mb-4">
-                    <span className="bg-[var(--color-bg-app)] text-[var(--color-primary)] font-title text-2xl px-6 py-2 rounded-full">
-                      {item.year}
-                    </span>
-                  </div>
-                  <h3 className="font-title text-3xl text-[var(--color-text-body)] mb-4">
-                    {item.title}
-                  </h3>
-                  <p className="font-body text-lg text-[var(--color-text-body)] opacity-80 leading-relaxed">
-                    {item.description}
-                  </p>
-                </div>
-              </motion.div>
+          {/* The Card Rail - horizontal gallery controlled by vertical scroll */}
+          <motion.div style={{ x }} className="flex gap-[10vw] px-[35vw] items-center">
+            {storyCards.map((card, index) => (
+              <StoryCard 
+                key={card.id} 
+                card={card} 
+                index={index} 
+                total={storyCards.length} 
+                scrollYProgress={storyScrollProgress} 
+              />
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 

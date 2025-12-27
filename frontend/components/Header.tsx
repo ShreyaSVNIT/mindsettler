@@ -22,6 +22,7 @@ export default function IntegratedHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   const handleLinkClick = (e: React.MouseEvent, href: string) => {
     e.preventDefault();
@@ -33,7 +34,29 @@ export default function IntegratedHeader() {
   };
 
   useEffect(() => {
-    const onScroll = () => setIsAtTop(window.scrollY === 0);
+    let lastScrollY = window.scrollY;
+    
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Always visible at top
+      if (currentScrollY === 0) {
+        setIsAtTop(true);
+        setIsVisible(true);
+      } else {
+        setIsAtTop(false);
+        
+        // Show header when scrolling up, hide when scrolling down
+        if (currentScrollY < lastScrollY) {
+          setIsVisible(true);
+        } else if (currentScrollY > lastScrollY) {
+          setIsVisible(false);
+        }
+      }
+      
+      lastScrollY = currentScrollY;
+    };
+    
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -44,7 +67,7 @@ export default function IntegratedHeader() {
       <header
         className={`fixed top-0 left-0 w-full z-[130] transition-all duration-500 h-20 group ${
           isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'
-        }`}
+        } ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
       >
         <div className="h-full w-full flex items-stretch">
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
