@@ -7,6 +7,7 @@
   --color-primary-hover: #eb81a5;
 
   --color-bg-app: #F9D1D5;
+  --color-bg-lavender: #F2ECF2;
   --color-bg-card: #ffffff;
   --color-bg-subtle: #faf9fb;
 
@@ -16,6 +17,9 @@
   /* Fonts */
   --font-title: "Imbue", serif;
   --font-body: "Playfair Display", serif;
+
+  /* Layout */
+  --header-h: 5rem;
 }
 
 /* Global base styles */
