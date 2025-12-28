@@ -7,13 +7,47 @@ interface MagneticButtonProps {
   text?: string;
   onClick?: () => void;
   className?: string;
+  variant?: 'default' | 'lavender';
 }
 
 const MagneticButton = ({ 
   text = "Contact us", 
   onClick, 
-  className = "" 
+  className = "",
+  variant = 'default'
 }: MagneticButtonProps) => {
+  const baseStyles = variant === 'lavender'
+    ? "bg-[var(--color-text-body)] border border-[var(--color-text-body)]"
+    : "bg-[var(--color-primary)] border border-[var(--color-primary)]";
+
+  const washEffectBg = variant === 'lavender'
+    ? "bg-[var(--color-bg-lavender)]"
+    : "bg-[var(--color-bg-app)]";
+
+  const textColorDefault = variant === 'lavender'
+    ? "text-[var(--color-bg-lavender)]"
+    : "text-[var(--color-bg-app)]";
+
+  const textColorHover = variant === 'lavender'
+    ? "group-hover:text-[var(--color-text-body)]"
+    : "group-hover:text-[var(--color-primary)]";
+
+  const arrowBgDefault = variant === 'lavender'
+    ? "bg-[var(--color-bg-lavender)]"
+    : "bg-[var(--color-bg-app)]";
+
+  const arrowBgHover = variant === 'lavender'
+    ? "group-hover:bg-[var(--color-text-body)]"
+    : "group-hover:bg-[var(--color-primary)]";
+
+  const arrowColorDefault = variant === 'lavender'
+    ? "text-[var(--color-text-body)]"
+    : "text-[var(--color-primary)]";
+
+  const arrowColorHover = variant === 'lavender'
+    ? "group-hover:text-[var(--color-bg-lavender)]"
+    : "group-hover:text-[var(--color-bg-app)]";
+
   return (
     <button
       onClick={onClick}
@@ -30,28 +64,27 @@ const MagneticButton = ({
         overflow-hidden
         transition-all
         duration-500
-        bg-[var(--color-primary)]
-        border border-[var(--color-primary)]
+        ${baseStyles}
         ${className}
       `}
     >
       {/* THE WASH EFFECT: Bottom-to-top background layer */}
-      <div className="
+      <div className={`
         absolute 
         inset-0 
         z-0 
         w-full 
         h-full 
         translate-y-full 
-        bg-[var(--color-bg-app)] 
+        ${washEffectBg}
         transition-transform 
         duration-500 
         ease-out 
         group-hover:translate-y-0
-      " />
+      `} />
 
       {/* Main Text */}
-      <span className="
+      <span className={`
         relative
         z-10
         font-body 
@@ -59,14 +92,14 @@ const MagneticButton = ({
         tracking-tight 
         transition-colors 
         duration-500 
-        text-[var(--color-bg-app)]
-        group-hover:text-[var(--color-primary)]
-      ">
+        ${textColorDefault}
+        ${textColorHover}
+      `}>
         {text}
       </span>
 
       {/* Arrow Circle Container */}
-      <div className="
+      <div className={`
         relative
         z-10
         flex 
@@ -78,31 +111,31 @@ const MagneticButton = ({
         overflow-hidden
         transition-all 
         duration-500 
-        bg-[var(--color-bg-app)]
-        group-hover:bg-[var(--color-primary)]
-      ">
+        ${arrowBgDefault}
+        ${arrowBgHover}
+      `}>
         {/* ARROW REPLACEMENT ANIMATION (Horizontal) */}
         <div className="relative h-6 w-6 overflow-hidden">
           {/* Original Arrow: Slides out to the RIGHT */}
           <ArrowRight 
             size={24} 
             strokeWidth={1.5}
-            className="
+            className={`
               absolute 
               inset-0 
               transition-all 
               duration-500 
               ease-in-out 
-              text-[var(--color-primary)] 
+              ${arrowColorDefault}
               group-hover:translate-x-full 
               group-hover:opacity-0
-            " 
+            `} 
           />
           {/* New Arrow: Slides in from the LEFT */}
           <ArrowRight 
             size={24} 
             strokeWidth={1.5}
-            className="
+            className={`
               absolute 
               inset-0 
               -translate-x-full 
@@ -110,10 +143,10 @@ const MagneticButton = ({
               transition-all 
               duration-500 
               ease-in-out 
-              text-[var(--color-bg-app)] 
+              ${arrowColorHover}
               group-hover:translate-x-0 
               group-hover:opacity-100
-            " 
+            `} 
           />
         </div>
       </div>
