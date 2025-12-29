@@ -28,6 +28,7 @@ export default function IntegratedHeader() {
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
 
   const handleLinkClick = (e: React.MouseEvent, href: string) => {
     e.preventDefault();
@@ -55,12 +56,38 @@ export default function IntegratedHeader() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const hasShownSplash = sessionStorage.getItem('splashShown');
+
+    const reveal = () => {
+      setTimeout(() => setShowIntro(true), 900);
+    };
+
+    if (hasShownSplash) {
+      // Subsequent visits: header visible immediately
+      setShowIntro(true);
+      return;
+    }
+
+    const handleSplashDone = () => {
+      reveal();
+    };
+
+    window.addEventListener('splashDone', handleSplashDone);
+    return () => window.removeEventListener('splashDone', handleSplashDone);
+  }, []);
+
   return (
     <>
-      <header
+      <motion.header
         className={`fixed top-0 left-0 w-full z-[130] transition-all duration-500 h-20 group ${
           isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'
         } ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: showIntro ? 1 : 0 }}
+        transition={{ duration: 0.6 }}
       >
         <div className="h-full w-full flex items-stretch">
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
@@ -114,7 +141,7 @@ export default function IntegratedHeader() {
             </Link>
           </div>
         </div>
-      </header>
+      </motion.header>
 
       {/* --- MENU OVERLAY --- */}
       <AnimatePresence>

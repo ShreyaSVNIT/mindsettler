@@ -4,14 +4,16 @@ import { useState, useEffect } from 'react';
 import SplashScreen from './SplashScreen';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
+  // Important: render the same tree on server + initial client render to avoid hydration mismatches.
+  // We only decide to show the splash after mount.
   const [showSplash, setShowSplash] = useState(false);
 
   useEffect(() => {
-    // Check if splash screen has been shown in this session
     const hasShownSplash = sessionStorage.getItem('splashShown');
-    
-    if (!hasShownSplash) {
-      // Show splash screen
+
+    if (hasShownSplash) {
+      setShowSplash(false);
+    } else {
       setShowSplash(true);
       sessionStorage.setItem('splashShown', 'true');
     }
@@ -19,12 +21,18 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const handleSplashComplete = () => {
     setShowSplash(false);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('splashDone'));
+    }
   };
-
+ 
   return (
     <>
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      {/* App (hero + header) always rendered so video can play under splash */}
       {children}
+
+      {/* Splash overlays on top, then unmounts with no cross-cut */}
+      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
     </>
   );
 }
