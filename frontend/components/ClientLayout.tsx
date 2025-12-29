@@ -13,6 +13,13 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
     if (hasShownSplash) {
       setShowSplash(false);
+
+      // Make downstream components behave the same as if the splash just finished.
+      // Use a microtask so listeners have a chance to attach.
+      (window as any).__msSplashDone = true;
+      setTimeout(() => {
+        window.dispatchEvent(new Event('splashDone'));
+      }, 0);
     } else {
       setShowSplash(true);
       sessionStorage.setItem('splashShown', 'true');
@@ -21,9 +28,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   const handleSplashComplete = () => {
     setShowSplash(false);
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('splashDone'));
-    }
   };
  
   return (

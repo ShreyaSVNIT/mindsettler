@@ -59,22 +59,14 @@ export default function IntegratedHeader() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const hasShownSplash = sessionStorage.getItem('splashShown');
+    const reveal = () => setTimeout(() => setShowIntro(true), 200);
 
-    const reveal = () => {
-      setTimeout(() => setShowIntro(true), 900);
-    };
-
-    if (hasShownSplash) {
-      // Subsequent visits: header visible immediately
+    if ((window as any).__msSplashDone) {
       setShowIntro(true);
       return;
     }
 
-    const handleSplashDone = () => {
-      reveal();
-    };
-
+    const handleSplashDone = () => reveal();
     window.addEventListener('splashDone', handleSplashDone);
     return () => window.removeEventListener('splashDone', handleSplashDone);
   }, []);

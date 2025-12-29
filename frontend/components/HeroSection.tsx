@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import MagneticButton from './Button';
 
+const HERO_VIDEO_POSTER =
+  'https://res.cloudinary.com/dqz1ffhyo/video/upload/q_auto:best,w_1920,so_0,f_jpg/v1766503247/WhatsApp_Video_2025-12-23_at_13.54.39_Precise_Proteus_tuqnir.jpg';
+
 const HeroSection = () => {
   const [showContent, setShowContent] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -12,12 +15,9 @@ const HeroSection = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const hasShownSplash = sessionStorage.getItem('splashShown');
-
     const startHero = () => {
       if (videoRef.current) {
         try {
-          videoRef.current.currentTime = 0;
           const playPromise = videoRef.current.play();
           if (playPromise && typeof playPromise.catch === 'function') {
             playPromise.catch(() => {});
@@ -28,19 +28,16 @@ const HeroSection = () => {
       }
 
       // Let the video move a bit before text appears
-      setTimeout(() => setShowContent(true), 800);
+      setTimeout(() => setShowContent(true), 150);
     };
 
-    if (hasShownSplash) {
-      // Subsequent visits: no splash, start immediately
+    // If the event already fired (race), start immediately.
+    if ((window as any).__msSplashDone) {
       startHero();
       return;
     }
 
-    const handleSplashDone = () => {
-      startHero();
-    };
-
+    const handleSplashDone = () => startHero();
     window.addEventListener('splashDone', handleSplashDone);
     return () => window.removeEventListener('splashDone', handleSplashDone);
   }, []);
@@ -62,6 +59,7 @@ const HeroSection = () => {
           playsInline
           preload="auto"
           ref={videoRef}
+          poster={HERO_VIDEO_POSTER}
           className="w-full h-full object-cover scale-110"
         >
           <source 
@@ -76,9 +74,9 @@ const HeroSection = () => {
       {showContent && (
         <motion.div 
           className="relative z-10 px-6 max-w-5xl flex flex-col items-center"
-          initial={{ opacity: 0, y: 80 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.7, 0, 0.3, 1] }}
+          transition={{ duration: 1.0, delay: 0.1, ease: [0.65, 0, 0.35, 1] }}
         >
         
         {/* TOP SUBTITLE */}
