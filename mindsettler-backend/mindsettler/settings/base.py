@@ -34,6 +34,8 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -61,6 +63,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+     "apps.core.middleware.admin_activity.AdminActivityMiddleware",
+    "apps.core.middleware.admin_no_cache.AdminNoCacheMiddleware",
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -70,7 +75,7 @@ ROOT_URLCONF = 'mindsettler.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -157,3 +162,10 @@ SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_HTTPONLY = False
 FRONTEND_URL = "http://localhost:3000"  
 DEFAULT_FROM_EMAIL = "no-reply@mindsettler.com"
+# ─────────────────────────
+# Admin & Session Security
+# ─────────────────────────
+
+SESSION_COOKIE_AGE = 60*10       # 10 minutes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_SAVE_EVERY_REQUEST = False
