@@ -112,6 +112,21 @@ class Booking(models.Model):
     )
 
     confirmed_at = models.DateTimeField(null=True, blank=True)
+    payment_status = models.CharField(
+    max_length=20,
+    choices=[
+        ("PENDING", "Pending"),
+        ("SUCCESS", "Success"),
+        ("FAILED", "Failed"),
+    ],
+    default="PENDING",
+)
+
+    payment_reference = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+    )
 
     # ───────── CANCELLATION ─────────
     cancellation_token = models.UUIDField(

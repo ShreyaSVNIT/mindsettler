@@ -2,8 +2,7 @@ from django.contrib import admin, messages
 from django.core.exceptions import ValidationError
 
 from .models import Booking
-from apps.bookings.services import apply_admin_decision
-
+from apps.bookings.services import approve_booking, reject_booking
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
@@ -129,14 +128,13 @@ class BookingAdmin(admin.ModelAdmin):
                 continue
 
             try:
-                apply_admin_decision(
-                    booking=booking,
-                    decision="APPROVED",
-                    approved_start=booking.approved_slot_start,
-                    approved_end=booking.approved_slot_end,
-                    psychologist=booking.psychologist,
-                    corporate=booking.corporate,
-                )
+                approve_booking(
+                booking=booking,
+                approved_start=booking.approved_slot_start,
+                approved_end=booking.approved_slot_end,
+                psychologist=booking.psychologist,
+                corporate=booking.corporate,
+            )
             except Exception as e:
                 messages.error(
                     request,
@@ -163,14 +161,13 @@ class BookingAdmin(admin.ModelAdmin):
                 continue
 
             try:
-                apply_admin_decision(
-                    booking=booking,
-                    decision="APPROVED",
-                    approved_start=booking.approved_slot_start,
-                    approved_end=booking.approved_slot_end,
-                    psychologist=booking.psychologist,
-                    corporate=booking.corporate,
-                )
+                approve_booking(
+                booking=booking,
+                approved_start=booking.approved_slot_start,
+                approved_end=booking.approved_slot_end,
+                psychologist=booking.psychologist,
+                corporate=booking.corporate,
+                    )
             except Exception as e:
                 messages.error(
                     request,
@@ -192,13 +189,11 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 continue
 
-            apply_admin_decision(
-                booking=booking,
-                decision="REJECTED",
-                reason=booking.rejection_reason,
-                alternate_slots=booking.alternate_slots,
-            )
-
+        reject_booking(
+            booking=booking,
+            reason=booking.rejection_reason,
+            alternate_slots=booking.alternate_slots,
+        )
         self.message_user(request, "Rejection action completed.")
 
     actions = [
