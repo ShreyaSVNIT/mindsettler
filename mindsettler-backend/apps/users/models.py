@@ -1,5 +1,7 @@
 # users/models.py
 from django.db import models
+from django.utils import timezone
+
 
 class AppUser(models.Model):
 
@@ -11,6 +13,7 @@ class AppUser(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    last_admin_activity = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.email
