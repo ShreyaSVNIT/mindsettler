@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/Button";
+import { BACKEND_URL } from "@/lib/api";
 
 /* ---------------- Zod Schema Following API Guidelines ---------------- */
 
@@ -117,7 +118,7 @@ export default function BookPage() {
         payload.preferred_time_end = data.preferred_time_end;
       }
 
-      const response = await fetch("http://127.0.0.1:8000/api/bookings/draft/", {
+      const response = await fetch(`${BACKEND_URL}/api/bookings/draft/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
