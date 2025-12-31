@@ -1,14 +1,17 @@
+from datetime import timedelta
+
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import ValidationError
-from django.utils import timezone
-from datetime import timedelta
 
 from apps.users.models import AppUser
-from apps.bookings.models import Booking
-from apps.bookings.serializers import BookingDraftSerializer
-from apps.bookings.services import get_active_booking, validate_payment_mode
+from apps.bookings.serializers.draft import BookingDraftSerializer
+from apps.bookings.services import (
+    get_active_booking,
+    validate_payment_mode,
+)
 from apps.bookings.email import send_booking_verification_email
 
 
@@ -20,6 +23,9 @@ class BookingDraftCreateView(APIView):
         email = request.data.get("email", "").strip().lower()
         consent = request.data.get("consent_given")
 
+        # ─────────────────────────
+        # Basic validation
+        # ─────────────────────────
         if not email:
             raise ValidationError("Email is required")
 
@@ -28,25 +34,40 @@ class BookingDraftCreateView(APIView):
 
         user, _ = AppUser.objects.get_or_create(email=email)
 
-        # Existing active booking
+        # ─────────────────────────
+        # Active booking exists → ALWAYS verify email first
+        # ─────────────────────────
         active = get_active_booking(user)
         if active:
-            if not active.email_verified:
-                send_booking_verification_email(active)
+            # Throttle verification email
+            if (
+                active.last_verification_email_sent_at
+                and timezone.now() - active.last_verification_email_sent_at
+                < timedelta(seconds=60)
+            ):
                 return Response(
-                    {"message": "Verification required. Email sent."},
-                    status=200,
+                    {
+                        "message": "Please wait before requesting another verification email."
+                    },
+                    status=429,
                 )
 
+            send_booking_verification_email(active)
+
+            active.last_verification_email_sent_at = timezone.now()
+            active.save(update_fields=["last_verification_email_sent_at"])
+
+            # 🚫 Do NOT reveal status or acknowledgement ID here
             return Response(
                 {
-                    "message": "Active booking found",
-                    "status": active.status,
-                    "acknowledgement_id": active.acknowledgement_id,
+                    "message": "Verification required to continue. Email sent."
                 },
                 status=200,
             )
 
+        # ─────────────────────────
+        # New booking → validate payment input
+        # ─────────────────────────
         validate_payment_mode(
             request.data.get("mode"),
             request.data.get("payment_mode"),
@@ -62,22 +83,17 @@ class BookingDraftCreateView(APIView):
             consent_given_at=timezone.now(),
         )
 
-        # Throttle email resend
-        if (
-            booking.last_verification_email_sent_at and
-            timezone.now() - booking.last_verification_email_sent_at < timedelta(seconds=60)
-        ):
-            return Response(
-                {"message": "Please wait before requesting another verification email."},
-                status=429,
-            )
-
+        # ─────────────────────────
+        # Send verification email (throttled)
+        # ─────────────────────────
         send_booking_verification_email(booking)
 
         booking.last_verification_email_sent_at = timezone.now()
         booking.save(update_fields=["last_verification_email_sent_at"])
 
         return Response(
-            {"message": "Verification email sent. Please verify to submit booking."},
+            {
+                "message": "Verification email sent. Please verify to submit booking."
+            },
             status=201,
         )

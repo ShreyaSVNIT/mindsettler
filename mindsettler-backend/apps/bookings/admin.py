@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
 
+
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
 
@@ -34,7 +35,7 @@ class BookingAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
     # ─────────────────────────
-    # READ-ONLY (SYSTEM OWNED)
+    # READ-ONLY
     # ─────────────────────────
     readonly_fields = (
         "user",
@@ -76,6 +77,7 @@ class BookingAdmin(admin.ModelAdmin):
             "fields": (
                 "approved_slot_start",
                 "approved_slot_end",
+                "amount",              # ✅ REQUIRED
                 "psychologist",
                 "corporate",
                 "rejection_reason",
@@ -99,12 +101,10 @@ class BookingAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if change:
             old = Booking.objects.get(pk=obj.pk)
-
             if old.status in {"COMPLETED", "CANCELLED"}:
                 raise ValidationError(
                     "This booking is finalized and cannot be modified."
                 )
-
         super().save_model(request, obj, form, change)
 
     # ─────────────────────────
@@ -113,6 +113,7 @@ class BookingAdmin(admin.ModelAdmin):
     @admin.action(description="Approve selected bookings")
     def approve_bookings(self, request, queryset):
         for booking in queryset:
+
             if booking.status != "PENDING":
                 messages.warning(
                     request,
@@ -127,47 +128,22 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 continue
 
-            try:
-                approve_booking(
-                booking=booking,
-                approved_start=booking.approved_slot_start,
-                approved_end=booking.approved_slot_end,
-                psychologist=booking.psychologist,
-                corporate=booking.corporate,
-            )
-            except Exception as e:
+            if booking.amount is None:
                 messages.error(
                     request,
-                    f"{booking.acknowledgement_id}: {str(e)}"
-                )
-
-        self.message_user(request, "Approval action completed.")
-
-    @admin.action(description="Approve selected bookings")
-    def approve_bookings(self, request, queryset):
-        for booking in queryset:
-            if booking.status != "PENDING":
-                messages.warning(
-                    request,
-                    f"{booking.acknowledgement_id}: Not pending, skipped."
-                )
-                continue
-
-            if not booking.approved_slot_start or not booking.approved_slot_end:
-                messages.error(
-                    request,
-                    f"{booking.acknowledgement_id}: Approved slot required."
+                    f"{booking.acknowledgement_id}: Amount is required."
                 )
                 continue
 
             try:
                 approve_booking(
-                booking=booking,
-                approved_start=booking.approved_slot_start,
-                approved_end=booking.approved_slot_end,
-                psychologist=booking.psychologist,
-                corporate=booking.corporate,
-                    )
+                    booking=booking,
+                    approved_start=booking.approved_slot_start,
+                    approved_end=booking.approved_slot_end,
+                    amount=booking.amount,
+                    psychologist=booking.psychologist,
+                    corporate=booking.corporate,
+                )
             except Exception as e:
                 messages.error(
                     request,
@@ -179,6 +155,7 @@ class BookingAdmin(admin.ModelAdmin):
     @admin.action(description="Reject selected bookings")
     def reject_bookings(self, request, queryset):
         for booking in queryset:
+
             if booking.status != "PENDING":
                 continue
 
@@ -189,14 +166,15 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 continue
 
-        reject_booking(
-            booking=booking,
-            reason=booking.rejection_reason,
-            alternate_slots=booking.alternate_slots,
-        )
+            reject_booking(
+                booking=booking,
+                reason=booking.rejection_reason,
+                alternate_slots=booking.alternate_slots,
+            )
+
         self.message_user(request, "Rejection action completed.")
 
     actions = [
         approve_bookings,
         reject_bookings,
-    ]   
+    ]

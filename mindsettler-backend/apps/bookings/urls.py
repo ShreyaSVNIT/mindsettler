@@ -39,3 +39,12 @@ urlpatterns = [
         name="admin-booking-reject",
     ),
 ]
+from .views.payments import (
+    InitiatePaymentView,
+    CompletePaymentView,
+)
+
+urlpatterns += [
+    path("initiate-payment/", InitiatePaymentView.as_view()),
+    path("complete-payment/", CompletePaymentView.as_view()),
+]

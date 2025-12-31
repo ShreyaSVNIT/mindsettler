@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import ValidationError
 
 from apps.bookings.models import Booking
-from apps.bookings.services import has_active_booking
+from apps.bookings.services import get_active_booking, submit_booking
 
 
 class VerifyEmailView(APIView):
@@ -24,32 +24,37 @@ class VerifyEmailView(APIView):
         except Booking.DoesNotExist:
             raise ValidationError("Invalid or expired verification link")
 
-        # 🚫 Prevent multiple active bookings
-        active = has_active_booking(booking.user)
+        # 🔒 Check for other active booking (exclude self)
+        active = get_active_booking(booking.user)
         if active and active.id != booking.id:
             booking.status = "REJECTED"
             booking.rejection_reason = "Another active booking exists"
             booking.save(update_fields=["status", "rejection_reason"])
 
-            return Response({
-                "message": "Another active booking exists. This request was rejected."
-            })
+            return Response(
+                {
+                    "message": "Another active booking exists. This request was rejected."
+                },
+                status=200,
+            )
 
-        # 🔐 Verify email (idempotent)
+        # ✅ Verify email (idempotent)
         if not booking.email_verified:
             booking.verify_email()
 
-        # 📤 Submit booking
+        # ✅ Submit booking using lifecycle service
         if booking.status == "DRAFT":
-            booking.status = "PENDING"
+            submit_booking(booking)
 
         if not booking.acknowledgement_id:
             booking.generate_acknowledgement_id()
+            booking.save(update_fields=["acknowledgement_id"])
 
-        booking.save(update_fields=["status", "acknowledgement_id"])
-
-        return Response({
-            "message": "Email verified successfully",
-            "acknowledgement_id": booking.acknowledgement_id,
-            "status": booking.status,
-        })
+        return Response(
+            {
+                "message": "Email verified successfully",
+                "acknowledgement_id": booking.acknowledgement_id,
+                "status": booking.status,
+            },
+            status=200,
+        )

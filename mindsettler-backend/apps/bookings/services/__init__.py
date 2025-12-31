@@ -1,7 +1,30 @@
 # apps/bookings/services/__init__.py
-from .queries import has_active_booking, get_active_booking
-from .guards import ensure_email_verified
-from .lifecycle import submit_booking, confirm_booking
-from .admin import approve_booking, reject_booking
-from .cancellation import cancel_booking
-from .payments import validate_payment_mode
+
+# Lifecycle
+from .lifecycle import (
+    submit_booking,
+    approve_booking,
+    move_to_payment_pending,
+    confirm_booking,
+    cancel_booking,
+)
+
+# Admin actions
+from .admin import (
+    approve_booking,
+    reject_booking,
+)
+
+# Payments
+from .payments import (
+    initiate_payment,
+    complete_payment,
+    validate_payment_mode,
+    
+)
+
+# Queries
+from .queries import (
+    get_active_booking,
+    has_active_booking,
+)

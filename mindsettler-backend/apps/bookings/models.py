@@ -11,13 +11,14 @@ class Booking(models.Model):
     STATUS_CHOICES = [
         ("DRAFT", "Draft"),
         ("PENDING", "Pending"),
-        ("REJECTED", "Rejected"),
         ("APPROVED", "Approved"),
+        ("PAYMENT_PENDING", "Payment Pending"),
         ("CONFIRMED", "Confirmed"),
         ("COMPLETED", "Completed"),
+        ("REJECTED", "Rejected"),
         ("CANCELLED", "Cancelled"),
+        ("PAYMENT_FAILED", "Payment Failed"),
     ]
-
     PERIOD_CHOICES = [
         ("MORNING", "Morning"),
         ("EVENING", "Evening"),
@@ -112,20 +113,24 @@ class Booking(models.Model):
     )
 
     confirmed_at = models.DateTimeField(null=True, blank=True)
-    payment_status = models.CharField(
-    max_length=20,
-    choices=[
-        ("PENDING", "Pending"),
-        ("SUCCESS", "Success"),
-        ("FAILED", "Failed"),
-    ],
-    default="PENDING",
-)
+    #------------PAYMENT--------
 
     payment_reference = models.CharField(
-        max_length=100,
+        max_length=100, null=True, blank=True
+    )
+
+    payment_requested_at = models.DateTimeField(
+        null=True, blank=True
+    )
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
         null=True,
         blank=True,
+    )
+
+    confirmed_at = models.DateTimeField(
+        null=True, blank=True
     )
 
     # ───────── CANCELLATION ─────────
