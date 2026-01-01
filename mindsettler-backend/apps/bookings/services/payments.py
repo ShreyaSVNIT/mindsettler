@@ -1,34 +1,45 @@
 # apps/bookings/services/payments.py
 
 from uuid import uuid4
-
-from .lifecycle import move_to_payment_pending, confirm_booking
-
-
-# apps/bookings/services/payments.py
-from uuid import uuid4
 from rest_framework.exceptions import ValidationError
 
-from .lifecycle import move_to_payment_pending
+from .guards import (
+    ensure_email_verified,
+    ensure_amount_set,
+)
+from .lifecycle import (
+    move_to_payment_pending,
+    confirm_booking,
+)
 
 
+# ─────────────────────────
+# PAYMENT INITIATION
+# ─────────────────────────
 def initiate_payment(booking):
     """
-    Initiate payment safely (idempotent)
+    Initiate payment safely (idempotent).
+    Email verification is mandatory.
     """
 
-    # If already in payment pending, just return existing reference
+    # 🔒 Guard: email must be verified
+    ensure_email_verified(booking)
+
+    # Idempotency
     if booking.status == "PAYMENT_PENDING":
         return {
             "payment_reference": booking.payment_reference,
             "amount": booking.amount,
         }
 
-    # Only approved bookings can initiate payment
+    # Only approved bookings can pay
     if booking.status != "APPROVED":
         raise ValidationError(
             f"Cannot initiate payment in status: {booking.status}"
         )
+
+    if booking.amount is None:
+        raise ValidationError("Payment amount not set")
 
     payment_reference = f"PAY-{uuid4().hex[:12].upper()}"
 
@@ -42,14 +53,27 @@ def initiate_payment(booking):
         "amount": booking.amount,
     }
 
+# ─────────────────────────
+# PAYMENT COMPLETION
+# ─────────────────────────
 def complete_payment(booking):
     """
-    Dummy payment success (gateway callback placeholder)
+    Payment success callback (gateway simulation)
+
+    Allowed only from PAYMENT_PENDING
     """
+    if booking.status != "PAYMENT_PENDING":
+        raise ValidationError(
+            f"Cannot complete payment in status: {booking.status}"
+        )
+
     confirm_booking(booking)
     return booking
 
 
+# ─────────────────────────
+# PAYMENT MODE VALIDATION
+# ─────────────────────────
 ALLOWED_PAYMENT_MODES = {"ONLINE", "OFFLINE"}
 
 
@@ -72,4 +96,5 @@ def validate_payment_mode(mode, payment_mode):
     if mode == "OFFLINE":
         if payment_mode:
             raise ValidationError(
-                "Payment mode should not be provided for offline bookings")
+                "Payment mode should not be provided for offline bookings"
+            )

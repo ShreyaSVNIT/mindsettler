@@ -1,13 +1,46 @@
-import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+import uuid
 from django.conf import settings
 from django.utils import timezone
-import uuid
+from rest_framework.exceptions import ValidationError
+
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+from python_http_client.exceptions import ForbiddenError, UnauthorizedError
+
+
+def _send_email(message):
+    """
+    Strict email sender.
+    - Email MUST be delivered
+    - Any SendGrid failure raises ValidationError
+    """
+
+    api_key = getattr(settings, "SENDGRID_API_KEY", None)
+
+    if not api_key:
+        raise ValidationError(
+            "Email service misconfigured: SENDGRID_API_KEY missing"
+        )
+
+    try:
+        sg = SendGridAPIClient(api_key)
+        sg.send(message)
+
+    except (ForbiddenError, UnauthorizedError):
+        raise ValidationError(
+            "Email service rejected request (invalid API key or sender identity)"
+        )
+
+    except Exception as e:
+        raise ValidationError(
+            f"Failed to send email. Please try again later. ({str(e)})"
+        )
+
 
 def send_booking_verification_email(booking):
     """
-    Sends email verification link for a booking
+    Sends booking verification email.
+    Email delivery is mandatory.
     """
 
     verification_url = (
@@ -16,7 +49,7 @@ def send_booking_verification_email(booking):
     )
 
     message = Mail(
-        from_email="mindsettler.dev@gmail.com",
+        from_email=settings.DEFAULT_FROM_EMAIL,
         to_emails=booking.user.email,
         subject="Verify your booking – MindSettler",
         html_content=f"""
@@ -30,29 +63,29 @@ def send_booking_verification_email(booking):
             </a>
         </p>
 
-        <p>If you did not request this booking, please ignore this email.</p>
-
         <br />
         <p>– MindSettler Team</p>
         """,
     )
-    message.reply_to = "mindsettler.dev@gmail.com"
 
-    sg = SendGridAPIClient(os.environ["SENDGRID_API_KEY"])
-    sg.send(message)
+    _send_email(message)
+
     booking.last_verification_email_sent_at = timezone.now()
     booking.save(update_fields=["last_verification_email_sent_at"])
 
 
 def send_cancellation_verification_email(booking):
     """
-    Sends email to verify booking cancellation
+    Sends cancellation confirmation email.
+    Email delivery is mandatory.
     """
 
-    # Generate fresh token every time
     booking.cancellation_token = uuid.uuid4()
     booking.cancellation_requested_at = timezone.now()
-    booking.save(update_fields=["cancellation_token", "cancellation_requested_at"])
+    booking.save(update_fields=[
+        "cancellation_token",
+        "cancellation_requested_at",
+    ])
 
     cancel_url = (
         f"{settings.FRONTEND_URL}/verify-cancellation"
@@ -60,34 +93,43 @@ def send_cancellation_verification_email(booking):
     )
 
     message = Mail(
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to_emails=booking.user.email,
-        subject="Confirm Cancellation – MindSettler",
-        html_content=f"""
-        <p>Hello,</p>
+    from_email=settings.DEFAULT_FROM_EMAIL,
+    to_emails=booking.user.email,
+    subject="⚠️ Confirm Cancellation – MindSettler",
+    html_content=f"""
+    <h2 style="color:#c0392b;">Cancellation Confirmation Required</h2>
 
-        <p>You requested to cancel your session.</p>
+    <p>Hello,</p>
 
-        <p><strong>Session ID:</strong> {booking.acknowledgement_id}</p>
+    <p>
+        You have requested to <strong>cancel your session</strong>.
+        This action is irreversible.
+    </p>
 
-        <p>Please confirm your cancellation by clicking the link below:</p>
+    <p><strong>Session ID:</strong> {booking.acknowledgement_id}</p>
 
-        <p>
-            <a href="{cancel_url}">
-                Confirm Cancellation
-            </a>
-        </p>
+    <p>
+        Please confirm cancellation by clicking the button below:
+    </p>
 
-        <p>
-            ⚠️ This action is irreversible.
-            If you did not request this, please ignore this email.
-        </p>
+    <p>
+        <a href="{cancel_url}"
+           style="padding:10px 16px;
+                  background:#c0392b;
+                  color:white;
+                  text-decoration:none;
+                  border-radius:4px;">
+            Confirm Cancellation
+        </a>
+    </p>
 
-        <br />
-        <p>– MindSettler Team</p>
-        """,
-    )
+    <p style="font-size:12px;color:#666;">
+        Requested at: {timezone.now().strftime("%Y-%m-%d %H:%M:%S UTC")}
+    </p>
 
-    sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
-    sg.send(message)
+    <br />
+    <p>– MindSettler Team</p>
+    """,
+)
 
+    _send_email(message)

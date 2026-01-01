@@ -77,6 +77,12 @@ class Booking(models.Model):
 
     approved_slot_start = models.DateTimeField(null=True, blank=True)
     approved_slot_end = models.DateTimeField(null=True, blank=True)
+    approved_at = models.DateTimeField(
+    null=True,
+    blank=True,
+    help_text="When admin approved the booking"
+)
+
 
     rejection_reason = models.TextField(blank=True)
     alternate_slots = models.TextField(blank=True)
@@ -96,6 +102,8 @@ class Booking(models.Model):
     )
 
     last_verification_email_sent_at = models.DateTimeField(null=True, blank=True)
+    submitted_at = models.DateTimeField(null=True, blank=True)
+
 
     # ───────── ACKNOWLEDGEMENT ─────────
     acknowledgement_id = models.CharField(
@@ -133,16 +141,37 @@ class Booking(models.Model):
         null=True, blank=True
     )
 
-    # ───────── CANCELLATION ─────────
+
+    # ───────── Cancellation Flow ─────────
+    cancellation_reason = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    cancelled_at = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
+    cancelled_by = models.CharField(
+        max_length=20,
+        choices=(
+            ("USER", "User"),
+            ("ADMIN", "Admin"),
+        ),
+        blank=True,
+        null=True
+    )
     cancellation_token = models.UUIDField(
         null=True,
         blank=True,
-        editable=False,
-        db_index=True,   # 👈 index instead of unique
+        db_index=True,   # index but NOT unique
     )
-    cancellation_reason = models.TextField(blank=True)
-    cancellation_requested_at = models.DateTimeField(null=True, blank=True)
-
+    cancellation_requested_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    
     # ───────── TIMESTAMPS ─────────
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

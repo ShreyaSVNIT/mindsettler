@@ -1,52 +1,59 @@
-# apps/bookings/services/admin.py
+from django.utils import timezone
 from rest_framework.exceptions import ValidationError
+
+from .guards import assert_transition
 
 
 def approve_booking(
     booking,
     approved_start,
     approved_end,
+    amount,
     psychologist=None,
     corporate=None,
 ):
-    if booking.status != "PENDING":
-        raise ValidationError("Only pending bookings can be approved")
-
-    if approved_start >= approved_end:
-        raise ValidationError("Invalid approved slot")
+    """
+    PENDING → APPROVED
+    """
+    assert_transition(booking.status, "APPROVED")
 
     booking.status = "APPROVED"
     booking.approved_slot_start = approved_start
     booking.approved_slot_end = approved_end
+    booking.amount = amount
     booking.psychologist = psychologist
     booking.corporate = corporate
+    booking.approved_at = timezone.now()
 
-    booking.save(
-        update_fields=[
-            "status",
-            "approved_slot_start",
-            "approved_slot_end",
-            "psychologist",
-            "corporate",
-        ]
-    )
+    booking.save(update_fields=[
+        "status",
+        "approved_slot_start",
+        "approved_slot_end",
+        "amount",
+        "psychologist",
+        "corporate",
+        "approved_at",
+    ])
+
     return booking
 
 
-def reject_booking(booking, reason, alternate_slots=""):
-    if booking.status not in {"PENDING", "APPROVED"}:
-        raise ValidationError("Booking cannot be rejected")
-
-    if not reason:
-        raise ValidationError("Rejection reason is required")
+def reject_booking(booking, reason, alternate_slots=None):
+    """
+    PENDING → REJECTED
+    """
+    assert_transition(booking.status, "REJECTED")
 
     booking.status = "REJECTED"
     booking.rejection_reason = reason
     booking.alternate_slots = alternate_slots
+    booking.rejected_at = timezone.now()
 
     booking.save(update_fields=[
         "status",
         "rejection_reason",
         "alternate_slots",
+        "rejected_at",
     ])
+
     return booking

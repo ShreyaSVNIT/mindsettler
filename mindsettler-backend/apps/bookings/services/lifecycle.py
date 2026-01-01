@@ -1,5 +1,3 @@
-# apps/bookings/services/lifecycle.py
-
 from django.utils import timezone
 from rest_framework.exceptions import ValidationError
 from decimal import Decimal
@@ -32,7 +30,6 @@ def approve_booking(
     PENDING → APPROVED
     Amount is finalized here (single source of truth)
     """
-
     assert_transition(booking.status, "APPROVED")
 
     booking.status = "APPROVED"
@@ -41,6 +38,7 @@ def approve_booking(
     booking.amount = Decimal(amount)
     booking.psychologist = psychologist
     booking.corporate = corporate
+    booking.approved_at = timezone.now()
 
     booking.save(update_fields=[
         "status",
@@ -49,14 +47,20 @@ def approve_booking(
         "amount",
         "psychologist",
         "corporate",
+        "approved_at",
     ])
 
     return booking
 
+
 def move_to_payment_pending(booking, payment_reference):
     """
     APPROVED → PAYMENT_PENDING
+    (Idempotent-safe)
     """
+    if booking.status == "PAYMENT_PENDING":
+        return booking
+
     assert_transition(booking.status, "PAYMENT_PENDING")
 
     booking.status = "PAYMENT_PENDING"
@@ -86,8 +90,11 @@ def confirm_booking(booking):
 
 def cancel_booking(booking, reason=None):
     """
-    CONFIRMED → CANCELLED
+    PENDING / APPROVED / PAYMENT_PENDING / CONFIRMED → CANCELLED
     """
+    if booking.status in {"CANCELLED", "COMPLETED"}:
+        raise ValidationError("Booking cannot be cancelled")
+
     assert_transition(booking.status, "CANCELLED")
 
     booking.status = "CANCELLED"

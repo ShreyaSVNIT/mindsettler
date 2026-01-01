@@ -1,4 +1,3 @@
-# apps/bookings/services/guards.py
 from rest_framework.exceptions import ValidationError
 
 
@@ -33,5 +32,23 @@ def ensure_status(booking, allowed_statuses: set):
 
 
 def ensure_email_verified(booking):
+    """
+    Hard gate before:
+    - payment initiation
+    - confirmations
+    - booking details access
+    """
     if not booking.email_verified:
-        raise ValidationError("Email not verified")
+        raise ValidationError(
+            "Email verification required before proceeding"
+        )
+
+
+def ensure_amount_set(booking):
+    if booking.amount is None:
+        raise ValidationError("Booking amount not set")
+
+
+def ensure_payment_reference(booking):
+    if not booking.payment_reference:
+        raise ValidationError("Payment reference missing")

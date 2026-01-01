@@ -1,6 +1,4 @@
 from django.contrib import admin, messages
-from django.core.exceptions import ValidationError
-
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
 
@@ -35,7 +33,7 @@ class BookingAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
 
     # ─────────────────────────
-    # READ-ONLY
+    # READ-ONLY FIELDS
     # ─────────────────────────
     readonly_fields = (
         "user",
@@ -60,7 +58,6 @@ class BookingAdmin(admin.ModelAdmin):
                 "email_verified_at",
             )
         }),
-
         ("User Preferences", {
             "fields": (
                 "preferred_date",
@@ -72,19 +69,17 @@ class BookingAdmin(admin.ModelAdmin):
                 "user_message",
             )
         }),
-
         ("Admin Decision", {
             "fields": (
                 "approved_slot_start",
                 "approved_slot_end",
-                "amount",              # ✅ REQUIRED
+                "amount",
                 "psychologist",
                 "corporate",
                 "rejection_reason",
                 "alternate_slots",
             )
         }),
-
         ("System", {
             "fields": (
                 "status",
@@ -101,10 +96,15 @@ class BookingAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         if change:
             old = Booking.objects.get(pk=obj.pk)
+
             if old.status in {"COMPLETED", "CANCELLED"}:
-                raise ValidationError(
-                    "This booking is finalized and cannot be modified."
+                self.message_user(
+                    request,
+                    "This booking is finalized and cannot be modified.",
+                    level=messages.ERROR,
                 )
+                return  # 🚫 stop save safely
+
         super().save_model(request, obj, form, change)
 
     # ─────────────────────────
@@ -124,7 +124,7 @@ class BookingAdmin(admin.ModelAdmin):
             if not booking.approved_slot_start or not booking.approved_slot_end:
                 messages.error(
                     request,
-                    f"{booking.acknowledgement_id}: Approved slot required."
+                    f"{booking.acknowledgement_id}: Approved slot start & end required."
                 )
                 continue
 
@@ -144,19 +144,25 @@ class BookingAdmin(admin.ModelAdmin):
                     psychologist=booking.psychologist,
                     corporate=booking.corporate,
                 )
+                messages.success(
+                    request,
+                    f"{booking.acknowledgement_id}: Approved successfully."
+                )
             except Exception as e:
                 messages.error(
                     request,
                     f"{booking.acknowledgement_id}: {str(e)}"
                 )
 
-        self.message_user(request, "Approval action completed.")
-
     @admin.action(description="Reject selected bookings")
     def reject_bookings(self, request, queryset):
         for booking in queryset:
 
             if booking.status != "PENDING":
+                messages.warning(
+                    request,
+                    f"{booking.acknowledgement_id}: Not pending, skipped."
+                )
                 continue
 
             if not booking.rejection_reason:
@@ -166,15 +172,23 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 continue
 
-            reject_booking(
-                booking=booking,
-                reason=booking.rejection_reason,
-                alternate_slots=booking.alternate_slots,
-            )
-
-        self.message_user(request, "Rejection action completed.")
+            try:
+                reject_booking(
+                    booking=booking,
+                    reason=booking.rejection_reason,
+                    alternate_slots=booking.alternate_slots,
+                )
+                messages.success(
+                    request,
+                    f"{booking.acknowledgement_id}: Rejected successfully."
+                )
+            except Exception as e:
+                messages.error(
+                    request,
+                    f"{booking.acknowledgement_id}: {str(e)}"
+                )
 
     actions = [
-        approve_bookings,
-        reject_bookings,
+        "approve_bookings",
+        "reject_bookings",
     ]

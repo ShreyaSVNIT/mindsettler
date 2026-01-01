@@ -8,10 +8,7 @@ from rest_framework.exceptions import ValidationError
 
 from apps.users.models import AppUser
 from apps.bookings.serializers.draft import BookingDraftSerializer
-from apps.bookings.services import (
-    get_active_booking,
-    validate_payment_mode,
-)
+from apps.bookings.services import get_active_booking
 from apps.bookings.email import send_booking_verification_email
 
 
@@ -35,44 +32,46 @@ class BookingDraftCreateView(APIView):
         user, _ = AppUser.objects.get_or_create(email=email)
 
         # ─────────────────────────
-        # Active booking exists → ALWAYS verify email first
+        # Active booking exists → email verification gate
         # ─────────────────────────
-        active = get_active_booking(user)
-        if active:
+        active_booking = get_active_booking(user)
+
+        if active_booking:
             # Throttle verification email
             if (
-                active.last_verification_email_sent_at
-                and timezone.now() - active.last_verification_email_sent_at
+                active_booking.last_verification_email_sent_at
+                and timezone.now() - active_booking.last_verification_email_sent_at
                 < timedelta(seconds=60)
             ):
                 return Response(
                     {
-                        "message": "Please wait before requesting another verification email."
+                        "message": (
+                            "Please wait before requesting another verification email."
+                        )
                     },
                     status=429,
                 )
 
-            send_booking_verification_email(active)
+            send_booking_verification_email(active_booking)
 
-            active.last_verification_email_sent_at = timezone.now()
-            active.save(update_fields=["last_verification_email_sent_at"])
+            active_booking.last_verification_email_sent_at = timezone.now()
+            active_booking.save(
+                update_fields=["last_verification_email_sent_at"]
+            )
 
-            # 🚫 Do NOT reveal status or acknowledgement ID here
             return Response(
                 {
-                    "message": "Verification required to continue. Email sent."
+                    "message": (
+                        "Please verify your email to continue "
+                        "and view details of your existing booking."
+                    )
                 },
                 status=200,
             )
 
         # ─────────────────────────
-        # New booking → validate payment input
+        # Create fresh draft booking
         # ─────────────────────────
-        validate_payment_mode(
-            request.data.get("mode"),
-            request.data.get("payment_mode"),
-        )
-
         serializer = BookingDraftSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -83,13 +82,12 @@ class BookingDraftCreateView(APIView):
             consent_given_at=timezone.now(),
         )
 
-        # ─────────────────────────
-        # Send verification email (throttled)
-        # ─────────────────────────
         send_booking_verification_email(booking)
 
         booking.last_verification_email_sent_at = timezone.now()
-        booking.save(update_fields=["last_verification_email_sent_at"])
+        booking.save(
+            update_fields=["last_verification_email_sent_at"]
+        )
 
         return Response(
             {
