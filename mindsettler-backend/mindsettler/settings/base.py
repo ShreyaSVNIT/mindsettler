@@ -1,11 +1,12 @@
 """
-Django settings for mindsettler project.
+Base Django settings for MindSettler
 """
 
 from pathlib import Path
 import os
 from dotenv import load_dotenv
 from datetime import timedelta
+import dj_database_url
 
 # ───────────────────────────────
 # Base directory & env loading
@@ -13,32 +14,26 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Explicitly load .env from project root
+# Load .env ONLY for local development
 load_dotenv(BASE_DIR / ".env")
 
 # ───────────────────────────────
-# Core security
+# Core security (DO NOT hard-crash here)
 # ───────────────────────────────
 
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise RuntimeError("SECRET_KEY not set in .env")
+SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-dev-secret-key")
 
 DEBUG = True
 ALLOWED_HOSTS = []
 
 # ───────────────────────────────
-# Email (SendGrid)
+# Email (values only, no validation here)
 # ───────────────────────────────
 
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
-if not SENDGRID_API_KEY:
-    raise RuntimeError("SENDGRID_API_KEY not set in .env")
-
-# MUST match verified sender in SendGrid
 DEFAULT_FROM_EMAIL = "mindsettler.dev@gmail.com"
 
-FRONTEND_URL = "http://localhost:3000"
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 # ───────────────────────────────
 # Application definition
@@ -99,21 +94,19 @@ TEMPLATES = [
 WSGI_APPLICATION = "mindsettler.wsgi.application"
 
 # ───────────────────────────────
-# Database
+# Database (SQLite local fallback)
 # ───────────────────────────────
-import dj_database_url
-import os
 
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        ssl_require=not DEBUG,
+        ssl_require=False,
     )
 }
 
 # ───────────────────────────────
-# Auth / Security
+# Auth / Internationalization
 # ───────────────────────────────
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -128,8 +121,13 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# ───────────────────────────────
+# Static files
+# ───────────────────────────────
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ───────────────────────────────
@@ -157,7 +155,7 @@ SIMPLE_JWT = {
 
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_AGE = 60 * 10  # 10 minutes
+SESSION_COOKIE_AGE = 60 * 10
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = False
 
