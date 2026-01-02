@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import MagneticButton from "@/components/Button";
 import { bookingAPI } from "@/lib/api";
 import type { BookingDraftRequest } from "@/types";
+import { trackBookingFormOpened, trackBookingSubmitted } from "@/lib/analytics";
 
 /* ---------------- Zod Schema Following Backend Contract ---------------- */
 
@@ -89,6 +90,13 @@ export default function BookPage() {
 
   const preferredPeriod = watch("preferred_period");
 
+  // Track analytics when form is opened
+  useEffect(() => {
+    if (selectedMode) {
+      trackBookingFormOpened({ mode: selectedMode });
+    }
+  }, [selectedMode]);
+
   const onSubmit = async (data: BookingFormData) => {
     setBookingStatus("submitting");
     setErrorMessage("");
@@ -115,6 +123,12 @@ export default function BookPage() {
       }
 
       const result = await bookingAPI.createDraft(payload);
+
+      // Track successful booking submission (privacy: no email/ID)
+      trackBookingSubmitted({
+        mode: data.mode,
+        period: data.preferred_period,
+      });
 
       // Backend may return existing booking details
       if (result.acknowledgement_id) {

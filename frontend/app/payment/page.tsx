@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
+import { trackPaymentCompleted } from "@/lib/analytics";
 
 type ViewState =
   | { kind: "idle" }
@@ -29,6 +30,9 @@ function PaymentPageContent() {
       await bookingAPI.completePayment({
         payment_reference: paymentReference,
       });
+      
+      // Track payment completion (privacy: no reference)
+      trackPaymentCompleted();
       
       setState({ kind: "success" });
       

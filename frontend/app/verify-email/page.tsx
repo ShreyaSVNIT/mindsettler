@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
 import type { VerifyEmailResponse } from "@/types";
+import { trackBookingVerified, trackBookingApproved } from "@/lib/analytics";
 
 type ViewState =
   | { kind: "idle" }
@@ -28,6 +29,14 @@ export default function VerifyEmailPage() {
       .verifyEmail(token)
       .then((data) => {
         setState({ kind: "success", data });
+        
+        // Track verification (privacy: only status, no ID)
+        trackBookingVerified({ status: data.status });
+        
+        // Track if booking was already approved
+        if (data.status === "APPROVED") {
+          trackBookingApproved();
+        }
         
         // Store acknowledgement ID for status tracking
         if (typeof window !== "undefined" && data.acknowledgement_id) {

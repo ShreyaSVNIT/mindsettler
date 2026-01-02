@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import SplashScreen from './SplashScreen';
+import { initFirebase } from '@/lib/firebase';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   // Important: render the same tree on server + initial client render to avoid hydration mismatches.
@@ -24,6 +25,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       setShowSplash(true);
       sessionStorage.setItem('splashShown', 'true');
     }
+
+    // Initialize Firebase Analytics (client-side only, Spark plan)
+    initFirebase().catch((err) => {
+      // Silently fail - analytics should never break the app
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Firebase initialization warning:', err);
+      }
+    });
   }, []);
 
   const handleSplashComplete = () => {

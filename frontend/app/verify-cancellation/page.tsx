@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
 import type { VerifyCancellationResponse } from "@/types";
+import { trackCancellationConfirmed } from "@/lib/analytics";
 
 type ViewState =
   | { kind: "idle" }
@@ -27,6 +28,9 @@ export default function VerifyCancellationPage() {
     bookingAPI
       .verifyCancellation(token)
       .then((data) => {
+        // Track cancellation confirmation (privacy: no token)
+        trackCancellationConfirmed();
+        
         setState({ kind: "success", data });
       })
       .catch((err: any) => {

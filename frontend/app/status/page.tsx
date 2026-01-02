@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI, statusHelpers } from "@/lib/api";
 import type { BookingStatusResponse, BookingStatus } from "@/types";
+import { trackPaymentInitiated, trackCancellationRequested } from "@/lib/analytics";
 
 type ViewState =
   | { kind: "idle" }
@@ -70,6 +71,9 @@ function StatusPageContent() {
         acknowledgement_id: acknowledgementId,
       });
       
+      // Track payment initiation (privacy: no reference, just has_amount)
+      trackPaymentInitiated({ has_amount: !!result.amount });
+      
       // Navigate to payment page with details
       router.push(`/payment?ref=${result.payment_reference}&amount=${result.amount}`);
     } catch (err: any) {
@@ -88,6 +92,9 @@ function StatusPageContent() {
       await bookingAPI.requestCancellation({
         acknowledgement_id: acknowledgementId,
       });
+      
+      // Track cancellation request (privacy: no ID)
+      trackCancellationRequested();
       
       alert("Cancellation email sent! Please check your inbox to confirm.");
       fetchStatus();
