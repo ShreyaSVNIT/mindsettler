@@ -6,9 +6,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/Button";
-import { BACKEND_URL } from "@/lib/api";
+import { bookingAPI } from "@/lib/api";
+import type { BookingDraftRequest } from "@/types";
 
-/* ---------------- Zod Schema Following API Guidelines ---------------- */
+/* ---------------- Zod Schema Following Backend Contract ---------------- */
 
 const bookingSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -32,9 +33,6 @@ const bookingSchema = z.object({
   preferred_time_end: z.string().optional(),
   mode: z.enum(["ONLINE", "OFFLINE"], {
     required_error: "Select session mode",
-  }),
-  payment_mode: z.enum(["ONLINE", "OFFLINE"], {
-    required_error: "Select payment mode",
   }),
   user_message: z.string().optional(),
 }).refine(
@@ -82,7 +80,6 @@ export default function BookPage() {
     defaultValues: {
       preferred_period: "MORNING",
       mode: "ONLINE",
-      payment_mode: "ONLINE",
       consent_given: false,
       privacy_policy: false,
       non_refund_policy: false,
@@ -97,14 +94,13 @@ export default function BookPage() {
     setErrorMessage("");
 
     try {
-      // Prepare payload - ONLY send required fields per API guidelines
-      const payload: any = {
+      // Prepare payload following backend contract
+      const payload: BookingDraftRequest = {
         email: data.email,
         consent_given: data.consent_given,
         preferred_date: data.preferred_date,
         preferred_period: data.preferred_period,
         mode: data.mode,
-        payment_mode: data.payment_mode,
       };
 
       // Add optional fields only if they exist
@@ -118,23 +114,11 @@ export default function BookPage() {
         payload.preferred_time_end = data.preferred_time_end;
       }
 
-      const response = await fetch(`${BACKEND_URL}/api/bookings/draft/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to create booking");
-      }
+      const result = await bookingAPI.createDraft(payload);
 
       // Backend may return existing booking details
       if (result.acknowledgement_id) {
-        setExistingBooking(result);
+        setExistingBooking(result as any);
         setBookingStatus("existing_booking");
       } else {
         // Verification email sent
@@ -463,37 +447,6 @@ export default function BookPage() {
                 )}
               </div>
 
-              {/* Payment Mode */}
-              <div>
-                <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                  Payment Mode <span className="text-[var(--color-primary)]">*</span>
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {(["ONLINE", "OFFLINE"] as const).map((paymentMode) => (
-                    <label
-                      key={paymentMode}
-                      className={`flex items-center justify-center px-4 py-3 rounded-xl border-2 cursor-pointer transition-all font-body text-sm font-semibold ${
-                        watch("payment_mode") === paymentMode
-                          ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
-                          : "border-[var(--color-primary)]/20 hover:border-[var(--color-primary)]/40 bg-white"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        {...register("payment_mode")}
-                        value={paymentMode}
-                        className="sr-only"
-                        disabled={bookingStatus === "submitting"}
-                      />
-                      {paymentMode}
-                    </label>
-                  ))}
-                </div>
-                {errors.payment_mode && (
-                  <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.payment_mode.message}</p>
-                )}
-              </div>
-
               {/* Optional Message */}
               <div>
                 <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
@@ -624,23 +577,19 @@ export default function BookPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">2</span>
-                <span>Click the link to <strong>verify your booking request</strong></span>
+                <span>Click the link to <strong>verify your booking</strong> (moves to PENDING)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">3</span>
-                <span>Our admin will <strong>review and approve</strong> your booking</span>
+                <span>Our admin will <strong>review and approve</strong> your booking (moves to APPROVED)</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">4</span>
-                <span>You'll receive a <strong>confirmation email</strong></span>
+                <span>You'll be notified and need to <strong>complete payment</strong> (moves to PAYMENT_PENDING → CONFIRMED)</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">5</span>
-                <span>You'll need to <strong>confirm within 24 hours</strong></span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-xs font-semibold text-white">6</span>
-                <span>Session begins! <strong className="text-[var(--color-primary)]">🎉</strong></span>
+                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-xs font-semibold text-white">5</span>
+                <span>Session confirmed! <strong className="text-[var(--color-primary)]">🎉</strong></span>
               </li>
             </ol>
           </motion.div>
