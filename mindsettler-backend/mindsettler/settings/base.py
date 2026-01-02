@@ -163,3 +163,31 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_SAVE_EVERY_REQUEST = False
 
 CSRF_COOKIE_HTTPONLY = False
+# ─────────────────────────────
+# JAZZMIN ADMIN THEME
+# ─────────────────────────────
+
+JAZZMIN_SETTINGS = {
+    "site_title": "MindSettler Admin",
+    "site_header": "MindSettler",
+    "site_brand": "MindSettler",
+    "welcome_sign": "Welcome to MindSettler Admin",
+    "copyright": "MindSettler",
+
+    "site_logo_classes": "img-circle",
+
+    "topmenu_links": [
+        {"name": "Dashboard", "url": "admin:index", "permissions": ["auth.view_user"]},
+    ],
+
+    "icons": {
+        "apps.bookings": "fas fa-calendar-check",
+        "apps.users": "fas fa-user",
+        "apps.psychologists": "fas fa-brain",
+        "apps.corporates": "fas fa-building",
+    },
+
+    "theme": "flatly",
+
+    "custom_css": "admin/css/mindsettler.css",
+}
