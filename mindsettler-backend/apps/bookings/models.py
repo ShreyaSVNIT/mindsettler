@@ -4,6 +4,7 @@ from apps.users.models import AppUser
 from apps.psychologists.models import Psychologist
 from apps.corporates.models import Corporate
 import uuid
+from django.core.exceptions import ValidationError
 
 
 class Booking(models.Model):
@@ -177,6 +178,14 @@ class Booking(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     # ───────── DOMAIN METHODS ─────────
+
+    def clean(self):
+        if self.approved_slot_start and self.approved_slot_end:
+            if self.approved_slot_end <= self.approved_slot_start:
+                raise ValidationError({
+                    "approved_slot_end": "End time must be after start time."
+                })
+            
     def generate_acknowledgement_id(self):
         if not self.acknowledgement_id:
             self.acknowledgement_id = f"MS-{uuid.uuid4().hex[:8].upper()}"

@@ -1,6 +1,8 @@
 from django.contrib import admin, messages
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
+from django.db.models import Q
+from django.core.exceptions import ValidationError
 
 
 @admin.register(Booking)
@@ -93,20 +95,31 @@ class BookingAdmin(admin.ModelAdmin):
     # ─────────────────────────
     # IMMUTABLE STATE PROTECTION
     # ─────────────────────────
-    def save_model(self, request, obj, form, change):
-        if change:
-            old = Booking.objects.get(pk=obj.pk)
 
-            if old.status in {"COMPLETED", "CANCELLED"}:
-                self.message_user(
-                    request,
-                    "This booking is finalized and cannot be modified.",
-                    level=messages.ERROR,
-                )
-                return  # 🚫 stop save safely
+def save_model(self, request, obj, form, change):
+    # Run model validations first
+    try:
+        obj.full_clean()
+    except ValidationError as e:
+        form.add_error(None, e)
+        return
 
-        super().save_model(request, obj, form, change)
+    # ⚠️ Slot overlap warning (only when approving)
+    if obj.approved_slot_start and obj.approved_slot_end:
+        overlapping = Booking.objects.filter(
+            status__in=["APPROVED", "CONFIRMED"],
+            psychologist=obj.psychologist,
+            approved_slot_start__lt=obj.approved_slot_end,
+            approved_slot_end__gt=obj.approved_slot_start,
+        ).exclude(pk=obj.pk)
 
+        if overlapping.exists():
+            messages.warning(
+                request,
+                "⚠️ This time slot overlaps with another approved/confirmed booking."
+            )
+
+    super().save_model(request, obj, form, change)
     # ─────────────────────────
     # ADMIN ACTIONS
     # ─────────────────────────
