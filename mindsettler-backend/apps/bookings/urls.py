@@ -12,8 +12,9 @@ from .views import (
 from .views.payments import (
     InitiatePaymentView,
     CompletePaymentView,
-)
 
+)
+from .views.status import BookingStatusCheckView
 urlpatterns = [
     # ───── User flow ─────
     path("draft/", BookingDraftCreateView.as_view()),
@@ -30,4 +31,7 @@ urlpatterns = [
     # ───── Admin flow ─────
     path("admin/bookings/<int:booking_id>/approve/", AdminApproveBookingView.as_view()),
     path("admin/bookings/<int:booking_id>/reject/", AdminRejectBookingView.as_view()),
+    # apps/bookings/urls.py
+    path("check-status/", BookingStatusCheckView.as_view()),
+
 ]
