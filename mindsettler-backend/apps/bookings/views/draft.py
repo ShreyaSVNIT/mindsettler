@@ -70,7 +70,7 @@ class BookingDraftCreateView(APIView):
             )
 
         # ─────────────────────────
-        # Create fresh draft booking
+        # Create fresh draft booking (explicit intent)
         # ─────────────────────────
         serializer = BookingDraftSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -91,7 +91,9 @@ class BookingDraftCreateView(APIView):
 
         return Response(
             {
-                "message": "Verification email sent. Please verify to submit booking."
+                "message": (
+                    "Verification email sent. Please verify to submit booking."
+                )
             },
             status=201,
         )

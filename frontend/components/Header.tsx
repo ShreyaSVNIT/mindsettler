@@ -19,6 +19,7 @@ const GALLERY_IMAGES = [
 const NAV_LINKS = [
   { label: "About", href: "/about" },
   { label: "How It Works", href: "/how-it-works" },
+  { label: "Resources", href: "/resources" },
 ];
 
 export default function IntegratedHeader() {
@@ -74,17 +75,16 @@ export default function IntegratedHeader() {
   return (
     <>
       <motion.header
-        className={`fixed top-0 left-0 w-full z-[130] transition-all duration-500 h-20 group ${
-          isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'
-        } ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
+        className={`fixed top-0 left-0 w-full z-[130] transition-all duration-500 h-20 group ${isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'
+          } ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: showIntro ? 1 : 0 }}
         transition={{ duration: 0.6 }}
       >
         <div className="h-full w-full flex items-stretch">
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            <button 
-              onClick={() => setMenuOpen(!menuOpen)} 
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
               className={`p-2 hover:scale-110 transition-all relative z-[140] ${isAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}
             >
               <AnimatePresence mode="wait">
@@ -112,9 +112,9 @@ export default function IntegratedHeader() {
 
           <div className="flex-grow relative flex items-center justify-center px-8">
             <Link href="/" className="absolute left-1/2 -translate-x-1/2 mt-2">
-              <img 
-                src="/MindSettlerLogo.png" 
-                alt="Logo" 
+              <img
+                src="/MindSettlerLogo.png"
+                alt="Logo"
                 className="w-[180px] h-auto"
               />
             </Link>

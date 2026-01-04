@@ -38,11 +38,6 @@ def _send_email(message):
 
 
 def send_booking_verification_email(booking):
-    """
-    Sends booking verification email.
-    Email delivery is mandatory.
-    """
-
     verification_url = (
         f"{settings.FRONTEND_URL}/verify-booking"
         f"?token={booking.email_verification_token}"
@@ -51,21 +46,59 @@ def send_booking_verification_email(booking):
     message = Mail(
         from_email=settings.DEFAULT_FROM_EMAIL,
         to_emails=booking.user.email,
-        subject="Verify your booking – MindSettler",
+        subject="Complete your MindSettler booking",
+        plain_text_content="""
+Hello,
+
+You recently started a booking on MindSettler.
+
+Please open this email and use the button to continue your booking.
+
+If you did not request this, you can safely ignore this email.
+
+MindSettler
+support@mindsettler.in
+""",
         html_content=f"""
-        <p>Hello,</p>
+<div style="max-width:520px;
+            margin:0 auto;
+            font-family:Arial, Helvetica, sans-serif;
+            color:#333;
+            line-height:1.6;">
 
-        <p>Please verify your booking by clicking the link below:</p>
+  <p>Hello,</p>
 
-        <p>
-            <a href="{verification_url}">
-                Verify Booking
-            </a>
-        </p>
+  <p>
+    You recently started a booking on <strong>MindSettler</strong>.
+    To continue, please verify your email address.
+  </p>
 
-        <br />
-        <p>– MindSettler Team</p>
-        """,
+  <div style="margin:28px 0; text-align:center;">
+    <a href="{verification_url}"
+       style="display:inline-block;
+              padding:12px 24px;
+              background:#453859;
+              color:#ffffff;
+              text-decoration:none;
+              border-radius:4px;
+              font-size:15px;">
+      Continue booking
+    </a>
+  </div>
+
+  <p style="font-size:13px;color:#666;">
+    If you did not request this booking, no action is required.
+  </p>
+
+  <hr style="border:none;border-top:1px solid #e6e6e6;margin:24px 0;" />
+
+  <p style="font-size:12px;color:#777;">
+    MindSettler – Mental Wellness Platform<br />
+    Support: support@mindsettler.in
+  </p>
+
+</div>
+""",
     )
 
     _send_email(message)
@@ -73,13 +106,7 @@ def send_booking_verification_email(booking):
     booking.last_verification_email_sent_at = timezone.now()
     booking.save(update_fields=["last_verification_email_sent_at"])
 
-
 def send_cancellation_verification_email(booking):
-    """
-    Sends cancellation confirmation email.
-    Email delivery is mandatory.
-    """
-
     booking.cancellation_token = uuid.uuid4()
     booking.cancellation_requested_at = timezone.now()
     booking.save(update_fields=[
@@ -93,43 +120,65 @@ def send_cancellation_verification_email(booking):
     )
 
     message = Mail(
-    from_email=settings.DEFAULT_FROM_EMAIL,
-    to_emails=booking.user.email,
-    subject="⚠️ Confirm Cancellation – MindSettler",
-    html_content=f"""
-    <h2 style="color:#c0392b;">Cancellation Confirmation Required</h2>
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=booking.user.email,
+        subject="Confirm cancellation of your MindSettler booking",
+        plain_text_content="""
+Hello,
 
-    <p>Hello,</p>
+We received a request to cancel a booking on MindSettler.
 
-    <p>
-        You have requested to <strong>cancel your session</strong>.
-        This action is irreversible.
-    </p>
+Please open this email and use the button to confirm the cancellation.
 
-    <p><strong>Session ID:</strong> {booking.acknowledgement_id}</p>
+If you did not request this, you can ignore this message.
 
-    <p>
-        Please confirm cancellation by clicking the button below:
-    </p>
+MindSettler
+support@mindsettler.in
+""",
+        html_content=f"""
+<div style="max-width:520px;
+            margin:0 auto;
+            font-family:Arial, Helvetica, sans-serif;
+            color:#333;
+            line-height:1.6;">
 
-    <p>
-        <a href="{cancel_url}"
-           style="padding:10px 16px;
-                  background:#c0392b;
-                  color:white;
-                  text-decoration:none;
-                  border-radius:4px;">
-            Confirm Cancellation
-        </a>
-    </p>
+  <p>Hello,</p>
 
-    <p style="font-size:12px;color:#666;">
-        Requested at: {timezone.now().strftime("%Y-%m-%d %H:%M:%S UTC")}
-    </p>
+  <p>
+    We received a request to cancel a booking on
+    <strong>MindSettler</strong>.
+  </p>
 
-    <br />
-    <p>– MindSettler Team</p>
-    """,
-)
+  <p>
+    Please confirm your request using the button below.
+  </p>
+
+  <div style="margin:28px 0; text-align:center;">
+    <a href="{cancel_url}"
+       style="display:inline-block;
+              padding:12px 24px;
+              background:#e55d80;
+              color:#ffffff;
+              text-decoration:none;
+              border-radius:4px;
+              font-size:15px;">
+      Confirm cancellation
+    </a>
+  </div>
+
+  <p style="font-size:13px;color:#666;">
+    If you did not request this cancellation, you may safely ignore this email.
+  </p>
+
+  <hr style="border:none;border-top:1px solid #e6e6e6;margin:24px 0;" />
+
+  <p style="font-size:12px;color:#777;">
+    MindSettler – Mental Wellness Platform<br />
+    Support: support@mindsettler.in
+  </p>
+
+</div>
+""",
+    )
 
     _send_email(message)

@@ -1,12 +1,20 @@
 from django.contrib import admin, messages
+from django.core.exceptions import ValidationError
+
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
-from django.db.models import Q
-from django.core.exceptions import ValidationError
 
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
+
+    # ─────────────────────────
+    # QUERYSET (CRITICAL FIX)
+    # ─────────────────────────
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # Hide unverified drafts from admin
+        return qs.exclude(status="DRAFT")
 
     # ─────────────────────────
     # LIST VIEW
@@ -33,6 +41,8 @@ class BookingAdmin(admin.ModelAdmin):
     )
 
     ordering = ("-created_at",)
+
+    actions = ["approve_bookings", "reject_bookings"]
 
     # ─────────────────────────
     # READ-ONLY FIELDS
@@ -93,33 +103,46 @@ class BookingAdmin(admin.ModelAdmin):
     )
 
     # ─────────────────────────
-    # IMMUTABLE STATE PROTECTION
+    # SAVE VALIDATION & WARNINGS
     # ─────────────────────────
+    def save_model(self, request, obj, form, change):
 
-def save_model(self, request, obj, form, change):
-    # Run model validations first
-    try:
-        obj.full_clean()
-    except ValidationError as e:
-        form.add_error(None, e)
-        return
+        # Block edits to finalized bookings
+        if change:
+            old = Booking.objects.get(pk=obj.pk)
+            if old.status in {"COMPLETED", "CANCELLED"}:
+                self.message_user(
+                    request,
+                    "This booking is finalized and cannot be modified.",
+                    level=messages.ERROR,
+                )
+                return
 
-    # ⚠️ Slot overlap warning (only when approving)
-    if obj.approved_slot_start and obj.approved_slot_end:
-        overlapping = Booking.objects.filter(
-            status__in=["APPROVED", "CONFIRMED"],
-            psychologist=obj.psychologist,
-            approved_slot_start__lt=obj.approved_slot_end,
-            approved_slot_end__gt=obj.approved_slot_start,
-        ).exclude(pk=obj.pk)
+        # Approved slot validation
+        if obj.approved_slot_start and obj.approved_slot_end:
+            if obj.approved_slot_end <= obj.approved_slot_start:
+                self.message_user(
+                    request,
+                    "Approved end time must be after start time.",
+                    level=messages.ERROR,
+                )
+                return
 
-        if overlapping.exists():
-            messages.warning(
-                request,
-                "⚠️ This time slot overlaps with another approved/confirmed booking."
-            )
+            overlapping = Booking.objects.filter(
+                status__in=["APPROVED", "CONFIRMED"],
+                psychologist=obj.psychologist,
+                approved_slot_start__lt=obj.approved_slot_end,
+                approved_slot_end__gt=obj.approved_slot_start,
+            ).exclude(pk=obj.pk)
 
-    super().save_model(request, obj, form, change)
+            if overlapping.exists():
+                messages.warning(
+                    request,
+                    "⚠️ This slot overlaps with another approved/confirmed booking."
+                )
+
+        super().save_model(request, obj, form, change)
+
     # ─────────────────────────
     # ADMIN ACTIONS
     # ─────────────────────────
@@ -137,14 +160,14 @@ def save_model(self, request, obj, form, change):
             if not booking.approved_slot_start or not booking.approved_slot_end:
                 messages.error(
                     request,
-                    f"{booking.acknowledgement_id}: Approved slot start & end required."
+                    f"{booking.acknowledgement_id}: Slot start & end required."
                 )
                 continue
 
             if booking.amount is None:
                 messages.error(
                     request,
-                    f"{booking.acknowledgement_id}: Amount is required."
+                    f"{booking.acknowledgement_id}: Amount required."
                 )
                 continue
 
@@ -161,6 +184,7 @@ def save_model(self, request, obj, form, change):
                     request,
                     f"{booking.acknowledgement_id}: Approved successfully."
                 )
+
             except Exception as e:
                 messages.error(
                     request,
@@ -195,13 +219,9 @@ def save_model(self, request, obj, form, change):
                     request,
                     f"{booking.acknowledgement_id}: Rejected successfully."
                 )
+
             except Exception as e:
                 messages.error(
                     request,
                     f"{booking.acknowledgement_id}: {str(e)}"
                 )
-
-    actions = [
-        "approve_bookings",
-        "reject_bookings",
-    ]
