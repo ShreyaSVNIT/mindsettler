@@ -1,6 +1,5 @@
 from django.contrib import admin, messages
 from django.core.exceptions import ValidationError
-from django.db.models import Q
 
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
@@ -8,6 +7,17 @@ from apps.bookings.services import approve_booking, reject_booking
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
+
+    # ─────────────────────────
+    # QUERYSET (CRITICAL FIX)
+    # ─────────────────────────
+    def get_queryset(self, request):
+        """
+        Hide unverified DRAFT bookings from admin.
+        Verified DRAFTs (rare) and all other states remain visible.
+        """
+        qs = super().get_queryset(request)
+        return qs.exclude(status="DRAFT", email_verified=False)
 
     # ─────────────────────────
     # LIST VIEW
@@ -111,7 +121,7 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-        # ❌ Slot end must be after start
+        # ❌ Approved slot sanity check
         if obj.approved_slot_start and obj.approved_slot_end:
             if obj.approved_slot_end <= obj.approved_slot_start:
                 self.message_user(
@@ -121,7 +131,7 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-            # ⚠️ Overlapping slot warning
+            # ⚠️ Slot overlap warning (non-blocking)
             overlapping = Booking.objects.filter(
                 status__in=["APPROVED", "CONFIRMED"],
                 psychologist=obj.psychologist,
