@@ -1,6 +1,5 @@
 from django.contrib import admin, messages
 from django.core.exceptions import ValidationError
-from django.db.models import Q
 
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
@@ -8,6 +7,14 @@ from apps.bookings.services import approve_booking, reject_booking
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
+
+    # ─────────────────────────
+    # QUERYSET (CRITICAL FIX)
+    # ─────────────────────────
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        # Hide unverified drafts from admin
+        return qs.exclude(status="DRAFT")
 
     # ─────────────────────────
     # LIST VIEW
@@ -100,7 +107,7 @@ class BookingAdmin(admin.ModelAdmin):
     # ─────────────────────────
     def save_model(self, request, obj, form, change):
 
-        # ❌ Block edits to finalized bookings
+        # Block edits to finalized bookings
         if change:
             old = Booking.objects.get(pk=obj.pk)
             if old.status in {"COMPLETED", "CANCELLED"}:
@@ -111,7 +118,7 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-        # ❌ Slot end must be after start
+        # Approved slot validation
         if obj.approved_slot_start and obj.approved_slot_end:
             if obj.approved_slot_end <= obj.approved_slot_start:
                 self.message_user(
@@ -121,7 +128,6 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-            # ⚠️ Overlapping slot warning
             overlapping = Booking.objects.filter(
                 status__in=["APPROVED", "CONFIRMED"],
                 psychologist=obj.psychologist,
