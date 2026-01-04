@@ -7,6 +7,7 @@ from .views import (
     AdminRejectBookingView,
     RequestCancellationView,
     VerifyCancellationView,
+    BookingStatusCheckView,
 )
 
 from .views.payments import (
@@ -19,6 +20,7 @@ urlpatterns = [
     path("draft/", BookingDraftCreateView.as_view()),
     path("verify-email/", VerifyEmailView.as_view()),
     path("confirm/", ConfirmBookingView.as_view()),
+    path("check-status/", BookingStatusCheckView.as_view()),
 
     path("request-cancellation/", RequestCancellationView.as_view()),
     path("verify-cancellation/", VerifyCancellationView.as_view()),

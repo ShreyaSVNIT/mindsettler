@@ -66,11 +66,11 @@ export const bookingAPI = {
 
   /**
    * Get booking status
-   * GET /api/bookings/status/?acknowledgement_id=...
+   * GET /api/bookings/check-status/?acknowledgement_id=...
    */
   async getStatus(acknowledgementId: string): Promise<BookingStatusResponse> {
     const response = await fetch(
-      `${BACKEND_URL}/api/bookings/status/?acknowledgement_id=${encodeURIComponent(acknowledgementId)}`
+      `${BACKEND_URL}/api/bookings/check-status/?acknowledgement_id=${encodeURIComponent(acknowledgementId)}`
     );
     return handleResponse<BookingStatusResponse>(response);
   },

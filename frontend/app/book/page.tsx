@@ -147,7 +147,7 @@ export default function BookPage() {
   const minDate = new Date().toISOString().split("T")[0];
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-subtle)]">
+    <main className="min-h-screen bg-[var(--color-bg-lavender)]">
       
       {/* Hero Section - Mode Selection */}
       {!selectedMode && bookingStatus === "idle" && (
@@ -168,7 +168,7 @@ export default function BookPage() {
 
             {/* Session Info Cards */}
             <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto mb-12">
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-[var(--color-primary)]/20">
+              <div className="bg-[var(--color-bg-lavender)] rounded-2xl p-4 border border-[var(--color-primary)]/20">
                 <div className="text-2xl mb-2">⏱️</div>
                 <div className="font-body text-sm text-[var(--color-text-body)]/90">
                   <span className="font-bold block mb-1">Session Duration</span>
@@ -182,7 +182,7 @@ export default function BookPage() {
                   Introductory assessment & goal setting
                 </div>
               </div>
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-4 border border-[var(--color-primary)]/20">
+              <div className="bg-[var(--color-bg-lavender)] rounded-2xl p-4 border border-[var(--color-primary)]/20">
                 <div className="text-2xl mb-2">🏢</div>
                 <div className="font-body text-sm text-[var(--color-text-body)]/90">
                   <span className="font-bold block mb-1">Location</span>
@@ -322,7 +322,7 @@ export default function BookPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-primary)]/20"
+              className="bg-[var(--color-bg-lavender)] rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-primary)]/20"
             >
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
@@ -344,19 +344,53 @@ export default function BookPage() {
               </div>
 
               {/* Preferred Date */}
-              <div>
+              <div className="relative">
                 <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
                   Preferred Date <span className="text-[var(--color-primary)]">*</span>
                 </label>
-                <input
-                  type="date"
-                  {...register("preferred_date")}
-                  min={minDate}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
-                  disabled={bookingStatus === "submitting"}
-                />
+                
+                <div className="relative group">
+                  <input
+                    type="date"
+                    {...register("preferred_date")}
+                    min={minDate}
+                    className="w-full px-4 py-3 pr-12 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    disabled={bookingStatus === "submitting"}
+                    style={{
+                      colorScheme: 'light',
+                    }}
+                  />
+
+                  {/* Custom Calendar Icon */}
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--color-text-body)]/60">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="20" 
+                      height="20" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                    >
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                  </div>
+                </div>
+                
+                {/* Helper Text */}
+                <p className="mt-1.5 ml-1 text-[10px] uppercase tracking-wider text-[var(--color-text-body)]/40 font-semibold">
+                  MM/DD/YYYY
+                </p>
+
                 {errors.preferred_date && (
-                  <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.preferred_date.message}</p>
+                  <p className="text-[var(--color-primary)] text-sm mt-1 font-body">
+                    {errors.preferred_date.message}
+                  </p>
                 )}
               </div>
 
