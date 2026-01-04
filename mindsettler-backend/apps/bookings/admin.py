@@ -12,9 +12,12 @@ class BookingAdmin(admin.ModelAdmin):
     # QUERYSET (CRITICAL FIX)
     # ─────────────────────────
     def get_queryset(self, request):
+        """
+        Hide unverified DRAFT bookings from admin.
+        Verified DRAFTs (rare) and all other states remain visible.
+        """
         qs = super().get_queryset(request)
-        # Hide unverified drafts from admin
-        return qs.exclude(status="DRAFT")
+        return qs.exclude(status="DRAFT", email_verified=False)
 
     # ─────────────────────────
     # LIST VIEW
@@ -107,7 +110,7 @@ class BookingAdmin(admin.ModelAdmin):
     # ─────────────────────────
     def save_model(self, request, obj, form, change):
 
-        # Block edits to finalized bookings
+        # ❌ Block edits to finalized bookings
         if change:
             old = Booking.objects.get(pk=obj.pk)
             if old.status in {"COMPLETED", "CANCELLED"}:
@@ -118,7 +121,7 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-        # Approved slot validation
+        # ❌ Approved slot sanity check
         if obj.approved_slot_start and obj.approved_slot_end:
             if obj.approved_slot_end <= obj.approved_slot_start:
                 self.message_user(
@@ -128,6 +131,7 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
+            # ⚠️ Slot overlap warning (non-blocking)
             overlapping = Booking.objects.filter(
                 status__in=["APPROVED", "CONFIRMED"],
                 psychologist=obj.psychologist,
