@@ -1,14 +1,16 @@
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+import uuid
+
 from apps.users.models import AppUser
 from apps.psychologists.models import Psychologist
 from apps.corporates.models import Corporate
-import uuid
-from django.core.exceptions import ValidationError
 
 
 class Booking(models.Model):
 
+    # ───────── CONSTANTS ─────────
     STATUS_CHOICES = [
         ("DRAFT", "Draft"),
         ("PENDING", "Pending"),
@@ -20,6 +22,7 @@ class Booking(models.Model):
         ("CANCELLED", "Cancelled"),
         ("PAYMENT_FAILED", "Payment Failed"),
     ]
+
     PERIOD_CHOICES = [
         ("MORNING", "Morning"),
         ("EVENING", "Evening"),
@@ -36,11 +39,38 @@ class Booking(models.Model):
         ("OFFLINE", "Offline"),
     ]
 
-    # ───────── USER ─────────
+    GENDER_CHOICES = [
+        ("MALE", "Male"),
+        ("FEMALE", "Female"),
+        ("OTHER", "Other"),
+        ("PREFER_NOT_TO_SAY", "Prefer not to say"),
+    ]
+
+    # ───────── USER (AUTH ENTITY) ─────────
     user = models.ForeignKey(
         AppUser,
         on_delete=models.CASCADE,
         related_name="bookings",
+    )
+
+    # ───────── USER DETAILS (SNAPSHOT) ─────────
+    full_name = models.CharField(max_length=100)
+    phone_number = models.CharField(max_length=15)
+
+    city = models.CharField(max_length=50, blank=True)
+    state = models.CharField(max_length=50, blank=True)
+    country = models.CharField(max_length=50, default="India")
+
+    age = models.PositiveIntegerField(null=True, blank=True)
+    gender = models.CharField(
+        max_length=20,
+        choices=GENDER_CHOICES,
+        blank=True,
+    )
+
+    emergency_contact = models.CharField(
+        max_length=15,
+        blank=True,
     )
 
     # ───────── STATE ─────────
@@ -50,40 +80,47 @@ class Booking(models.Model):
         default="DRAFT",
     )
 
-    # ───────── USER PREFERENCE ─────────
+    # ───────── USER PREFERENCES ─────────
+    preferred_date = models.DateField(null=True, blank=True)
     preferred_period = models.CharField(
         max_length=10,
         choices=PERIOD_CHOICES,
-        null= True,
+        null=True,
         blank=True,
     )
 
     preferred_time_start = models.TimeField(null=True, blank=True)
     preferred_time_end = models.TimeField(null=True, blank=True)
-    preferred_date = models.DateField(null=True, blank=True)
 
-    # ───────── SESSION ─────────
+    # ───────── SESSION DETAILS ─────────
     mode = models.CharField(max_length=10, choices=MODE_CHOICES)
-    payment_mode = models.CharField(max_length=10, choices=PAYMENT_MODE_CHOICES)
+    payment_mode = models.CharField(
+        max_length=10,
+        choices=PAYMENT_MODE_CHOICES,
+        null=True,
+        blank=True,
+    )
+
     user_message = models.TextField(blank=True)
 
     # ───────── ADMIN ASSIGNMENT ─────────
     psychologist = models.ForeignKey(
-        Psychologist, null=True, blank=True, on_delete=models.SET_NULL
+        Psychologist,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
 
     corporate = models.ForeignKey(
-        Corporate, null=True, blank=True, on_delete=models.SET_NULL
+        Corporate,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
     )
 
     approved_slot_start = models.DateTimeField(null=True, blank=True)
     approved_slot_end = models.DateTimeField(null=True, blank=True)
-    approved_at = models.DateTimeField(
-    null=True,
-    blank=True,
-    help_text="When admin approved the booking"
-)
-
+    approved_at = models.DateTimeField(null=True, blank=True)
 
     rejection_reason = models.TextField(blank=True)
     alternate_slots = models.TextField(blank=True)
@@ -105,7 +142,6 @@ class Booking(models.Model):
     last_verification_email_sent_at = models.DateTimeField(null=True, blank=True)
     submitted_at = models.DateTimeField(null=True, blank=True)
 
-
     # ───────── ACKNOWLEDGEMENT ─────────
     acknowledgement_id = models.CharField(
         max_length=20,
@@ -114,23 +150,10 @@ class Booking(models.Model):
         blank=True,
     )
 
-    # ───────── USER CONFIRMATION ─────────
-    confirmation_token = models.UUIDField(
-        default=uuid.uuid4,
-        editable=False,
-        unique=True,
-    )
+    # ───────── PAYMENT ─────────
+    payment_reference = models.CharField(max_length=100, null=True, blank=True)
+    payment_requested_at = models.DateTimeField(null=True, blank=True)
 
-    confirmed_at = models.DateTimeField(null=True, blank=True)
-    #------------PAYMENT--------
-
-    payment_reference = models.CharField(
-        max_length=100, null=True, blank=True
-    )
-
-    payment_requested_at = models.DateTimeField(
-        null=True, blank=True
-    )
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -138,21 +161,11 @@ class Booking(models.Model):
         blank=True,
     )
 
-    confirmed_at = models.DateTimeField(
-        null=True, blank=True
-    )
+    confirmed_at = models.DateTimeField(null=True, blank=True)
 
-
-    # ───────── Cancellation Flow ─────────
-    cancellation_reason = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    cancelled_at = models.DateTimeField(
-        blank=True,
-        null=True
-    )
+    # ───────── CANCELLATION FLOW ─────────
+    cancellation_reason = models.TextField(blank=True, null=True)
+    cancelled_at = models.DateTimeField(blank=True, null=True)
 
     cancelled_by = models.CharField(
         max_length=20,
@@ -161,31 +174,35 @@ class Booking(models.Model):
             ("ADMIN", "Admin"),
         ),
         blank=True,
-        null=True
+        null=True,
     )
+
     cancellation_token = models.UUIDField(
         null=True,
         blank=True,
-        db_index=True,   # index but NOT unique
+        db_index=True,
     )
-    cancellation_requested_at = models.DateTimeField(
-        null=True,
-        blank=True
-    )
-    
+
+    cancellation_requested_at = models.DateTimeField(null=True, blank=True)
+
     # ───────── TIMESTAMPS ─────────
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # ───────── DOMAIN METHODS ─────────
-
+    # ───────── VALIDATION ─────────
     def clean(self):
         if self.approved_slot_start and self.approved_slot_end:
             if self.approved_slot_end <= self.approved_slot_start:
                 raise ValidationError({
                     "approved_slot_end": "End time must be after start time."
                 })
-            
+
+        if self.phone_number and not self.phone_number.isdigit():
+            raise ValidationError({
+                "phone_number": "Phone number must contain digits only."
+            })
+
+    # ───────── DOMAIN HELPERS ─────────
     def generate_acknowledgement_id(self):
         if not self.acknowledgement_id:
             self.acknowledgement_id = f"MS-{uuid.uuid4().hex[:8].upper()}"
@@ -196,15 +213,8 @@ class Booking(models.Model):
         self.email_verified_at = timezone.now()
         self.save(update_fields=["email_verified", "email_verified_at"])
 
-    def can_cancel(self):
-        return (
-            self.status == "CONFIRMED"
-            and self.approved_slot_start
-            and timezone.now()
-            <= self.approved_slot_start - timezone.timedelta(hours=24)
-        )
-
     def __str__(self):
         return self.acknowledgement_id or f"Booking-{self.id}"
+
     class Meta:
         ordering = ["-created_at"]
