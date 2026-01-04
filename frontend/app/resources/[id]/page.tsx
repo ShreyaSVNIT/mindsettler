@@ -31,7 +31,7 @@ export default function ResourceDetailPage({ params }: { params: Promise<{ id: s
         <article className="min-h-screen bg-[var(--color-bg-card)]">
 
             {/* --- Top Navigation --- */}
-            <div className="fixed top-0 left-0 w-full z-50 px-6 py-6 pointer-events-none">
+            <div className="absolute top-15 left-0 w-full z-50 px-6 py-6 pointer-events-none">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <Link href="/resources" className="pointer-events-auto group flex items-center gap-2 bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-all border border-[var(--color-border)]">
                         <ArrowLeft className="w-4 h-4 text-[var(--color-text-body)] group-hover:-translate-x-1 transition-transform" />
