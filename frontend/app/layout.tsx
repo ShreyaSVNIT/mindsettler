@@ -4,6 +4,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ClientLayout from "@/components/ClientLayout";
+import ContactOverlay from "@/components/ContactOverlay";
 
 const imbue = Imbue({
   variable: "--font-title",
@@ -33,6 +34,7 @@ export default function RootLayout({
           </main>
 
           <Footer />
+          <ContactOverlay />
         </ClientLayout>
       </body>
     </html>
