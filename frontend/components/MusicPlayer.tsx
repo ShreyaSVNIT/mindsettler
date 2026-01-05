@@ -14,6 +14,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
   const [error, setError] = useState<string | null>(null);
   const playerRef = useRef<any>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const hasAutoPlayedRef = useRef(false);
 
   // Extract video ID from YouTube URL
   const getVideoId = (url: string) => {
@@ -107,6 +108,31 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       }
     };
   }, [videoId]);
+
+  // Auto-play after splash screen completes
+  useEffect(() => {
+    const handleSplashDone = () => {
+      if (!hasAutoPlayedRef.current && playerRef.current && isLoaded) {
+        setTimeout(() => {
+          try {
+            playerRef.current.playVideo();
+            hasAutoPlayedRef.current = true;
+          } catch (err) {
+            console.error('Error auto-playing music:', err);
+          }
+        }, 500); // Small delay to ensure smooth transition
+      }
+    };
+
+    // Check if splash already completed
+    if ((window as any).__msSplashDone && !hasAutoPlayedRef.current && isLoaded) {
+      handleSplashDone();
+    }
+
+    // Listen for splash completion event
+    window.addEventListener('splashDone', handleSplashDone);
+    return () => window.removeEventListener('splashDone', handleSplashDone);
+  }, [isLoaded]);
 
   const togglePlay = () => {
     if (!playerRef.current || !isLoaded) return;

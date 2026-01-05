@@ -12,10 +12,22 @@ import type {
   VerifyCancellationResponse,
 } from "@/types";
 
-export const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://127.0.0.1:8000").replace(
-	/\/$/,
-	""
-);
+// Backend URL configuration - must be set in production
+const getBackendURL = () => {
+  const url = process.env.NEXT_PUBLIC_BACKEND_URL;
+  
+  // In production, fail fast if not configured
+  if (process.env.NODE_ENV === 'production' && !url) {
+    throw new Error(
+      'NEXT_PUBLIC_BACKEND_URL is not set. Configure it in your Vercel environment variables.'
+    );
+  }
+  
+  // Use localhost for development
+  return (url ?? "http://127.0.0.1:8000").replace(/\/$/, "");
+};
+
+export const BACKEND_URL = getBackendURL();
 
 // API Error Handler
 class APIError extends Error {

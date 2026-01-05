@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,15 +23,58 @@ type SignupFormData = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState<{score: number; label: string; hint: string}>({ score: 0, label: 'Weak', hint: '' });
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     mode: "onSubmit",
   });
+
+  const password = watch('password');
+
+  // Calculate password strength
+  const calculatePasswordStrength = (pwd: string) => {
+    if (!pwd) return { score: 0, label: 'Weak', hint: '' };
+    
+    let score = 0;
+    const hints = [];
+    
+    if (pwd.length >= 8) score++;
+    else hints.push('at least 8 characters');
+    
+    if (pwd.length >= 12) score++;
+    
+    if (/[a-z]/.test(pwd) && /[A-Z]/.test(pwd)) score++;
+    else hints.push('uppercase and lowercase letters');
+    
+    if (/\d/.test(pwd)) score++;
+    else hints.push('numbers');
+    
+    if (/[^a-zA-Z0-9]/.test(pwd)) score++;
+    else hints.push('special characters');
+    
+    let label = 'Weak';
+    if (score >= 4) label = 'Strong';
+    else if (score >= 2) label = 'Medium';
+    
+    const hint = hints.length > 0 ? `Add ${hints.join(', ')}` : 'Excellent password!';
+    
+    return { score, label, hint };
+  };
+
+  // Update password strength when password changes
+  useEffect(() => {
+    if (password) {
+      setPasswordStrength(calculatePasswordStrength(password));
+    }
+  }, [password]);
 
   const onSubmit = async () => {
     setSubmitted(true);
@@ -154,12 +197,12 @@ export default function SignupPage() {
                 <div>
                   <div className="relative">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
                       {...register("password")}
                       disabled={isSubmitting}
                       placeholder="Create password"
-                      className="w-full rounded-2xl border-2 border-[var(--color-border)] bg-white/60 px-5 py-4 pl-12 font-body text-[15px] text-[var(--color-text-body)] placeholder:text-[var(--color-text-body)]/40 outline-none transition-all focus:border-[var(--color-primary)] focus:bg-white"
+                      className="w-full rounded-2xl border-2 border-[var(--color-border)] bg-white/60 px-5 py-4 pl-12 pr-12 font-body text-[15px] text-[var(--color-text-body)] placeholder:text-[var(--color-text-body)]/40 outline-none transition-all focus:border-[var(--color-primary)] focus:bg-white"
                     />
                     <svg
                       className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-body)]/40"
@@ -174,11 +217,63 @@ export default function SignupPage() {
                         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                       />
                     </svg>
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-body)]/40 hover:text-[var(--color-text-body)]/70 transition-colors"
+                    >
+                      {showPassword ? (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
+                    </button>
                   </div>
                   {errors.password && (
                     <p className="mt-2 ml-1 font-body text-xs text-[var(--color-primary)]">
                       {errors.password.message}
                     </p>
+                  )}
+                  
+                  {/* Password Strength Indicator */}
+                  {password && password.length > 0 && (
+                    <div className="mt-3 space-y-2">
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map((bar) => (
+                          <div
+                            key={bar}
+                            className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
+                              bar <= passwordStrength.score
+                                ? passwordStrength.score <= 2
+                                  ? 'bg-red-500'
+                                  : passwordStrength.score <= 3
+                                  ? 'bg-yellow-500'
+                                  : 'bg-green-500'
+                                : 'bg-gray-200'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className={`font-body text-xs font-medium ${
+                          passwordStrength.score <= 2
+                            ? 'text-red-600'
+                            : passwordStrength.score <= 3
+                            ? 'text-yellow-600'
+                            : 'text-green-600'
+                        }`}>
+                          {passwordStrength.label}
+                        </span>
+                        <span className="font-body text-xs text-[var(--color-text-body)]/60">
+                          {passwordStrength.hint}
+                        </span>
+                      </div>
+                    </div>
                   )}
                 </div>
 
@@ -186,12 +281,12 @@ export default function SignupPage() {
                 <div>
                   <div className="relative">
                     <input
-                      type="password"
+                      type={showConfirmPassword ? "text" : "password"}
                       autoComplete="new-password"
                       {...register("confirmPassword")}
                       disabled={isSubmitting}
                       placeholder="Confirm password"
-                      className="w-full rounded-2xl border-2 border-[var(--color-border)] bg-white/60 px-5 py-4 pl-12 font-body text-[15px] text-[var(--color-text-body)] placeholder:text-[var(--color-text-body)]/40 outline-none transition-all focus:border-[var(--color-primary)] focus:bg-white"
+                      className="w-full rounded-2xl border-2 border-[var(--color-border)] bg-white/60 px-5 py-4 pl-12 pr-12 font-body text-[15px] text-[var(--color-text-body)] placeholder:text-[var(--color-text-body)]/40 outline-none transition-all focus:border-[var(--color-primary)] focus:bg-white"
                     />
                     <svg
                       className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-body)]/40"
@@ -206,6 +301,22 @@ export default function SignupPage() {
                         d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--color-text-body)]/40 hover:text-[var(--color-text-body)]/70 transition-colors"
+                    >
+                      {showConfirmPassword ? (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      )}
+                    </button>
                   </div>
                   {errors.confirmPassword && (
                     <p className="mt-2 ml-1 font-body text-xs text-[var(--color-primary)]">
