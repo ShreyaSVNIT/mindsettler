@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 from apps.bookings.models import Booking
 from apps.bookings.services import get_active_booking, submit_booking
+from apps.bookings.serializers.public import BookingPublicSerializer
 
 
 class VerifyEmailView(APIView):
@@ -24,7 +25,9 @@ class VerifyEmailView(APIView):
         except Booking.DoesNotExist:
             raise ValidationError("Invalid or expired verification link")
 
-        # 🔒 Check for other active booking (exclude self)
+        # ─────────────────────────
+        # Active booking guard
+        # ─────────────────────────
         active = get_active_booking(booking.user)
         if active and active.id != booking.id:
             booking.status = "REJECTED"
@@ -33,28 +36,43 @@ class VerifyEmailView(APIView):
 
             return Response(
                 {
-                    "message": "Another active booking exists. This request was rejected."
+                    "message": (
+                        "Another active booking already exists. "
+                        "This request was rejected."
+                    ),
+                    "status": "REJECTED",
                 },
                 status=200,
             )
 
-        # ✅ Verify email (idempotent)
+        # ─────────────────────────
+        # Email verification (idempotent)
+        # ─────────────────────────
         if not booking.email_verified:
             booking.verify_email()
 
-        # ✅ Submit booking using lifecycle service
+        # ─────────────────────────
+        # Submit booking lifecycle
+        # ─────────────────────────
         if booking.status == "DRAFT":
             submit_booking(booking)
 
+        # ─────────────────────────
+        # Ensure acknowledgement ID
+        # ─────────────────────────
         if not booking.acknowledgement_id:
             booking.generate_acknowledgement_id()
-            booking.save(update_fields=["acknowledgement_id"])
+
+        # ─────────────────────────
+        # Public response
+        # Calendar link appears ONLY after payment (CONFIRMED)
+        # ─────────────────────────
+        serializer = BookingPublicSerializer(booking)
 
         return Response(
             {
                 "message": "Email verified successfully",
-                "acknowledgement_id": booking.acknowledgement_id,
-                "status": booking.status,
+                "booking": serializer.data,
             },
             status=200,
         )

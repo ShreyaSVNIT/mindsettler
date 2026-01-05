@@ -58,16 +58,26 @@ def initiate_payment(booking):
 # ─────────────────────────
 def complete_payment(booking):
     """
-    Payment success callback (gateway simulation)
+    Completes payment for a booking.
 
-    Allowed only from PAYMENT_PENDING
+    Lifecycle:
+        PAYMENT_PENDING → CONFIRMED
+
+    Rules:
+    - Can only be called once
+    - Only allowed from PAYMENT_PENDING
+    - CONFIRMED booking is calendar-eligible
     """
+
+    # 🔒 Enforce lifecycle transition
     if booking.status != "PAYMENT_PENDING":
         raise ValidationError(
-            f"Cannot complete payment in status: {booking.status}"
+            f"Payment cannot be completed in status: {booking.status}"
         )
 
+    # ✅ Confirm booking (single source of truth)
     confirm_booking(booking)
+
     return booking
 
 
