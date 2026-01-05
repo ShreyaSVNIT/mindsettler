@@ -188,6 +188,9 @@ class Booking(models.Model):
     # ───────── TIMESTAMPS ─────────
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # ───────── Notifications ─────────
+    approval_email_sent = models.BooleanField(default=False)
+    rejection_email_sent = models.BooleanField(default=False)
 
     # ───────── VALIDATION ─────────
     def clean(self):

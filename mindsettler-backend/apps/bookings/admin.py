@@ -1,8 +1,11 @@
 from django.contrib import admin, messages
-from django.core.exceptions import ValidationError
 
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
+from apps.bookings.email import (
+    send_booking_approved_email,
+    send_booking_rejected_email,
+)
 
 
 @admin.register(Booking)
@@ -13,7 +16,7 @@ class BookingAdmin(admin.ModelAdmin):
     # ─────────────────────────
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        # Hide raw drafts that user hasn’t verified
+        # Hide unverified drafts
         return qs.exclude(status="DRAFT")
 
     # ─────────────────────────
@@ -48,7 +51,6 @@ class BookingAdmin(admin.ModelAdmin):
     )
 
     ordering = ("-created_at",)
-
     actions = ["approve_bookings", "reject_bookings"]
 
     # ─────────────────────────
@@ -129,7 +131,7 @@ class BookingAdmin(admin.ModelAdmin):
     # ─────────────────────────
     def save_model(self, request, obj, form, change):
 
-        # Prevent editing finalized bookings
+        # Prevent edits to finalized bookings
         if change:
             old = Booking.objects.get(pk=obj.pk)
             if old.status in {"COMPLETED", "CANCELLED"}:
@@ -140,7 +142,7 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-        # Slot sanity check
+        # Slot sanity checks
         if obj.approved_slot_start and obj.approved_slot_end:
             if obj.approved_slot_end <= obj.approved_slot_start:
                 self.message_user(
@@ -202,10 +204,15 @@ class BookingAdmin(admin.ModelAdmin):
                     psychologist=booking.psychologist,
                     corporate=booking.corporate,
                 )
+
+                # ✅ EMAIL NOTIFICATION (Step 6)
+                send_booking_approved_email(booking)
+
                 messages.success(
                     request,
                     f"{booking.acknowledgement_id}: Approved successfully."
                 )
+
             except Exception as e:
                 messages.error(
                     request,
@@ -236,10 +243,15 @@ class BookingAdmin(admin.ModelAdmin):
                     reason=booking.rejection_reason,
                     alternate_slots=booking.alternate_slots,
                 )
+
+                # ✅ EMAIL NOTIFICATION (Step 6)
+                send_booking_rejected_email(booking)
+
                 messages.success(
                     request,
                     f"{booking.acknowledgement_id}: Rejected successfully."
                 )
+
             except Exception as e:
                 messages.error(
                     request,
