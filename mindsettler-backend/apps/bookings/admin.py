@@ -1,30 +1,33 @@
 from django.contrib import admin, messages
-from django.core.exceptions import ValidationError
 
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
+from apps.bookings.email import (
+    send_booking_approved_email,
+    send_booking_rejected_email,
+)
 
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
 
     # ─────────────────────────
-    # QUERYSET (CRITICAL FIX)
+    # QUERYSET
     # ─────────────────────────
     def get_queryset(self, request):
-        """
-        Hide unverified DRAFT bookings from admin.
-        Verified DRAFTs (rare) and all other states remain visible.
-        """
         qs = super().get_queryset(request)
-        return qs.exclude(status="DRAFT", email_verified=False)
+        # Hide unverified drafts
+        return qs.exclude(status="DRAFT")
 
     # ─────────────────────────
     # LIST VIEW
     # ─────────────────────────
     list_display = (
         "acknowledgement_id",
-        "user",
+        "full_name",
+        "user_email",
+        "phone_number",
+        "city",
         "status",
         "preferred_date",
         "preferred_period",
@@ -36,39 +39,50 @@ class BookingAdmin(admin.ModelAdmin):
         "status",
         "mode",
         "preferred_period",
+        "city",
     )
 
     search_fields = (
-        "user__email",
         "acknowledgement_id",
+        "full_name",
+        "user__email",
+        "phone_number",
+        "city",
     )
 
     ordering = ("-created_at",)
-
     actions = ["approve_bookings", "reject_bookings"]
 
     # ─────────────────────────
-    # READ-ONLY FIELDS
+    # READ ONLY
     # ─────────────────────────
     readonly_fields = (
-        "user",
-        "status",
         "acknowledgement_id",
+        "user",
         "email_verified",
         "email_verified_at",
         "consent_given",
         "consent_given_at",
         "created_at",
         "updated_at",
+        "cancelled_at",
+        "cancelled_by",
     )
 
     # ─────────────────────────
     # FORM LAYOUT
     # ─────────────────────────
     fieldsets = (
-        ("User", {
+        ("Personal Details", {
             "fields": (
+                "full_name",
+                "phone_number",
+                "city",
                 "user",
+            )
+        }),
+        ("Verification", {
+            "fields": (
                 "email_verified",
                 "email_verified_at",
             )
@@ -106,11 +120,18 @@ class BookingAdmin(admin.ModelAdmin):
     )
 
     # ─────────────────────────
-    # SAVE VALIDATION & WARNINGS
+    # DISPLAY HELPERS
+    # ─────────────────────────
+    @admin.display(description="Email")
+    def user_email(self, obj):
+        return obj.user.email if obj.user else "-"
+
+    # ─────────────────────────
+    # SAVE VALIDATION
     # ─────────────────────────
     def save_model(self, request, obj, form, change):
 
-        # ❌ Block edits to finalized bookings
+        # Prevent edits to finalized bookings
         if change:
             old = Booking.objects.get(pk=obj.pk)
             if old.status in {"COMPLETED", "CANCELLED"}:
@@ -121,7 +142,7 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-        # ❌ Approved slot sanity check
+        # Slot sanity checks
         if obj.approved_slot_start and obj.approved_slot_end:
             if obj.approved_slot_end <= obj.approved_slot_start:
                 self.message_user(
@@ -131,7 +152,6 @@ class BookingAdmin(admin.ModelAdmin):
                 )
                 return
 
-            # ⚠️ Slot overlap warning (non-blocking)
             overlapping = Booking.objects.filter(
                 status__in=["APPROVED", "CONFIRMED"],
                 psychologist=obj.psychologist,
@@ -157,7 +177,7 @@ class BookingAdmin(admin.ModelAdmin):
             if booking.status != "PENDING":
                 messages.warning(
                     request,
-                    f"{booking.acknowledgement_id}: Not pending, skipped."
+                    f"{booking.acknowledgement_id}: Not pending."
                 )
                 continue
 
@@ -184,6 +204,10 @@ class BookingAdmin(admin.ModelAdmin):
                     psychologist=booking.psychologist,
                     corporate=booking.corporate,
                 )
+
+                # ✅ EMAIL NOTIFICATION (Step 6)
+                send_booking_approved_email(booking)
+
                 messages.success(
                     request,
                     f"{booking.acknowledgement_id}: Approved successfully."
@@ -202,7 +226,7 @@ class BookingAdmin(admin.ModelAdmin):
             if booking.status != "PENDING":
                 messages.warning(
                     request,
-                    f"{booking.acknowledgement_id}: Not pending, skipped."
+                    f"{booking.acknowledgement_id}: Not pending."
                 )
                 continue
 
@@ -219,6 +243,10 @@ class BookingAdmin(admin.ModelAdmin):
                     reason=booking.rejection_reason,
                     alternate_slots=booking.alternate_slots,
                 )
+
+                # ✅ EMAIL NOTIFICATION (Step 6)
+                send_booking_rejected_email(booking)
+
                 messages.success(
                     request,
                     f"{booking.acknowledgement_id}: Rejected successfully."

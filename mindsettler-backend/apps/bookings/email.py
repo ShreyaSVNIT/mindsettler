@@ -182,3 +182,91 @@ support@mindsettler.in
     )
 
     _send_email(message)
+
+def send_booking_approved_email(booking):
+    """
+    Sends approval notification email (idempotent).
+    """
+    if booking.approval_email_sent:
+        return
+
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=booking.user.email,
+        subject="Your MindSettler session has been approved",
+        html_content=f"""
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;">
+            <h2 style="color:#453859;">Session Approved ✅</h2>
+
+            <p>Hello,</p>
+
+            <p>Your session request has been approved with the following details:</p>
+
+            <table style="border-collapse:collapse;">
+                <tr><td><strong>Booking ID</strong></td><td>{booking.acknowledgement_id}</td></tr>
+                <tr><td><strong>Date</strong></td><td>{booking.approved_slot_start.date()}</td></tr>
+                <tr>
+                    <td><strong>Time</strong></td>
+                    <td>
+                        {booking.approved_slot_start.strftime("%H:%M")}
+                        –
+                        {booking.approved_slot_end.strftime("%H:%M")}
+                    </td>
+                </tr>
+                <tr><td><strong>Amount</strong></td><td>₹{booking.amount}</td></tr>
+            </table>
+
+            <p>Please proceed with payment to confirm your appointment.</p>
+
+            <br />
+            <p>— MindSettler Team<br/>
+            <small>support@mindsettler.in</small></p>
+        </div>
+        """,
+    )
+
+    _send_email(message)
+
+    booking.approval_email_sent = True
+    booking.save(update_fields=["approval_email_sent"])
+
+
+def send_booking_rejected_email(booking):
+    """
+    Sends rejection notification email (idempotent).
+    """
+    if booking.rejection_email_sent:
+        return
+
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=booking.user.email,
+        subject="Update on your MindSettler booking",
+        html_content=f"""
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;">
+            <h2 style="color:#c0392b;">Booking Update</h2>
+
+            <p>Hello,</p>
+
+            <p>Unfortunately, your booking request could not be approved.</p>
+
+            <p><strong>Reason:</strong></p>
+            <div style="background:#faf9fb;padding:12px;border-left:4px solid #c0392b;">
+                {booking.rejection_reason}
+            </div>
+
+            {"<p><strong>Suggested alternate slots:</strong></p><p>" + booking.alternate_slots + "</p>" if booking.alternate_slots else ""}
+
+            <p>You are welcome to submit a new request anytime.</p>
+
+            <br />
+            <p>— MindSettler Team<br/>
+            <small>support@mindsettler.in</small></p>
+        </div>
+        """,
+    )
+
+    _send_email(message)
+
+    booking.rejection_email_sent = True
+    booking.save(update_fields=["rejection_email_sent"])
