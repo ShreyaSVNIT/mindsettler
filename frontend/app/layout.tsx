@@ -29,7 +29,12 @@ export default function RootLayout({
         <ClientLayout>
           <Header />
 
-          <main className="min-h-[100dvh]">
+          <main
+            className="
+              pt-[var(--header-h)]
+              min-h-[100dvh]
+            "
+          >
             {children}
           </main>
 

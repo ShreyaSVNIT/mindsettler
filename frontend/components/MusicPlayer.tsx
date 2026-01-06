@@ -172,7 +172,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       </div>
 
       {/* Music Control Corner */}
-      <div className="fixed bottom-0 left-0 z-50">
+      <div className="fixed bottom-0 left-0 z-50 flex flex-col items-start">
         <button
           onClick={togglePlay}
           disabled={!isLoaded}
@@ -184,35 +184,32 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
             transition-all hover:scale-105
             origin-bottom-left
             disabled:opacity-50 disabled:cursor-not-allowed
-            flex flex-col items-start
+            flex items-center gap-3
           `}
           aria-label={isPlaying ? 'Pause music' : 'Play music'}
         >
-          <div className="flex items-center gap-3">
-            {isPlaying ? (
-              <Pause className="w-6 h-6" fill="currentColor" />
-            ) : (
-              <Play className="w-6 h-6 ml-0.5" fill="currentColor" />
-            )}
-            <div className="flex flex-col items-start">
-              <span className="font-title text-xl font-bold uppercase tracking-wider leading-none">
-                {isPlaying ? 'PAUSE' : 'PLAY'}
-              </span>
-            </div>
-          </div>
-          {isPlaying && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleMute();
-              }}
-              className="mt-2 text-sm opacity-70 hover:opacity-100 transition-opacity flex items-center gap-1"
-            >
-              {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-              <span className="font-body text-xs">{isMuted ? 'Unmute' : 'Mute'}</span>
-            </button>
+          {isPlaying ? (
+            <Pause className="w-6 h-6" fill="currentColor" />
+          ) : (
+            <Play className="w-6 h-6 ml-0.5" fill="currentColor" />
           )}
+          <div className="flex flex-col items-start">
+            <span className="font-title text-xl font-bold uppercase tracking-wider leading-none">
+              {isPlaying ? 'PAUSE' : 'PLAY'}
+            </span>
+          </div>
         </button>
+        
+        {isPlaying && (
+          <button
+            onClick={toggleMute}
+            className="bg-[var(--color-primary)] text-white px-6 py-2 ml-8 mb-2 rounded-r-2xl opacity-70 hover:opacity-100 transition-all flex items-center gap-2 shadow-lg"
+            aria-label={isMuted ? 'Unmute music' : 'Mute music'}
+          >
+            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+            <span className="font-body text-xs">{isMuted ? 'Unmute' : 'Mute'}</span>
+          </button>
+        )}
       </div>
     </>
   );

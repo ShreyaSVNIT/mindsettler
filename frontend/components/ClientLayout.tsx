@@ -5,11 +5,11 @@ import SplashScreen from './SplashScreen';
 import { initFirebase } from '@/lib/firebase';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
-  // Important: render the same tree on server + initial client render to avoid hydration mismatches.
-  // We only decide to show the splash after mount.
-  const [showSplash, setShowSplash] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const hasShownSplash = sessionStorage.getItem('splashShown');
 
     if (hasShownSplash) {
@@ -39,12 +39,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     setShowSplash(false);
   };
  
+  // Prevent hydration mismatch by not rendering splash until mounted
+  if (!mounted) {
+    return <>{children}</>;
+  }
+
   return (
     <>
-      {/* App (hero + header) always rendered so video can play under splash */}
       {children}
-
-      {/* Splash overlays on top, then unmounts with no cross-cut */}
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
     </>
   );
