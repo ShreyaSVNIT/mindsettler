@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
+import Iridescence from "@/components/Iridescence";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -35,23 +35,21 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-[calc(100vh-5rem)] bg-[var(--color-bg-lavender)] grid grid-cols-1 lg:grid-cols-2">
-      {/* Left Side - Image & Text */}
+      {/* Left Side - LiquidEther Background */}
       <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
           className="relative hidden lg:flex flex-col justify-center px-16 overflow-hidden"
         >
-          {/* Background Image */}
+          {/* Iridescence Background */}
           <div className="absolute inset-0 z-0">
-            <Image
-              src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=1600"
-              alt="Wellness"
-              fill
-              className="object-cover opacity-50"
-              priority
+            <Iridescence
+              color={[0.89, 0.45, 0.51]}
+              mouseReact={true}
+              amplitude={0.25}
+              speed={0.5}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg-lavender)]/40 via-[var(--color-bg-lavender)]/70 to-[var(--color-bg-lavender)]" />
           </div>
 
           {/* Text Content */}
