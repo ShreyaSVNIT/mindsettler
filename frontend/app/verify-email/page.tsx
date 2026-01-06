@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
@@ -13,7 +13,7 @@ type ViewState =
   | { kind: "error"; message: string }
   | { kind: "success"; data: VerifyEmailResponse };
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -197,5 +197,20 @@ export default function VerifyEmailPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-[var(--color-bg-subtle)] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⏳</div>
+          <p className="font-body text-lg text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }
