@@ -42,14 +42,13 @@ export default function IntegratedHeader() {
     <>
       {/* --- MAIN HEADER --- */}
       <header
-        className={`fixed top-0 left-0 w-full z-[130] transition-all duration-500 h-20 group ${
-          isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'
-        }`}
+        className={`fixed top-0 left-0 w-full z-[130] transition-all duration-500 h-20 group ${isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'
+          }`}
       >
         <div className="h-full w-full flex items-stretch">
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            <button 
-              onClick={() => setMenuOpen(!menuOpen)} 
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
               className={`p-2 hover:scale-110 transition-all relative z-[140] ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}
             >
               <AnimatePresence mode="wait">
@@ -86,9 +85,13 @@ export default function IntegratedHeader() {
               <Calendar size={20} className={isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'} />
               <span className={`text-[14px] uppercase tracking-[0.15em] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>Book Session</span>
             </Link>
-            <div className="flex items-center gap-3 px-8">
-              <Phone size={20} className={isAtTop ? 'text-white' : 'text-[var(--color-primary)]'} />
-              <span className={`text-[15px] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>+44 (0)330 311 7799</span>
+            <div className="flex items-center gap-6 px-8">
+              <Link href="/login" className={`text-[14px] uppercase tracking-[0.15em] font-black transition-colors hover:text-[var(--color-primary)] ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
+                Login
+              </Link>
+              <Link href="/signup" className={`text-[14px] uppercase tracking-[0.15em] font-black transition-colors hover:text-[var(--color-primary)] ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
+                Signup
+              </Link>
             </div>
           </div>
         </div>
@@ -102,8 +105,8 @@ export default function IntegratedHeader() {
             initial={{ y: '-100%' }}
             animate={{ y: 0 }}
             exit={{ y: '-100%' }}
-            transition={{ 
-              duration: 0.8, 
+            transition={{
+              duration: 0.8,
               ease: [0.76, 0, 0.24, 1]
             }}
             className="fixed top-20 left-0 right-0 h-[calc(100vh-5rem)] z-[120] bg-[var(--color-primary)] flex overflow-hidden"
@@ -125,8 +128,8 @@ export default function IntegratedHeader() {
                     onMouseLeave={() => setHoveredLink(null)}
                     className="overflow-hidden"
                   >
-                    <Link 
-                      href={`/${link.toLowerCase().replace(/ /g, '-')}`} 
+                    <Link
+                      href={`/${link.toLowerCase().replace(/ /g, '-')}`}
                       onClick={(e) => handleLinkClick(e, `/${link.toLowerCase().replace(/ /g, '-')}`)}
                     >
                       <div className="overflow-hidden h-[4.5rem] lg:h-[7.5rem]">
@@ -150,15 +153,15 @@ export default function IntegratedHeader() {
 
             {/* RIGHT SIDE: PARALLAX GALLERY */}
             <div className="hidden lg:flex w-1/2 h-full gap-6 p-8 relative">
-              <motion.div 
+              <motion.div
                 className="flex-1 flex flex-col gap-6"
                 animate={{ y: -hoveredIndex * 120 }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
                 {GALLERY_IMAGES.filter(img => img.column === 1).map((img, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="relative overflow-hidden shrink-0 rounded-xl shadow-2xl" 
+                  <motion.div
+                    key={i}
+                    className="relative overflow-hidden shrink-0 rounded-xl shadow-2xl"
                     style={{ height: `${img.height}px` }}
                   >
                     <Image src={img.src} alt="wellness" fill className="object-cover" />
@@ -166,15 +169,15 @@ export default function IntegratedHeader() {
                 ))}
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 className="flex-1 flex flex-col gap-6 pt-40"
                 animate={{ y: hoveredIndex * 220 }}
                 transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
               >
                 {GALLERY_IMAGES.filter(img => img.column === 2).map((img, i) => (
-                  <motion.div 
-                    key={i} 
-                    className="relative overflow-hidden shrink-0 rounded-xl shadow-2xl" 
+                  <motion.div
+                    key={i}
+                    className="relative overflow-hidden shrink-0 rounded-xl shadow-2xl"
                     style={{ height: `${img.height}px` }}
                   >
                     <Image src={img.src} alt="wellness" fill className="object-cover" />

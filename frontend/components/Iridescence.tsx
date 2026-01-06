@@ -1,9 +1,6 @@
-'use client';
-
+/* eslint-disable react/no-unknown-property */
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
 import { useEffect, useRef } from 'react';
-
-import './Iridescence.css';
 
 const vertexShader = `
 attribute vec2 uv;
@@ -53,15 +50,15 @@ interface IridescenceProps {
   speed?: number;
   amplitude?: number;
   mouseReact?: boolean;
-  className?: string;
+  className?: string; // Added className prop to fix type error if passed
 }
 
-export default function Iridescence({ 
-  color = [1, 1, 1], 
-  speed = 1.0, 
-  amplitude = 0.1, 
+export default function Iridescence({
+  color = [1, 1, 1],
+  speed = 1.0,
+  amplitude = 0.1,
   mouseReact = true,
-  className = ''
+  ...rest
 }: IridescenceProps) {
   const ctnDom = useRef<HTMLDivElement>(null);
   const mousePos = useRef({ x: 0.5, y: 0.5 });
@@ -139,5 +136,5 @@ export default function Iridescence({
     };
   }, [color, speed, amplitude, mouseReact]);
 
-  return <div ref={ctnDom} className={`iridescence-container ${className}`} />;
+  return <div ref={ctnDom} className="w-full h-full" {...rest} />;
 }

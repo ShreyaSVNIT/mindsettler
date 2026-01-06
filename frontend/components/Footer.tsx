@@ -1,6 +1,7 @@
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { Instagram, Linkedin, ArrowRight } from "lucide-react";
 
@@ -55,26 +56,24 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 pt-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
-          
-          {/* Stay Connected */}
+
+          {/* Brand & Social - Column 1 */}
           <div className="flex flex-col gap-6">
-            <h4 className="font-title text-sm text-[var(--color-text-body)] font-semibold uppercase tracking-[0.2em] mb-2">Stay Connected</h4>
-            <div className="flex gap-4">
-              <a 
-                href="https://instagram.com" 
-                target="_blank" 
+            <Link href="/" className="block relative w-48 h-16">
+              <Image src="/MindSettlerLogo.png" alt="MindSettler" fill className="object-contain object-left" />
+            </Link>
+            <p className="font-body text-[15px] text-[var(--color-text-body)] opacity-80 leading-relaxed max-w-xs">
+              Your guided journey to mental clarity and emotional balance.
+            </p>
+            <div className="flex gap-4 pt-2">
+              <a
+                href="https://www.instagram.com/mindsettlerbypb/"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="w-12 h-12 flex items-center justify-center border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all duration-300 rounded-xl group"
+                className="w-10 h-10 flex items-center justify-center border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all duration-300 rounded-full group shadow-sm hover:shadow-md hover:-translate-y-1"
+                aria-label="Follow us on Instagram"
               >
-                <Instagram size={20} className="text-[var(--color-text-body)] group-hover:text-white transition-colors" />
-              </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-12 h-12 flex items-center justify-center border border-[var(--color-border)] hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white transition-all duration-300 rounded-xl group"
-              >
-                <Linkedin size={20} className="text-[var(--color-text-body)] group-hover:text-white transition-colors" />
+                <Instagram size={18} className="text-[var(--color-text-body)] group-hover:text-white transition-colors" />
               </a>
             </div>
           </div>
@@ -83,36 +82,34 @@ export default function Footer() {
           <div className="flex flex-col gap-6">
             <h4 className="font-title text-sm text-[var(--color-text-body)] font-semibold uppercase tracking-[0.2em] mb-2">Quick Links</h4>
             <nav className="flex flex-col gap-4 font-body">
-              <Link href="/about" className="text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors text-[15px]">
-                About
-              </Link>
-              <Link href="/how-it-works" className="text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors text-[15px]">
-                How it Works
-              </Link>
-              <Link href="/book" className="text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors text-[15px]">
-                Book Session
-              </Link>
-              <Link href="/about#contact" className="text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors text-[15px]">
-                Contact
-              </Link>
+              {['About', 'How it Works', 'Book Session', 'Contact'].map((item) => (
+                <Link
+                  key={item}
+                  href={item === 'Contact' ? '/about#contact' : `/${item.toLowerCase().replace(' ', '-')}`}
+                  className="text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-all text-[15px] flex items-center gap-2 group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-border)] group-hover:bg-[var(--color-primary)] transition-colors"></span>
+                  <span className="group-hover:translate-x-1 transition-transform">{item}</span>
+                </Link>
+              ))}
             </nav>
           </div>
 
           {/* Find Us */}
           <div className="flex flex-col gap-6">
             <h4 className="font-title text-sm text-[var(--color-text-body)] font-semibold uppercase tracking-[0.2em] mb-2">Find Us</h4>
-            <div className="flex flex-col gap-4 font-body text-[var(--color-text-body)]">
-              <p className="leading-relaxed text-[15px] opacity-80">
-                MindSettler<br />
-                Online Platform<br />
-                India
-              </p>
-              <a href="tel:+919876543210" className="hover:text-[var(--color-primary)] transition-colors text-[15px]">
-                +91 98765 43210
-              </a>
-              <a href="mailto:hello@mindsettler.com" className="hover:text-[var(--color-primary)] transition-colors underline decoration-1 underline-offset-4 text-[15px]">
-                hello@mindsettler.com
-              </a>
+            <div className="flex flex-col gap-4 font-body text-[var(--color-text-body)] w-full h-full pb-2">
+              <div className="w-full h-64 rounded-xl overflow-hidden border border-[var(--color-border)] shadow-md hover:shadow-lg transition-shadow duration-300">
+                <iframe
+                  src="https://maps.google.com/maps?q=Cafe+De+Meet+Siguiente+Surat&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
             </div>
           </div>
 
@@ -139,7 +136,7 @@ export default function Footer() {
                   <ArrowRight size={18} />
                 </button>
               </div>
-              
+
               <label className="flex items-start gap-3 text-xs font-body text-[var(--color-text-body)] opacity-60 cursor-pointer group">
                 <input
                   type="checkbox"
