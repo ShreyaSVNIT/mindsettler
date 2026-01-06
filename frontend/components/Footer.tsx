@@ -25,11 +25,7 @@ export default function Footer() {
       {/* Animated Marquee with ScrollVelocity */}
       <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-8 overflow-hidden">
         <ScrollVelocity
-          texts={[
-            'MINDFUL HEALING ✦',
-            'COMPASSIONATE CARE ✦',
-            'TRANSFORMATIVE JOURNEY ✦'
-          ]}
+          texts={['MINDFUL HEALING ✦ COMPASSIONATE CARE ✦ TRANSFORMATIVE JOURNEY ✦']}
           velocity={170}
           className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider"
         />

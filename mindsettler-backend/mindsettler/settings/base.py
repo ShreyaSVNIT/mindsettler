@@ -40,7 +40,10 @@ FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 # ───────────────────────────────
 
 INSTALLED_APPS = [
+    # ───────── Admin Theme ─────────
     "jazzmin",
+
+    # ───────── Django Core ─────────
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -48,13 +51,15 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    # ───────── Project Apps ─────────
     "apps.users",
     "apps.bookings",
-    "apps.chatbot",
+    "apps.chatbot.apps.ChatbotConfig", 
     "apps.core",
     "apps.psychologists",
     "apps.corporates",
 
+    # ───────── Third-party ─────────
     "rest_framework",
     "corsheaders",
 ]

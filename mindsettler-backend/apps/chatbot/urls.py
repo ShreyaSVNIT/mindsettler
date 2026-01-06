@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import ChatbotIntentView
+from .views import MindSettlerChat
 
 urlpatterns = [
-    path("intent/", ChatbotIntentView.as_view()),
+    path('chat/', MindSettlerChat.as_view(), name='chatbot_api'),
 ]

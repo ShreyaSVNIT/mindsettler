@@ -13,9 +13,18 @@ export type BookingStatus =
 export type PeriodType = "MORNING" | "EVENING" | "CUSTOM";
 export type ModeType = "ONLINE" | "OFFLINE";
 export type PaymentModeType = "ONLINE" | "OFFLINE";
+export type GenderType = "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY";
 
 export interface BookingDraftRequest {
   email: string;
+  full_name: string;
+  phone_number: string;
+  city: string;
+  state: string;
+  country: string;
+  age: number;
+  gender: GenderType;
+  emergency_contact: string;
   consent_given: boolean;
   preferred_date: string;
   preferred_period: PeriodType;
