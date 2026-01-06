@@ -14,6 +14,14 @@ import { trackBookingFormOpened, trackBookingSubmitted } from "@/lib/analytics";
 
 const bookingSchema = z.object({
   email: z.string().email("Invalid email address"),
+  full_name: z.string().min(2, "Full name is required"),
+  phone_number: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  country: z.string().default("India"),
+  age: z.number().min(13, "Must be at least 13 years old").optional(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"]).optional(),
+  emergency_contact: z.string().regex(/^\d{10}$/, "Emergency contact must be 10 digits").optional(),
   consent_given: z.boolean().refine((val) => val === true, {
     message: "You must accept all policies",
   }),
