@@ -47,3 +47,22 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Embla Carousel Styles */
+.embla__slide {
+  position: relative;
+  flex: 0 0 70%;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .embla__slide {
+    flex: 0 0 35%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .embla__slide {
+    flex: 0 0 22%;
+  }
+}

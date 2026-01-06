@@ -82,7 +82,7 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-[calc(100vh-5rem)] bg-[var(--color-bg-lavender)] grid grid-cols-1 lg:grid-cols-2">
-      {/* Left Side - LiquidEther Background */}
+      {/* Left Side - Iridescence Background */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
