@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { motion } from 'framer-motion';
 
 interface TermData {
   letter: string;
@@ -89,11 +90,59 @@ export default function MentalHealthBasics() {
     mentalHealthBasics.slice(20, 26)
   ];
 
+  // Logic to calculate start position (center explosion)
+  // We approximate visual center of the grid to be around row index 1.5
+  // and col index approx 3.
+  const cardVariants = {
+    hidden: (custom: { r: number; c: number; rowLen: number }) => {
+      // Calculate distance from center
+      const centerR = 1.5;
+      const centerC = (custom.rowLen - 1) / 2;
+
+      const dy = (custom.r - centerR) * 100; // Vertical distance
+      const dx = (custom.c - centerC) * 100; // Horizontal distance
+
+      return {
+        opacity: 0,
+        scale: 0.5, // Start slightly visible/larger for subtler effect
+        x: -dx * 0.4, // Drastically reduced travel distance (was 1.5)
+        y: -dy * 0.4,
+      };
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      x: 0,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 25,
+        stiffness: 100 // Slightly softer spring
+      }
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.04
+      }
+    }
+  };
+
   return (
     <section className="relative py-24 px-6 overflow-hidden bg-[var(--color-bg-card)]">
       <div className="relative max-w-7xl mx-auto flex flex-col items-center">
         {/* TITLE - Centered for symmetry */}
-        <div className="max-w-3xl mb-20 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="max-w-3xl mb-20 text-center"
+        >
           <p className="uppercase tracking-widest text-xs mb-4 opacity-70 font-body">
             Emotional Alphabet
           </p>
@@ -104,26 +153,34 @@ export default function MentalHealthBasics() {
           <p className="font-body text-lg opacity-80">
             A gentle A–Z of emotions — explore, pause, breathe.
           </p>
-        </div>
+        </motion.div>
 
         {/* GRID - Centered with equal side spacing */}
-        <div className="flex flex-col items-center gap-4 w-full">
-          {rows.map((row, i) => (
+        <motion.div
+          className="flex flex-col items-center gap-4 w-full"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
+          {rows.map((row, r) => (
             <div
-              key={i}
+              key={r}
               className="flex flex-wrap justify-center gap-3 md:gap-4 w-full"
             >
-              {row.map(term => (
-                <div
+              {row.map((term, c) => (
+                <motion.div
                   key={term.letter}
+                  custom={{ r, c, rowLen: row.length }}
+                  variants={cardVariants}
                   className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40"
                 >
                   <HexagonCard data={term} />
-                </div>
+                </motion.div>
               ))}
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       <style>{`

@@ -26,7 +26,7 @@ export default function Home() {
       <HeroSection />
       {/* <WaveDivider /> */}
       <MentalHealthBasics />
-      <MissionStatement /> 
+      <MissionStatement />
       <JourneyRoadmap />
       <MusicPlayer />
     </main>
