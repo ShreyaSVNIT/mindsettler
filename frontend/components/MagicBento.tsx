@@ -541,6 +541,9 @@ const MagicBento = ({
                 clickEffect={clickEffect}
                 enableMagnetism={enableMagnetism}
               >
+                <div className="magic-bento-card__index" aria-hidden="true">
+                  {String(index + 1).padStart(2, '0')}
+                </div>
                 <div className="magic-bento-card__content">
                   <h2 className="magic-bento-card__title">{card.title}</h2>
                   <p className="magic-bento-card__description">{card.description}</p>
@@ -558,6 +561,9 @@ const MagicBento = ({
 
           return (
             <div key={index} {...cardProps}>
+              <div className="magic-bento-card__index" aria-hidden="true">
+                {String(index + 1).padStart(2, '0')}
+              </div>
               <div className="magic-bento-card__content">
                 <h2 className="magic-bento-card__title">{card.title}</h2>
                 <p className="magic-bento-card__description">{card.description}</p>

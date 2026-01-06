@@ -23,7 +23,7 @@
   min-height: 180px;
   width: 100%;
   max-width: 100%;
-  padding: 1.5rem;
+  padding: 2rem;
   border-radius: 24px;
   border: 2px solid rgba(69, 56, 89, 0.2);
   background: #ffffff;
@@ -59,6 +59,7 @@
   display: flex;
   position: relative;
   color: var(--color-text-body);
+  z-index: 1;
 }
 
 .magic-bento-card__header {
@@ -110,21 +111,9 @@
   font-family: var(--font-title);
   font-weight: 700;
   font-size: clamp(1.5rem, 2vw, 2.25rem);
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.65rem;
   color: var(--color-text-body);
   line-height: 1.12;
-}
-
-.magic-bento-card__title::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: var(--color-primary);
-  box-shadow: 0 0 0 4px rgba(242, 236, 242, 0.9);
-  margin-right: 0.5rem;
-  transform: translateY(-2px);
 }
 
 .magic-bento-card__description {
@@ -137,29 +126,59 @@
   max-width: 68ch;
 }
 
+.magic-bento-card__description::first-letter {
+  font-family: var(--font-title);
+  color: var(--color-primary);
+  font-size: 1.7em;
+  line-height: 0.9;
+  padding-right: 0.05em;
+}
+
+.magic-bento-card__index {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 4vw, 4.25rem);
+  letter-spacing: -0.02em;
+  color: rgba(69, 56, 89, 0.12);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
 .magic-bento-card__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
   margin-top: auto;
-  padding-top: 1rem;
+  padding-top: 1.5rem;
 }
 
 .magic-bento-card__tag {
   display: inline-flex;
   align-items: center;
-  height: 28px;
-  padding: 0 0.75rem;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0.25rem 1rem;
   border-radius: 999px;
   font-family: var(--font-body);
   font-size: 12px;
   line-height: 1;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
   color: rgba(69, 56, 89, 0.9);
   background: var(--color-bg-lavender);
   border: 1px solid rgba(69, 56, 89, 0.18);
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+@media (max-width: 420px) {
+  .magic-bento-card__tags {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .magic-bento-card:hover .magic-bento-card__tag {
@@ -194,7 +213,7 @@
   .magic-bento-card {
     width: 100%;
     min-height: 160px;
-    padding: 1.25rem;
+    padding: 1.5rem;
   }
 }
 
