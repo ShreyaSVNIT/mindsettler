@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import MagneticButton from './Button';
+import AnimatedLogo from './AnimatedLogo';
 
 const HERO_VIDEO_POSTER =
   'https://res.cloudinary.com/dqz1ffhyo/video/upload/q_auto:best,w_1920,so_0,f_jpg/v1766503247/WhatsApp_Video_2025-12-23_at_13.54.39_Precise_Proteus_tuqnir.jpg';
@@ -63,7 +64,7 @@ const HeroSection = () => {
           className="w-full h-full object-cover scale-110"
         >
           <source 
-            src="https://res.cloudinary.com/dqz1ffhyo/video/upload/v1766503247/WhatsApp_Video_2025-12-23_at_13.54.39_Precise_Proteus_tuqnir.mp4" 
+            src="https://res.cloudinary.com/dqz1ffhyo/video/upload/q_auto:best,w_1920/v1766503247/WhatsApp_Video_2025-12-23_at_13.54.39_Precise_Proteus_tuqnir.mp4" 
             type="video/mp4" 
           />
         </video>
@@ -98,9 +99,9 @@ const HeroSection = () => {
             <circle cx="200" cy="100" r="80" stroke="currentColor" strokeWidth="0.2" opacity="0.3" />
           </svg>
 
-          {/* SIMPLIFIED HEADING */}
-          <h1 className="font-title leading-none text-white text-[clamp(3.5rem,12vw,9rem)] drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-            Mind<span style={{ color: 'var(--color-bg-app)' }}>Settler</span>
+          {/* ANIMATED HEADING */}
+          <h1 className="font-title leading-none text-[clamp(3.5rem,12vw,9rem)] drop-shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+            <AnimatedLogo isDark={true} />
           </h1>
         </div>
 
