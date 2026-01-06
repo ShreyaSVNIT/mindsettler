@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { Calendar, MapPin, Phone, Menu, X, Instagram, Linkedin } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import AnimatedLogo from './AnimatedLogo';
 
 const GALLERY_IMAGES = [
   { src: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600", height: 400, column: 1 },
@@ -75,8 +76,8 @@ export default function IntegratedHeader() {
           </nav>
 
           <div className="flex-grow relative flex items-center justify-center px-8">
-            <Link href="/" className="absolute left-1/2 -translate-x-1/2 mt-2">
-              <Image src="/MindSettlerLogo.png" alt="Logo" width={200} height={67} priority />
+            <Link href="/" className="absolute left-1/2 -translate-x-1/2">
+              <AnimatedLogo className="text-4xl font-bold" isDark={isAtTop} />
             </Link>
           </div>
 
