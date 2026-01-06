@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { Instagram, Linkedin, ArrowRight } from "lucide-react";
+import ScrollVelocity from "./ScrollVelocity";
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -21,26 +22,17 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-gradient-to-b from-[var(--color-bg-subtle)] to-[var(--color-bg-card)] overflow-hidden">
-      {/* Animated Marquee */}
+      {/* Animated Marquee with ScrollVelocity */}
       <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-8 overflow-hidden">
-        <div className="flex whitespace-nowrap animate-marquee">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex items-center gap-12 px-6 flex-shrink-0">
-              <span className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider">
-                MINDFUL HEALING
-              </span>
-              <span className="text-3xl text-[var(--color-primary)] opacity-40">✦</span>
-              <span className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider">
-                COMPASSIONATE CARE
-              </span>
-              <span className="text-3xl text-[var(--color-primary)] opacity-40">✦</span>
-              <span className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider">
-                TRANSFORMATIVE JOURNEY
-              </span>
-              <span className="text-3xl text-[var(--color-primary)] opacity-40">✦</span>
-            </div>
-          ))}
-        </div>
+        <ScrollVelocity
+          texts={[
+            'MINDFUL HEALING ✦',
+            'COMPASSIONATE CARE ✦',
+            'TRANSFORMATIVE JOURNEY ✦'
+          ]}
+          velocity={170}
+          className="text-6xl md:text-7xl font-title font-bold text-[var(--color-primary)] tracking-wider"
+        />
       </div>
 
       {/* Large Background Text */}
