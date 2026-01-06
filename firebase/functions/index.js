@@ -22,7 +22,7 @@ exports.sendBookingVerificationEmail = functions.https.onRequest(
       }
 
       const verificationLink =
-        `http://localhost:3000/verify-booking?token=${token}`;
+        `http://localhost:3000/verify-email?token=${token}`;
 
       await transporter.sendMail({
         from: `"MindSettler" <mindsettler.dev@gmail.com>`,

@@ -39,7 +39,7 @@ def _send_email(message):
 
 def send_booking_verification_email(booking):
     verification_url = (
-        f"{settings.FRONTEND_URL}/verify-booking"
+        f"{settings.FRONTEND_URL}/verify-email"
         f"?token={booking.email_verification_token}"
     )
 
