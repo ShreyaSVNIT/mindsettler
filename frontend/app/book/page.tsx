@@ -14,6 +14,14 @@ import { trackBookingFormOpened, trackBookingSubmitted } from "@/lib/analytics";
 
 const bookingSchema = z.object({
   email: z.string().email("Invalid email address"),
+  full_name: z.string().min(2, "Full name is required"),
+  phone_number: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
+  city: z.string().min(1, "City is required"),
+  state: z.string().min(1, "State is required"),
+  country: z.string().min(1, "Country is required"),
+  age: z.coerce.number().min(13, "Must be at least 13 years old"),
+  gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"]),
+  emergency_contact: z.string().regex(/^\d{10}$/, "Emergency contact must be 10 digits"),
   consent_given: z.boolean().refine((val) => val === true, {
     message: "You must accept all policies",
   }),
@@ -81,6 +89,7 @@ export default function BookPage() {
     defaultValues: {
       preferred_period: "MORNING",
       mode: "ONLINE",
+      country: "India",
       consent_given: false,
       privacy_policy: false,
       non_refund_policy: false,
@@ -105,6 +114,14 @@ export default function BookPage() {
       // Prepare payload following backend contract
       const payload: BookingDraftRequest = {
         email: data.email,
+        full_name: data.full_name,
+        phone_number: data.phone_number,
+        city: data.city,
+        state: data.state,
+        country: data.country,
+        age: data.age,
+        gender: data.gender,
+        emergency_contact: data.emergency_contact,
         consent_given: data.consent_given,
         preferred_date: data.preferred_date,
         preferred_period: data.preferred_period,
@@ -326,22 +343,175 @@ export default function BookPage() {
             >
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
-                {/* Email Field */}
-                <div>
-                <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                  Email Address <span className="text-[var(--color-primary)]">*</span>
-                </label>
-                <input
-                  type="email"
-                  {...register("email")}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
-                  placeholder="your.email@example.com"
-                  disabled={bookingStatus === "submitting"}
-                />
-                {errors.email && (
-                  <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.email.message}</p>
-                )}
-              </div>
+                {/* Personal Information Section */}
+                <div className="bg-[var(--color-primary)]/5 p-5 rounded-2xl border border-[var(--color-primary)]/10 space-y-5">
+                  <h3 className="font-body text-base font-bold text-[var(--color-text-body)] mb-3">
+                    Personal Information
+                  </h3>
+
+                  {/* Full Name */}
+                  <div>
+                    <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                      Full Name <span className="text-[var(--color-primary)]">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      {...register("full_name")}
+                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                      placeholder="Enter your full name"
+                      disabled={bookingStatus === "submitting"}
+                    />
+                    {errors.full_name && (
+                      <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.full_name.message}</p>
+                    )}
+                  </div>
+
+                  {/* Email & Phone */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                        Email Address <span className="text-[var(--color-primary)]">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        {...register("email")}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        placeholder="your.email@example.com"
+                        disabled={bookingStatus === "submitting"}
+                      />
+                      {errors.email && (
+                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.email.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                        Phone Number <span className="text-[var(--color-primary)]">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        {...register("phone_number")}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        placeholder="10-digit number"
+                        maxLength={10}
+                        disabled={bookingStatus === "submitting"}
+                      />
+                      {errors.phone_number && (
+                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.phone_number.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Age & Gender */}
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                        Age <span className="text-[var(--color-primary)]">*</span>
+                      </label>
+                      <input
+                        type="number"
+                        {...register("age")}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        placeholder="Your age"
+                        min={13}
+                        max={120}
+                        disabled={bookingStatus === "submitting"}
+                      />
+                      {errors.age && (
+                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.age.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                        Gender <span className="text-[var(--color-primary)]">*</span>
+                      </label>
+                      <select
+                        {...register("gender")}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        disabled={bookingStatus === "submitting"}
+                      >
+                        <option value="">Select gender</option>
+                        <option value="MALE">Male</option>
+                        <option value="FEMALE">Female</option>
+                        <option value="OTHER">Other</option>
+                        <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
+                      </select>
+                      {errors.gender && (
+                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.gender.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Location Fields */}
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                        City <span className="text-[var(--color-primary)]">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        {...register("city")}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        placeholder="Your city"
+                        disabled={bookingStatus === "submitting"}
+                      />
+                      {errors.city && (
+                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.city.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                        State <span className="text-[var(--color-primary)]">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        {...register("state")}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        placeholder="Your state"
+                        disabled={bookingStatus === "submitting"}
+                      />
+                      {errors.state && (
+                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.state.message}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                        Country <span className="text-[var(--color-primary)]">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        {...register("country")}
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        placeholder="Your country"
+                        disabled={bookingStatus === "submitting"}
+                      />
+                      {errors.country && (
+                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.country.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Emergency Contact */}
+                  <div>
+                    <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                      Emergency Contact Number <span className="text-[var(--color-primary)]">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      {...register("emergency_contact")}
+                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                      placeholder="10-digit number"
+                      maxLength={10}
+                      disabled={bookingStatus === "submitting"}
+                    />
+                    {errors.emergency_contact && (
+                      <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.emergency_contact.message}</p>
+                    )}
+                  </div>
+                </div>
 
               {/* Preferred Date */}
               <div className="relative">
