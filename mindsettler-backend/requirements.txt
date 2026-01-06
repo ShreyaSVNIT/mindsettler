@@ -40,8 +40,4 @@ cryptography==46.0.3
 cffi==2.0.0
 pycparser==2.23
 
-# ───────── Chatbot (NLP) ─────────
-torch>=2.5.0
-sentence-transformers>=2.6.0
-scikit-learn
-numpy
+

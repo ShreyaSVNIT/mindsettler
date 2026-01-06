@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     # ───────── Project Apps ─────────
     "apps.users",
     "apps.bookings",
-    "apps.chatbot.apps.ChatbotConfig", 
+    "apps.chatbot", 
     "apps.core",
     "apps.psychologists",
     "apps.corporates",
