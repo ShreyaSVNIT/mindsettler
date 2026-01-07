@@ -33,6 +33,10 @@ body {
   min-height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* 3D perspective for card flip effect */
 .perspective-1000 {
   perspective: 1000px;
@@ -46,4 +50,23 @@ body {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Embla Carousel Styles */
+.embla__slide {
+  position: relative;
+  flex: 0 0 70%;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .embla__slide {
+    flex: 0 0 35%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .embla__slide {
+    flex: 0 0 22%;
+  }
 }

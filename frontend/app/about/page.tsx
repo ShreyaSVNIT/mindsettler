@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from 'framer-motion';
 import MagneticButton from '@/components/Button';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
+import MagicBento from '@/components/MagicBento';
 
 // Animated Counter Component
 const AnimatedCounter = ({ value, inView }: { value: string, inView: boolean }) => {
@@ -43,30 +44,6 @@ interface CardProps {
   range: number[];
   targetScale: number;
 }
-
-const StoryCard = ({ card, index, total, scrollYProgress }: { 
-  card: { id: number; year: string; title: string; description: string }; 
-  index: number; 
-  total: number; 
-  scrollYProgress: any;
-}) => {
-  return (
-    <motion.div 
-      className="relative w-[350px] h-[450px] flex-shrink-0 bg-white border-2 border-[var(--color-primary)] p-8 flex flex-col justify-center items-center rounded-2xl shadow-xl"
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ y: -10, scale: 1.02 }}
-    >
-      <div className="inline-block mb-4 bg-[var(--color-primary)]/10 px-4 py-2 rounded-full">
-        <span className="text-xs font-body text-[var(--color-primary)] tracking-wider uppercase font-semibold">{card.year}</span>
-      </div>
-      <h3 className="text-2xl font-title text-[var(--color-primary)] mb-4">{card.title}</h3>
-      <p className="text-center text-gray-600 leading-relaxed text-sm">{card.description}</p>
-    </motion.div>
-  );
-};
 
 const Card = ({ i, title, description, progress, range, targetScale }: CardProps) => {
   const container = useRef(null);
@@ -143,7 +120,6 @@ const Card = ({ i, title, description, progress, range, targetScale }: CardProps
 export default function AboutPage() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
-  const storyContainerRef = useRef(null);
   
   // Subtle parallax for hero
   const { scrollYProgress: heroScrollProgress } = useScroll({
@@ -161,12 +137,6 @@ export default function AboutPage() {
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end end']
-  });
-
-  // Story section scroll progress - track vertical scroll for horizontal movement
-  const { scrollYProgress: storyScrollProgress } = useScroll({
-    target: storyContainerRef,
-    offset: ["start start", "end end"]
   });
 
   // Contact form state
@@ -219,50 +189,6 @@ export default function AboutPage() {
     { title: 'Personalized Care', description: 'No two journeys are the same. We match you with therapists who truly understand your unique needs.' },
     { title: 'Evidence-Based', description: 'Our therapists use proven techniques backed by research and decades of clinical experience.' },
   ];
-
-  const storyCards = [
-    { 
-      id: 6, 
-      year: 'The Foundation',
-      title: 'Understanding Mental Health', 
-      description: 'We recognized that mental wellness is not a luxury—it\'s a necessity. Our journey began with a simple question: How can we make therapy accessible to everyone?' 
-    },
-    { 
-      id: 5, 
-      year: 'The Beginning',
-      title: 'A Vision Born from Empathy', 
-      description: 'MindSettler was founded on the belief that mental wellness should be accessible, judgment-free, and deeply personal. We saw too many people suffering in silence, and we knew we had to change that.' 
-    },
-    { 
-      id: 4, 
-      year: 'Building Trust',
-      title: 'Creating Safe Spaces', 
-      description: 'We built a platform where confidentiality isn\'t just a promise—it\'s our foundation. Every conversation, every session, every breakthrough stays between you and your therapist.' 
-    },
-    { 
-      id: 3, 
-      year: 'The Mission',
-      title: 'Breaking Down Barriers', 
-      description: 'We built a platform that removes the stigma around seeking help. No waiting rooms, no awkward encounters—just you, your therapist, and a safe digital space designed for healing.' 
-    },
-    { 
-      id: 2, 
-      year: 'Growth & Impact',
-      title: 'Reaching More Hearts', 
-      description: 'From our first session to thousands of lives touched, we\'ve grown not just in size but in our commitment to making mental wellness a priority for everyone.' 
-    },
-    { 
-      id: 1, 
-      year: 'Today',
-      title: 'Growing Together', 
-      description: 'Every session, every breakthrough, every moment of clarity—these are the victories we celebrate. We\'re here not just as a service, but as your partner in wellness.' 
-    },
-  ];
-
-  // Adjust x movement based on total cards
-  // (total - 1) * 20% provides smoother, more controlled movement
-  const totalCards = storyCards.length;
-  const x = useTransform(storyScrollProgress, [0, 1], ["0%", `-${(totalCards - 1) * 20}%`]);
 
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)]">
@@ -521,47 +447,53 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-subtle)" />
+      <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-app)" />
 
-      {/* Our Story - Vertical Scroll Drives Horizontal Movement */}
-      <section ref={storyContainerRef} className="relative h-[400vh] bg-[var(--color-bg-app)]">
-        {/* Sticky Wrapper - stays in view while scrolling down */}
-        <div className="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden">
-          
-          {/* Header - Stays until cards are over */}
-          <div className="text-center mb-12 z-20 px-6">
+      {/* What We Offer - MagicBento Grid */}
+      <section className="relative py-24 bg-[var(--color-bg-app)] overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
               <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
+                <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
                 <span className="text-[var(--color-primary)] text-[10px] tracking-[0.4em] uppercase font-body font-light">
-                  Our Journey
+                  Our Approach
                 </span>
-                <div className="h-[1px] w-8 bg-[var(--color-primary)]" />
+                <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
               </div>
-              <h2 className="font-title text-5xl md:text-6xl text-[var(--color-text-body)]">
-                The <span className="text-[var(--color-primary)] italic">Story</span> Behind Us
+              <h2 className="font-title text-5xl md:text-6xl lg:text-7xl text-[var(--color-text-body)] mb-4">
+                What Makes Us <span className="text-[var(--color-primary)] italic">Different</span>
               </h2>
+              <p className="font-body text-lg text-[var(--color-text-body)]/60 max-w-2xl mx-auto">
+                Discover the core values and principles that guide our mission to transform mental wellness
+              </p>
             </motion.div>
           </div>
 
-          {/* The Card Rail - horizontal gallery controlled by vertical scroll */}
-          <motion.div style={{ x }} className="flex gap-[10vw] px-[35vw] items-center">
-            {storyCards.map((card, index) => (
-              <StoryCard 
-                key={card.id} 
-                card={card} 
-                index={index} 
-                total={storyCards.length} 
-                scrollYProgress={storyScrollProgress} 
-              />
-            ))}
+          {/* MagicBento Grid */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <MagicBento
+              enableStars={false}
+              enableMagnetism={true}
+              enableTilt={true}
+              enableSpotlight={true}
+              enableBorderGlow={true}
+            />
           </motion.div>
         </div>
       </section>
+
+      <WaveDividerSolid topColor="var(--color-bg-app)" bottomColor="var(--color-bg-subtle)" />
 
       {/* Title before cards */}
       <section className="py-24 px-6 bg-[var(--color-bg-subtle)]">
