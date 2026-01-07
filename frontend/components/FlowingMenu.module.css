@@ -1,0 +1,112 @@
+.wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--color-bg-app);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.item:first-child {
+  border-top: none;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+
+  background: transparent;
+  border: 0;
+  color: var(--color-text-body);
+
+  font-weight: 650;
+  letter-spacing: 0.22em;
+  font-size: clamp(0.9rem, 2.2vh, 1.1rem);
+}
+
+.link:hover {
+  color: var(--color-primary);
+}
+
+.marquee {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translate3d(0, 101%, 0);
+  background: var(--color-bg-card);
+}
+
+.marqueeInnerWrap {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.marqueeInner {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  width: fit-content;
+  will-change: transform;
+}
+
+.marqueePart {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marqueeText {
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  font-size: clamp(0.9rem, 2.2vh, 1.1rem);
+  line-height: 1;
+  padding: 0 1.2vw;
+  color: var(--color-text-body);
+}
+
+.marqueeImg {
+  width: 220px;
+  height: 42px;
+  margin: 0 1.2vw;
+  border-radius: 999px;
+  background-size: cover;
+  background-position: 50% 50%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 768px) {
+  .marqueeImg {
+    width: 280px;
+    height: 54px;
+  }
+}
