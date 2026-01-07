@@ -33,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${imbue.variable} ${playfair.variable} ${ivyPresto.variable}`}>
-      <body className="bg-bg-app text-text-body antialiased" style={{ fontFamily: "var(--font-ivy)" }}>
+      <body className="bg-bg-app text-text-body antialiased">
         <ClientLayout>
           <Header />
 

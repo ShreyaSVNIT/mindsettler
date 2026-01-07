@@ -35,16 +35,20 @@
 html,
 body {
   min-height: 100%;
-  font-family: var(--font-ivy) !important;
+  font-family: var(--font-body);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* Apply IvyPresto to body text elements */
-.font-body,
-p, span:not(.font-title *), div:not(.font-title):not(.font-title *) {
+/* Font classes */
+.font-title {
+  font-family: var(--font-title) !important;
+}
+
+/* Apply IvyPresto only to .font-body class */
+.font-body {
   font-family: var(--font-ivy) !important;
 }
 

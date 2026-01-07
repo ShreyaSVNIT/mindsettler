@@ -92,6 +92,7 @@
   line-height: 1;
   padding: 0 1.2vw;
   color: var(--color-text-body);
+  font-family: var(--font-title) !important;
 }
 
 .marqueeImg {

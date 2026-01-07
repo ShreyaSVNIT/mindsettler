@@ -8,10 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
-        colors: {
+      colors: {
         primary: {
-            DEFAULT: "#e55d80",
-            hover: "#eb81a5",
+          DEFAULT: "#e55d80",
+          hover: "#eb81a5",
         },
 
         "bg-app": "#f3eded",
@@ -21,12 +21,12 @@ const config: Config = {
         "text-body": "#453859",
 
         "border-muted": "#e8e6eb",
-        },
+      },
 
-        fontFamily: {
+      fontFamily: {
         title: ["var(--font-title)", "serif"],
         body: ["var(--font-ivy)", "serif"],
-        },
+      },
     },
   },
 

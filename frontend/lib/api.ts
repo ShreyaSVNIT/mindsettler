@@ -38,9 +38,31 @@ class APIError extends Error {
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
-  const data = await response.json().catch(() => ({ detail: "Invalid response from server" }));
+  // Handle empty responses (204 No Content)
+  if (response.status === 204 || response.headers.get('content-length') === '0') {
+    return {} as T;
+  }
+  
+  const contentType = response.headers.get('content-type');
+  if (!contentType || !contentType.includes('application/json')) {
+    const text = await response.text();
+    console.error('Non-JSON response:', { status: response.status, contentType, text });
+    throw new APIError(
+      response.status,
+      `Expected JSON response but got: ${text.substring(0, 100)}`
+    );
+  }
+  
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    console.error('JSON parse error:', e);
+    throw new APIError(response.status, "Invalid JSON response from server");
+  }
   
   if (!response.ok) {
+    console.error('API Error:', { status: response.status, data });
     throw new APIError(
       response.status,
       data.detail || data.message || data.error || "Request failed"
@@ -141,7 +163,7 @@ export const bookingAPI = {
 // Status helpers
 export const statusHelpers = {
   canInitiatePayment: (status: string) => status === "APPROVED",
-  canRequestCancellation: (status: string) => status === "CONFIRMED",
+  canRequestCancellation: (status: string) => !["CANCELLED", "REJECTED"].includes(status),
   isTerminal: (status: string) => ["CONFIRMED", "CANCELLED", "COMPLETED", "REJECTED"].includes(status),
   needsEmailVerification: (status: string) => status === "DRAFT",
   awaitingAdmin: (status: string) => status === "PENDING",
