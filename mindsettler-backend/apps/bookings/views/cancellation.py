@@ -1,5 +1,3 @@
-# apps/bookings/views/cancellation.py
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -15,8 +13,9 @@ class RequestCancellationView(APIView):
     Handles user-initiated cancellation requests.
 
     Rules:
-    - APPROVED  → cancel immediately (no email)
-    - CONFIRMED → email verification required
+    - APPROVED         → instant cancel (no email)
+    - PAYMENT_PENDING  → instant cancel (no email)
+    - CONFIRMED        → email verification required
     """
 
     permission_classes = [AllowAny]
@@ -31,15 +30,15 @@ class RequestCancellationView(APIView):
         try:
             booking = Booking.objects.get(
                 acknowledgement_id=ack_id,
-                status__in=["APPROVED", "CONFIRMED"],
+                status__in=["APPROVED", "PAYMENT_PENDING", "CONFIRMED"],
             )
         except Booking.DoesNotExist:
             raise ValidationError("Booking not found or not cancellable")
 
         # ─────────────────────────
-        # APPROVED → instant cancel
+        # APPROVED / PAYMENT_PENDING → instant cancel
         # ─────────────────────────
-        if booking.status == "APPROVED":
+        if booking.status in {"APPROVED", "PAYMENT_PENDING"}:
             cancel_by_user(booking)
             return Response({
                 "message": "Booking cancelled successfully",
@@ -47,15 +46,14 @@ class RequestCancellationView(APIView):
             })
 
         # ─────────────────────────
-        # CONFIRMED → email verify
+        # CONFIRMED → email verification
         # ─────────────────────────
         send_cancellation_verification_email(booking)
 
         return Response({
             "message": "Cancellation verification email sent"
         })
-    
-# apps/bookings/views/cancellation.py (continued)
+
 
 class VerifyCancellationView(APIView):
     """

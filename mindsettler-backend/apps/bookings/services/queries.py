@@ -1,13 +1,28 @@
 # apps/bookings/services/queries.py
+
 from apps.bookings.models import Booking
 
-ACTIVE_STATUSES = {"DRAFT", "PENDING", "APPROVED", "CONFIRMED"}
+# ─────────────────────────
+# SINGLE SOURCE OF TRUTH
+# ─────────────────────────
+ACTIVE_STATUSES = {
+    "DRAFT",
+    "PENDING",
+    "APPROVED",
+    "PAYMENT_PENDING",
+    "CONFIRMED",
+}
 
 
 def has_active_booking(user, exclude=None):
+    """
+    Returns True if the user has any active booking
+    (including PAYMENT_PENDING).
+    """
+
     qs = Booking.objects.filter(
         user=user,
-        status__in=["PENDING", "APPROVED", "CONFIRMED"],
+        status__in=ACTIVE_STATUSES,
     )
 
     if exclude is not None:
@@ -17,9 +32,15 @@ def has_active_booking(user, exclude=None):
 
 
 def get_active_booking(user):
+    """
+    Returns the most recent active booking for the user.
+    """
+
     return (
-        user.bookings
-        .filter(status__in=ACTIVE_STATUSES)
+        Booking.objects.filter(
+            user=user,
+            status__in=ACTIVE_STATUSES,
+        )
         .order_by("-created_at")
         .first()
     )
