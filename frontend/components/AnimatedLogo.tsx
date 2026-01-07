@@ -26,11 +26,15 @@ export default function AnimatedLogo({ className = '', isDark = false }: { class
   }, [hasCompleted]);
 
   return (
-    <div className={`flex items-center ${className}`}>
+    <div className={`inline-flex items-baseline justify-center whitespace-nowrap ${className}`}>
       <span className={`font-title text-inherit ${isDark ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
         Mind
       </span>
-      <div className="relative inline-block min-w-[140px]">
+      {/*
+        Reserve a fixed slot for the changing word so the overall title width
+        remains constant (prevents 'Mind' from shifting as the second word changes).
+      */}
+      <div className="relative inline-block w-[8ch] text-left">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentWordIndex}
@@ -38,11 +42,7 @@ export default function AnimatedLogo({ className = '', isDark = false }: { class
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className={`font-title text-inherit inline-block ${
-              currentWordIndex === words.length - 1 
-                ? isDark ? 'text-white' : 'text-[var(--color-primary)]'
-                : isDark ? 'text-white/70' : 'text-[var(--color-text-body)]/70'
-            }`}
+            className="font-title text-inherit inline-block text-[var(--color-bg-app)]"
           >
             {words[currentWordIndex]}
           </motion.span>
