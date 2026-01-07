@@ -66,7 +66,7 @@ export default function IntegratedHeader() {
           </div>
 
           <nav className={`hidden xl:flex items-center px-12 gap-10 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            {['About', 'How It Works', 'Resources'].map((item) => (
+            {['About', 'How It Works', 'Corporate', 'Resources'].map((item) => (
               <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className={`relative text-[15px] uppercase tracking-[0.25em] font-bold hover:text-[var(--color-primary)] transition-colors group/link ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
                 {item}
                 <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>

@@ -33,6 +33,10 @@ ALLOWED_HOSTS = []
 SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
 DEFAULT_FROM_EMAIL = "mindsettler.dev@gmail.com"
 
+# Console email backend for development (prints emails to terminal)
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 # ───────────────────────────────

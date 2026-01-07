@@ -20,8 +20,12 @@
   --color-border: #e8e6eb;
 
   /* Fonts */
+  --font-title: var(--font-title), serif;
+  --font-body: var(--font-ivy), serif;
+  /* Original fonts (temporarily replaced body only):
   --font-title: "Imbue", serif;
   --font-body: "Playfair Display", serif;
+  */
 
   /* Layout */
   --header-h: 5rem;
@@ -31,10 +35,17 @@
 html,
 body {
   min-height: 100%;
+  font-family: var(--font-ivy) !important;
 }
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Apply IvyPresto to body text elements */
+.font-body,
+p, span:not(.font-title *), div:not(.font-title):not(.font-title *) {
+  font-family: var(--font-ivy) !important;
 }
 
 /* 3D perspective for card flip effect */

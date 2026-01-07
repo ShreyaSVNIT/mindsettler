@@ -20,7 +20,6 @@ function StatusPageContent() {
   
   const [state, setState] = useState<ViewState>({ kind: "idle" });
   const [acknowledgementId, setAcknowledgementId] = useState<string>("");
-  const [isInitiatingPayment, setIsInitiatingPayment] = useState(false);
   const [isCancelling, setIsCancelling] = useState(false);
 
   // Get acknowledgement ID from URL or localStorage
@@ -65,22 +64,11 @@ function StatusPageContent() {
   const handleInitiatePayment = async () => {
     if (state.kind !== "success") return;
 
-    setIsInitiatingPayment(true);
-    try {
-      const result = await bookingAPI.initiatePayment({
-        acknowledgement_id: acknowledgementId,
-      });
-      
-      // Track payment initiation (privacy: no reference, just has_amount)
-      trackPaymentInitiated({ has_amount: !!result.amount });
-      
-      // Navigate to payment page with details
-      router.push(`/payment?ref=${result.payment_reference}&amount=${result.amount}`);
-    } catch (err: any) {
-      alert(err.message || "Failed to initiate payment");
-    } finally {
-      setIsInitiatingPayment(false);
-    }
+    // Track payment initiation (privacy: no reference, just has_amount)
+    trackPaymentInitiated({ has_amount: true });
+    
+    // Navigate to payment page - payment page will handle initiation
+    router.push(`/payment?id=${acknowledgementId}`);
   };
 
   const handleRequestCancellation = async () => {
@@ -325,10 +313,9 @@ function StatusPageContent() {
                 {statusHelpers.canInitiatePayment(state.data.status) && (
                   <button
                     onClick={handleInitiatePayment}
-                    disabled={isInitiatingPayment}
-                    className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-6 py-4 rounded-full transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-6 py-4 rounded-full transition-all shadow-lg"
                   >
-                    {isInitiatingPayment ? "Processing..." : "💳 Proceed to Payment"}
+                    💳 Proceed to Payment
                   </button>
                 )}
 

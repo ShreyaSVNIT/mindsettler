@@ -13,35 +13,36 @@ import { trackBookingFormOpened, trackBookingSubmitted } from "@/lib/analytics";
 /* ---------------- Zod Schema Following Backend Contract ---------------- */
 
 const bookingSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  full_name: z.string().min(2, "Full name is required"),
-  phone_number: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits"),
-  city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State is required"),
-  country: z.string().min(1, "Country is required"),
-  age: z.coerce.number().min(13, "Must be at least 13 years old"),
-  gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"]),
-  emergency_contact: z.string().regex(/^\d{10}$/, "Emergency contact must be 10 digits"),
+  email: z.string().email("Please enter a valid email address"),
+  full_name: z.string().min(2, "Please enter your full name"),
+  phone_number: z.string().regex(/^\d{10}$/, "Please enter a valid 10-digit phone number"),
+  city: z.string().min(1, "Please enter your city"),
+  state: z.string().optional(),
+  country: z.string().optional(),
+  age: z.coerce.number().min(13, "You must be at least 13 years old to book a session"),
+  gender: z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"], {
+    errorMap: () => ({ message: "Please select your gender" }),
+  }),
   consent_given: z.boolean().refine((val) => val === true, {
-    message: "You must accept all policies",
+    message: "Please accept all policies to continue",
   }),
   privacy_policy: z.boolean().refine((val) => val === true, {
-    message: "You must accept the privacy policy",
+    message: "Please accept the privacy policy",
   }),
   non_refund_policy: z.boolean().refine((val) => val === true, {
-    message: "You must accept the non-refund policy",
+    message: "Please accept the non-refund policy",
   }),
   confidentiality_policy: z.boolean().refine((val) => val === true, {
-    message: "You must accept the confidentiality policy",
+    message: "Please accept the confidentiality policy",
   }),
-  preferred_date: z.string().min(1, "Preferred date is required"),
+  preferred_date: z.string().min(1, "Please select your preferred date"),
   preferred_period: z.enum(["MORNING", "EVENING", "CUSTOM"], {
-    required_error: "Select a time period",
+    errorMap: () => ({ message: "Please select a time period" }),
   }),
   preferred_time_start: z.string().optional(),
   preferred_time_end: z.string().optional(),
   mode: z.enum(["ONLINE", "OFFLINE"], {
-    required_error: "Select session mode",
+    errorMap: () => ({ message: "Please select a session mode" }),
   }),
   user_message: z.string().optional(),
 }).refine(
@@ -52,7 +53,7 @@ const bookingSchema = z.object({
     return true;
   },
   {
-    message: "Start and end times are required for custom period",
+    message: "Please enter both start and end times for custom period",
     path: ["preferred_time_start"],
   }
 );
@@ -117,11 +118,11 @@ export default function BookPage() {
         full_name: data.full_name,
         phone_number: data.phone_number,
         city: data.city,
-        state: data.state,
-        country: data.country,
+        state: data.state || "NA",
+        country: data.country || "India",
         age: data.age,
         gender: data.gender,
-        emergency_contact: data.emergency_contact,
+        emergency_contact: data.phone_number, // Use phone number as emergency contact fallback
         consent_given: data.consent_given,
         preferred_date: data.preferred_date,
         preferred_period: data.preferred_period,
@@ -244,7 +245,7 @@ export default function BookPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-3xl p-10 text-center shadow-xl max-w-2xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl max-w-2xl"
           >
             <motion.div 
               initial={{ scale: 0 }}
@@ -254,12 +255,12 @@ export default function BookPage() {
             >
               📧
             </motion.div>
-            <h2 className="font-title text-4xl text-green-800 mb-4">Check Your Email</h2>
-            <p className="font-body text-lg text-green-700 mb-4 max-w-md mx-auto">
+            <h2 className="font-title text-4xl text-[var(--color-primary)] mb-4">Check Your Email</h2>
+            <p className="font-body text-lg text-[var(--color-text-body)] mb-4 max-w-md mx-auto">
               We've sent a verification link to your email address. Please click the link to verify your booking.
             </p>
-            <div className="bg-white/50 rounded-xl p-4 max-w-md mx-auto">
-              <p className="font-body text-sm text-green-600">
+            <div className="bg-[var(--color-primary)]/10 rounded-xl p-4 max-w-md mx-auto">
+              <p className="font-body text-sm text-[var(--color-text-body)]">
                 💡 Didn't receive it? Check your spam folder or wait a few minutes before trying again.
               </p>
             </div>
@@ -344,7 +345,7 @@ export default function BookPage() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
                 {/* Personal Information Section */}
-                <div className="bg-[var(--color-primary)]/5 p-5 rounded-2xl border border-[var(--color-primary)]/10 space-y-5">
+                <div className="space-y-5">
                   <h3 className="font-body text-base font-bold text-[var(--color-text-body)] mb-3">
                     Personal Information
                   </h3>
@@ -357,7 +358,7 @@ export default function BookPage() {
                     <input
                       type="text"
                       {...register("full_name")}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                       placeholder="Enter your full name"
                       disabled={bookingStatus === "submitting"}
                     />
@@ -375,7 +376,7 @@ export default function BookPage() {
                       <input
                         type="email"
                         {...register("email")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="your.email@example.com"
                         disabled={bookingStatus === "submitting"}
                       />
@@ -391,7 +392,7 @@ export default function BookPage() {
                       <input
                         type="tel"
                         {...register("phone_number")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="10-digit number"
                         maxLength={10}
                         disabled={bookingStatus === "submitting"}
@@ -411,7 +412,7 @@ export default function BookPage() {
                       <input
                         type="number"
                         {...register("age")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="Your age"
                         min={13}
                         max={120}
@@ -428,7 +429,7 @@ export default function BookPage() {
                       </label>
                       <select
                         {...register("gender")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                         disabled={bookingStatus === "submitting"}
                       >
                         <option value="">Select gender</option>
@@ -452,7 +453,7 @@ export default function BookPage() {
                       <input
                         type="text"
                         {...register("city")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="Your city"
                         disabled={bookingStatus === "submitting"}
                       />
@@ -463,12 +464,12 @@ export default function BookPage() {
 
                     <div>
                       <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                        State <span className="text-[var(--color-primary)]">*</span>
+                        State
                       </label>
                       <input
                         type="text"
                         {...register("state")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="Your state"
                         disabled={bookingStatus === "submitting"}
                       />
@@ -479,12 +480,12 @@ export default function BookPage() {
 
                     <div>
                       <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                        Country <span className="text-[var(--color-primary)]">*</span>
+                        Country
                       </label>
                       <input
                         type="text"
                         {...register("country")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="Your country"
                         disabled={bookingStatus === "submitting"}
                       />
@@ -492,24 +493,6 @@ export default function BookPage() {
                         <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.country.message}</p>
                       )}
                     </div>
-                  </div>
-
-                  {/* Emergency Contact */}
-                  <div>
-                    <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                      Emergency Contact Number <span className="text-[var(--color-primary)]">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      {...register("emergency_contact")}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
-                      placeholder="10-digit number"
-                      maxLength={10}
-                      disabled={bookingStatus === "submitting"}
-                    />
-                    {errors.emergency_contact && (
-                      <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.emergency_contact.message}</p>
-                    )}
                   </div>
                 </div>
 
@@ -524,7 +507,8 @@ export default function BookPage() {
                     type="date"
                     {...register("preferred_date")}
                     min={minDate}
-                    className="w-full px-4 py-3 pr-12 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                    placeholder="MM/DD/YYYY"
+                    className="w-full px-4 py-3 pr-12 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                     disabled={bookingStatus === "submitting"}
                     style={{
                       colorScheme: 'light',
@@ -551,11 +535,6 @@ export default function BookPage() {
                     </svg>
                   </div>
                 </div>
-                
-                {/* Helper Text */}
-                <p className="mt-1.5 ml-1 text-[10px] uppercase tracking-wider text-[var(--color-text-body)]/40 font-semibold">
-                  MM/DD/YYYY
-                </p>
 
                 {errors.preferred_date && (
                   <p className="text-[var(--color-primary)] text-sm mt-1 font-body">
@@ -610,7 +589,7 @@ export default function BookPage() {
                     <input
                       type="time"
                       {...register("preferred_time_start")}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                       disabled={bookingStatus === "submitting"}
                     />
                     {errors.preferred_time_start && (
@@ -624,7 +603,7 @@ export default function BookPage() {
                     <input
                       type="time"
                       {...register("preferred_time_end")}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-white"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                       disabled={bookingStatus === "submitting"}
                     />
                     {errors.preferred_time_end && (
@@ -673,7 +652,7 @@ export default function BookPage() {
                 <textarea
                   {...register("user_message")}
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body resize-none bg-white"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal resize-none bg-white"
                   placeholder="Any additional information or questions..."
                   disabled={bookingStatus === "submitting"}
                 />
@@ -743,6 +722,14 @@ export default function BookPage() {
                   <input
                     type="checkbox"
                     {...register("consent_given")}
+                    onChange={(e) => {
+                      setValue("consent_given", e.target.checked);
+                      if (e.target.checked) {
+                        setValue("privacy_policy", true);
+                        setValue("non_refund_policy", true);
+                        setValue("confidentiality_policy", true);
+                      }
+                    }}
                     className="mt-1 w-5 h-5 rounded border-2 border-[var(--color-primary)]/40 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                     disabled={bookingStatus === "submitting"}
                   />

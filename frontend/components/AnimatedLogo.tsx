@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const words = ['Healer', 'Warrior', 'Finder', 'Builder', 'Seeker', 'Settler'];
+const words = ['Healer', 'Finder', 'Builder', 'Seeker', 'Settler'];
 
 export default function AnimatedLogo({ className = '', isDark = false }: { className?: string; isDark?: boolean }) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
@@ -34,7 +34,7 @@ export default function AnimatedLogo({ className = '', isDark = false }: { class
         Reserve a fixed slot for the changing word so the overall title width
         remains constant (prevents 'Mind' from shifting as the second word changes).
       */}
-      <div className="relative inline-block w-[8ch] text-left">
+      <div className="relative inline-flex justify-center items-baseline w-[8ch]">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentWordIndex}
@@ -42,7 +42,7 @@ export default function AnimatedLogo({ className = '', isDark = false }: { class
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="font-title text-inherit inline-block text-[var(--color-bg-app)]"
+            className="font-title text-inherit absolute text-[var(--color-bg-app)]"
           >
             {words[currentWordIndex]}
           </motion.span>

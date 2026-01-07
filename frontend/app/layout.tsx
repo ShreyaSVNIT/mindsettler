@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { Imbue, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/Footer";
@@ -14,8 +15,15 @@ const imbue = Imbue({
 
 const playfair = Playfair_Display({
   variable: "--font-body",
-  weight: ["700"],
+  weight: ["400", "700"],
   subsets: ["latin"],
+});
+
+const ivyPresto = localFont({
+  src: "../public/fonts/IvyPresto.otf",
+  variable: "--font-ivy",
+  weight: "400",
+  display: "swap",
 });
 
 export default function RootLayout({
@@ -24,8 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${imbue.variable} ${playfair.variable}`}>
-      <body className="bg-bg-app text-text-body font-body antialiased">
+    <html lang="en" className={`${imbue.variable} ${playfair.variable} ${ivyPresto.variable}`}>
+      <body className="bg-bg-app text-text-body antialiased" style={{ fontFamily: "var(--font-ivy)" }}>
         <ClientLayout>
           <Header />
 

@@ -28,30 +28,35 @@ function VerifyEmailContent() {
     bookingAPI
       .verifyEmail(token)
       .then((data) => {
+        console.log("Verification API Response:", data);
+        console.log("Acknowledgement ID:", data.booking.acknowledgement_id);
+        console.log("Status:", data.booking.status);
+        
         setState({ kind: "success", data });
         
         // Track verification (privacy: only status, no ID)
-        trackBookingVerified({ status: data.status });
+        trackBookingVerified({ status: data.booking.status });
         
         // Track if booking was already approved
-        if (data.status === "APPROVED") {
+        if (data.booking.status === "APPROVED") {
           trackBookingApproved();
         }
         
         // Store acknowledgement ID for status tracking
-        if (typeof window !== "undefined" && data.acknowledgement_id) {
-          localStorage.setItem("acknowledgement_id", data.acknowledgement_id);
+        if (typeof window !== "undefined" && data.booking.acknowledgement_id) {
+          localStorage.setItem("acknowledgement_id", data.booking.acknowledgement_id);
         }
       })
       .catch((err: any) => {
+        console.error("Verification Error:", err);
         const message = err.message || "Email verification failed.";
         setState({ kind: "error", message });
       });
   }, [token]);
 
   const navigateToStatus = () => {
-    if (state.kind === "success" && state.data.acknowledgement_id) {
-      router.push(`/status?id=${state.data.acknowledgement_id}`);
+    if (state.kind === "success" && state.data.booking.acknowledgement_id) {
+      router.push(`/status?id=${state.data.booking.acknowledgement_id}`);
     }
   };
 
@@ -143,35 +148,42 @@ function VerifyEmailContent() {
             <div className="bg-white/60 rounded-2xl p-6 space-y-4 mb-6">
               <div className="flex justify-between items-center border-b border-green-200 pb-3">
                 <span className="font-body font-semibold text-green-700">Acknowledgement ID:</span>
-                <span className="font-mono font-bold text-green-800">{state.data.acknowledgement_id}</span>
+                <span className="font-mono font-bold text-green-800">{state.data.booking.acknowledgement_id}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="font-body font-semibold text-green-700">Status:</span>
                 <span className="font-body uppercase bg-green-200 px-3 py-1 rounded-full text-xs font-bold text-green-800">
-                  {state.data.status}
+                  {state.data.booking.status}
                 </span>
               </div>
             </div>
 
             <div className="bg-gradient-to-r from-green-600/10 to-green-500/10 rounded-xl p-5 mb-6">
               <p className="font-body text-sm text-green-700 text-center">
-                {state.data.status === "PENDING" && (
+                {state.data.booking.status === "PENDING" && (
                   <>
                     <span className="font-bold">📋 Your booking is now awaiting admin review.</span>
                     <br />
                     You'll receive an email once it's been approved.
                   </>
                 )}
-                {state.data.status === "APPROVED" && (
+                {state.data.booking.status === "APPROVED" && (
                   <>
                     <span className="font-bold">💳 Your booking has been approved!</span>
                     <br />
                     Please proceed to payment to confirm your session.
                   </>
                 )}
-                {state.data.status !== "PENDING" && state.data.status !== "APPROVED" && (
+                {state.data.booking.status === "CONFIRMED" && (
                   <>
-                    Your booking status is <span className="font-bold">{state.data.status}</span>.
+                    <span className="font-bold">✓ Your booking has been verified and payment received!</span>
+                    <br />
+                    You can cancel your booking if needed.
+                  </>
+                )}
+                {state.data.booking.status !== "PENDING" && state.data.booking.status !== "APPROVED" && state.data.booking.status !== "CONFIRMED" && (
+                  <>
+                    Your booking status is <span className="font-bold">{state.data.booking.status}</span>.
                     <br />
                     Check the status page for more details.
                   </>
@@ -180,12 +192,32 @@ function VerifyEmailContent() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button
-                onClick={navigateToStatus}
-                className="bg-green-600 hover:bg-green-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-              >
-                View Booking Status
-              </button>
+              {state.data.booking.status === "APPROVED" && (
+                <>
+                  <button
+                    onClick={() => router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)}
+                    className="bg-green-600 hover:bg-green-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                  >
+                    Proceed to Payment
+                  </button>
+                  <button
+                    onClick={() => router.push(`/status?id=${state.data.booking.acknowledgement_id}`)}
+                    className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                  >
+                    Cancel Booking
+                  </button>
+                </>
+              )}
+              
+              {state.data.booking.status === "CONFIRMED" && (
+                <button
+                  onClick={() => router.push(`/status?id=${state.data.booking.acknowledgement_id}`)}
+                  className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                >
+                  Cancel Booking
+                </button>
+              )}
+              
               <button
                 onClick={() => router.push("/")}
                 className="bg-white hover:bg-green-50 text-green-700 font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-green-200"

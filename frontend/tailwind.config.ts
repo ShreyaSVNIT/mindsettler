@@ -25,7 +25,7 @@ const config: Config = {
 
         fontFamily: {
         title: ["var(--font-title)", "serif"],
-        body: ["var(--font-body)", "serif"],
+        body: ["var(--font-ivy)", "serif"],
         },
     },
   },

@@ -41,8 +41,19 @@ export interface BookingDraftResponse {
 
 export interface VerifyEmailResponse {
   message: string;
-  acknowledgement_id: string;
-  status: BookingStatus;
+  booking: {
+    acknowledgement_id: string;
+    status: BookingStatus;
+    preferred_date: string;
+    preferred_period: PeriodType;
+    preferred_time_start?: string | null;
+    preferred_time_end?: string | null;
+    mode: ModeType;
+    approved_slot_start?: string | null;
+    approved_slot_end?: string | null;
+    created_at: string;
+    add_to_calendar_url?: string | null;
+  };
 }
 
 export interface BookingStatusResponse {
