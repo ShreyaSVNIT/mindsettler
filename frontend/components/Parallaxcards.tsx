@@ -2,69 +2,60 @@
 
 import React, { useState, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import {
   motion,
   useScroll,
   useTransform,
   AnimatePresence,
 } from "framer-motion";
-import {
-  Calendar,
-  CheckCircle,
-  Users,
-  MessageSquare,
-  Star,
-} from "lucide-react";
 
 /* ---------------- DATA ---------------- */
 
 const STEPS = [
   {
     id: 1,
-    title: "Step 01 · Book Your Session",
+    title: "Book Your Session",
     description:
       "Choose a time that feels right for you. This first step is about choosing yourself.",
-    icon: Calendar,
     image: "/step1.jpg",
+    link: "/book",
+    cta: "Book Now",
   },
   {
     id: 2,
-    title: "Step 02 · Receive Confirmation",
+    title: "Prepare & Connect",
     description:
-      "Clear details help you feel prepared and reduce uncertainty. We'll send you everything you need.",
-    icon: CheckCircle,
+      "Review the shared resources and get ready to open up in a comfortable space of your choice.",
     image: "/step2.jpg",
+    link: "/resources",
+    cta: "View Resources",
   },
   {
     id: 3,
-    title: "Step 03 · Prepare & Connect",
+    title: "Engage in Your Session",
     description:
-      "Review the shared resources and get ready to open up in a comfortable space of your choice.",
-    icon: Users,
+      "Work with your therapist in a safe, confidential, and supportive environment designed for healing.",
     image: "/step3.jpg",
+    link: "/confidentiality-policy",
+    cta: "Learn More",
   },
   {
     id: 4,
-    title: "Step 04 · Engage in Your Session",
+    title: "Continue Your Journey",
     description:
-      "Work with your therapist in a safe, confidential, and supportive environment designed for healing.",
-    icon: MessageSquare,
+      "Receive personalized follow-ups, resources, and ongoing guidance to support your mental wellness.",
     image: "/step4.jpg",
-  },
-  {
-    id: 5,
-    title: "Step 05 · Post-Session Support",
-    description:
-      "Continue your journey with personalized follow-ups, resources, and ongoing guidance.",
-    icon: Star,
-    image: "/step5.jpg",
+    link: "/resources",
+    cta: "Explore Support",
   },
 ];
 
 /* ---------------- COMPONENT ---------------- */
 
 export default function ParallaxCards() {
-  const [activeId, setActiveId] = useState(3);
+  const [activeId, setActiveId] = useState(2);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -78,24 +69,24 @@ export default function ParallaxCards() {
   return (
     <section
       ref={containerRef}
-      className="
-        relative min-h-screen w-full flex items-center justify-center overflow-hidden
-        pt-28 md:pt-0
-      "
+      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden z-10"
       style={{ backgroundColor: "var(--color-bg-app)" }}
     >
       {/* ---------- BACKGROUND IMAGE ---------- */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeId}
-          className="absolute inset-0"
-          style={{ y: backgroundY }}
-          initial={{ opacity: 0, scale: 1.03 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <div className="relative w-full h-full">
+      <div className="absolute inset-0">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeId}
+            className="absolute inset-0"
+            style={{ y: backgroundY }}
+            initial={{ opacity: 0, scale: 1 }}
+            animate={{ opacity: 1, scale: 1.05 }}
+            exit={{ opacity: 0, scale: 1 }}
+            transition={{ 
+              opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
+              scale: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
+            }}
+          >
             <Image
               src={activeStep.image}
               alt=""
@@ -103,33 +94,25 @@ export default function ParallaxCards() {
               priority
               className="object-cover"
             />
-          </div>
+          </motion.div>
+        </AnimatePresence>
 
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.35))",
-            }}
-          />
-        </motion.div>
-      </AnimatePresence>
+      </div>
 
       {/* ---------- CARDS ---------- */}
       <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl px-6">
         {STEPS.map((step) => {
           const isActive = activeId === step.id;
-          const Icon = step.icon;
 
           return (
             <motion.div
               key={step.id}
-              onMouseEnter={() => setActiveId(step.id)} // UNCHANGED
+              onMouseEnter={() => setActiveId(step.id)}
               layout
               initial={false}
               animate={{
-                width: isActive ? 520 : 320,
-                height: isActive ? 520 : 320,
+                width: isActive ? 480 : 320,
+                height: isActive ? 420 : 280,
               }}
               transition={{
                 type: "spring",
@@ -137,53 +120,97 @@ export default function ParallaxCards() {
                 damping: 30,
                 mass: 1.5,
               }}
-              className="relative rounded-[40px] overflow-hidden cursor-pointer flex flex-col p-10 shadow-2xl w-full md:w-auto"
+              className="relative rounded-2xl overflow-hidden cursor-pointer flex flex-col shadow-2xl w-full md:w-auto"
               style={{
                 backgroundColor: isActive
                   ? "var(--color-bg-card)"
-                  : "rgba(255,255,255,0.55)",
+                  : "rgba(255,255,255,0.45)",
                 border: "1px solid var(--color-border)",
-                backdropFilter: isActive ? "none" : "blur(14px)",
+                backdropFilter: isActive ? "none" : "blur(24px)",
+                padding: "40px", // Even padding on all sides
               }}
             >
-              <motion.div layout className="flex flex-col h-full">
-                {/* ICON */}
-                <motion.div
-                  layout="position"
-                  className="w-14 h-14 rounded-full flex items-center justify-center mb-6"
-                  style={{
-                    backgroundColor: "var(--color-bg-app)",
-                    color: "var(--color-primary)",
-                  }}
-                >
-                  <Icon className="w-7 h-7" />
-                </motion.div>
+              <motion.div layout className="flex flex-col h-full justify-between">
+                <div>
+                  {/* STEP NUMBER CIRCLE */}
+                  <motion.div
+                    layout="position"
+                    className="w-14 h-14 rounded-full flex items-center justify-center mb-6 font-title text-2xl font-bold"
+                    style={{
+                      backgroundColor: "var(--color-primary)",
+                      color: "var(--color-bg-card)",
+                    }}
+                  >
+                    {step.id}
+                  </motion.div>
 
-                {/* TITLE — ONLY VISUAL CHANGE */}
-                <motion.h3
-                  layout="position"
-                  className="font-title text-3xl font-extrabold mb-4"
-                  style={{ color: "var(--color-primary)" }}
-                >
-                  {step.title}
-                </motion.h3>
+                  {/* TITLE */}
+                  <motion.h3
+                    layout="position"
+                    className="font-title text-3xl font-extrabold mb-4"
+                    style={{ color: "var(--color-primary)" }}
+                  >
+                    {step.title}
+                  </motion.h3>
 
-                {/* DESCRIPTION — UNCHANGED */}
+                  {/* DESCRIPTION - comes from below quickly */}
+                  <AnimatePresence>
+                    {isActive && (
+                      <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                        className="font-body text-lg leading-relaxed"
+                        style={{
+                          color: "var(--color-text-body)",
+                          opacity: 0.9,
+                        }}
+                      >
+                        {step.description}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* SEPARATOR LINE AND CTA - at bottom */}
                 <AnimatePresence>
                   {isActive && (
-                    <motion.p
-                      initial={{ opacity: 0, y: 16 }}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
-                      transition={{ duration: 0.45, ease: "easeOut" }}
-                      className="font-body text-lg leading-relaxed"
-                      style={{
-                        color: "var(--color-text-body)",
-                        opacity: 0.9,
-                      }}
+                      transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                      className="mt-auto pt-6"
                     >
-                      {step.description}
-                    </motion.p>
+                      {/* SEPARATOR LINE */}
+                      <div
+                        className="h-[1px] w-full mb-4"
+                        style={{ backgroundColor: "var(--color-text-body)", opacity: 0.2 }}
+                      />
+                      
+                      {/* CTA LINK */}
+                      <Link
+                        href={step.link}
+                        className="flex items-center justify-between font-body font-bold text-lg transition-none group/link w-full"
+                        style={{ color: "var(--color-text-body)" }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = "var(--color-primary)";
+                        }}
+                      >
+                        <span>{step.cta}</span>
+                        <div className="relative h-5 w-5 overflow-hidden">
+                          {/* Original Arrow: Slides out to the RIGHT */}
+                          <ArrowRight 
+                            className="absolute inset-0 transition-all duration-500 ease-in-out group-hover/link:translate-x-full group-hover/link:opacity-0 w-5 h-5" 
+                          />
+                          {/* New Arrow: Slides in from the LEFT */}
+                          <ArrowRight 
+                            className="absolute inset-0 -translate-x-full opacity-0 transition-all duration-500 ease-in-out group-hover/link:translate-x-0 group-hover/link:opacity-100 w-5 h-5" 
+                          />
+                        </div>
+                      </Link>
+                    </motion.div>
                   )}
                 </AnimatePresence>
               </motion.div>
