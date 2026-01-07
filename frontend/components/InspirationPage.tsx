@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo, useRef } from 'react';
 import { ArrowRight, ArrowUp, Play, ExternalLink } from 'lucide-react';
 import { Imbue, Playfair_Display } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Resource } from '@/src/data/resources';
 
 // --- Fonts Configuration ---
@@ -27,6 +27,7 @@ interface InspirationPageProps {
     description: string;
     heroImage: string;
     overlayColor?: string;
+    isActive?: boolean;
 }
 
 export default function InspirationPage({
@@ -34,11 +35,50 @@ export default function InspirationPage({
     title,
     description,
     heroImage,
-    overlayColor = 'rgba(69, 56, 89, 0.4)'
+    overlayColor = 'transparent',
+    isActive = true,
 }: InspirationPageProps) {
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
+
+    const sectionRef = useRef<HTMLDivElement | null>(null);
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ['start start', 'end end'],
+    });
+
+    // Stronger parallax for the sticky hero: track when this section enters/leaves the viewport.
+    const { scrollYProgress: parallaxProgress } = useScroll({
+        target: sectionRef,
+        offset: ['start end', 'end start'],
+    });
+
+    const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 28, mass: 0.2 });
+    const heroImageY = useTransform(parallaxProgress, [0, 1], ['6%', '-18%']);
+    // Start slightly above center, end at center (never goes below the middle).
+    const heroTextY = useTransform(parallaxProgress, [0, 1], ['-18%', '0%']);
+
+    const feedContainer = useMemo(
+        () => ({
+            hidden: {},
+            show: {
+                transition: {
+                    staggerChildren: 0.08,
+                    delayChildren: 0.05,
+                },
+            },
+        }),
+        []
+    );
+
+    const feedItem = useMemo(
+        () => ({
+            hidden: { opacity: 0, y: 28 },
+            show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } },
+        }),
+        []
+    );
 
     return (
         <div
@@ -55,7 +95,7 @@ export default function InspirationPage({
             } as React.CSSProperties}
         >
             {/* Main Grid Container */}
-            <div className="flex flex-col lg:grid lg:grid-cols-2 relative">
+            <div ref={sectionRef} className="flex flex-col lg:grid lg:grid-cols-2 relative">
 
                 {/* --- Sticky Hero Section (LEFT) --- 
                     lg:order-1 ensures it is on the left
@@ -63,17 +103,21 @@ export default function InspirationPage({
                 <div className="relative w-full h-[60vh] lg:h-screen lg:sticky lg:top-0 bg-[var(--color-bg-app)] overflow-hidden lg:order-1">
                     {/* Background Image */}
                     <div className="absolute inset-0">
-                        <img
+                        <motion.img
                             src={heroImage}
                             alt={title}
-                            className="w-full h-full object-cover brightness-[0.9] saturate-[0.8]"
+                            className="absolute inset-0 w-full h-[130%] object-cover"
+                            style={{ y: heroImageY }}
                         />
-                        {/* Overlay */}
+                        {/* Optional overlay (default: transparent) */}
                         <div className="absolute inset-0" style={{ backgroundColor: overlayColor }}></div>
                     </div>
 
                     {/* Centered Typography Overlay */}
-                    <div className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6 lg:px-12">
+                    <motion.div
+                        className="relative z-10 h-full flex flex-col justify-center items-center text-center px-6 lg:px-12"
+                        style={{ y: heroTextY }}
+                    >
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -92,13 +136,13 @@ export default function InspirationPage({
                         >
                             {description}
                         </motion.p>
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* --- Scrollable Content Feed (RIGHT) --- 
                     lg:order-2 ensures it is on the right
                 */}
-                <div className="w-full bg-[var(--color-bg-lavender)] px-6 py-12 lg:px-16 lg:py-20 text-[var(--color-text-body)] lg:order-2">
+                <div className="relative w-full bg-[var(--color-bg-app)] px-6 py-12 lg:px-16 lg:py-20 text-[var(--color-text-body)] lg:order-2">
 
                     {/* Mobile Header */}
                     <div className="lg:hidden mb-12 border-b border-[var(--color-border)] pb-8">
@@ -107,69 +151,89 @@ export default function InspirationPage({
                     </div>
 
                     {/* Resources Feed */}
-                    <div className="space-y-20">
+                    <motion.div
+                        className="space-y-16"
+                        variants={feedContainer}
+                        initial="hidden"
+                        whileInView="show"
+                        viewport={{ once: true, margin: "-10%" }}
+                    >
                         {data.map((resource) => (
                             <motion.article
                                 key={resource.id}
-                                initial={{ opacity: 0, y: 40 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
-                                viewport={{ once: true, margin: "-10%" }}
+                                variants={feedItem}
                                 className="group cursor-pointer"
                             >
-                                <Link href={resource.type === 'link' && resource.externalUrl ? resource.externalUrl : `/resources/${resource.id}`} target={resource.type === 'link' ? '_blank' : undefined}>
+                                <div>
+                                    <Link href={resource.type === 'link' && resource.externalUrl ? resource.externalUrl : `/resources/${resource.id}`} target={resource.type === 'link' ? '_blank' : undefined} className="block relative h-[400px] lg:h-[500px] overflow-hidden rounded-sm">
 
-                                    {/* Image Container */}
-                                    <div className="overflow-hidden mb-6 aspect-[16/9] relative bg-[var(--color-bg-subtle)] shadow-md rounded-sm">
-                                        <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-4 py-2 text-xs font-bold tracking-wider uppercase z-10 text-[var(--color-text-body)] shadow-sm border border-[var(--color-border)]">
-                                            {resource.type}
+                                        {/* Background Image */}
+                                        <div className="absolute inset-0">
+                                            <Image
+                                                src={resource.imageUrl}
+                                                alt={resource.title}
+                                                fill
+                                                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
                                         </div>
-                                        <Image
-                                            src={resource.imageUrl}
-                                            alt={resource.title}
-                                            fill
-                                            className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                                        />
-                                        {resource.type === 'video' && (
-                                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-all">
-                                                <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center pl-1 group-hover:scale-110 transition-transform duration-300">
-                                                    <Play className="w-6 h-6 text-[var(--color-primary)] fill-current" />
+
+                                        {/* Tag Above Image */}
+                                        <div className="absolute top-6 left-6 z-10">
+                                            <span className="inline-block px-4 py-1.5 text-xs font-bold tracking-[0.25em] uppercase bg-white/90 text-[var(--color-text-body)] rounded-full">
+                                                {resource.type}
+                                            </span>
+                                        </div>
+
+                                        {/* Content Container - slides up on hover */}
+                                        <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-8 transition-all duration-700 ease-out group-hover:-translate-y-12">
+                                            {/* Title (Always Visible) */}
+                                            <h2 className="font-title text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-0 transition-all duration-700">
+                                                {resource.title}
+                                            </h2>
+                                            
+                                            {/* Description + CTA (Fade in on hover) */}
+                                            <div className="max-w-xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-150 pointer-events-none">
+                                                <p className="text-white/90 text-base lg:text-lg mt-6 mb-8 font-body leading-relaxed">
+                                                    {resource.description}
+                                                </p>
+                                                <div className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[var(--color-text-body)] font-bold text-sm uppercase tracking-[0.2em] rounded-full border-2 border-white transition-all pointer-events-auto">
+                                                    {resource.type === 'video' ? (
+                                                        <>
+                                                            <Play className="w-4 h-4" />
+                                                            Watch Now
+                                                        </>
+                                                    ) : resource.type === 'link' ? (
+                                                        <>
+                                                            <ExternalLink className="w-4 h-4" />
+                                                            Visit Link
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <ArrowRight className="w-4 h-4" />
+                                                            Read More
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
+                                        </div>
+                                    </Link>
+
+                                    {/* Metadata Below Card */}
+                                    <div className="flex items-center justify-between pt-4 text-base">
+                                        <span className="text-[var(--color-text-body)] opacity-90 font-semibold">
+                                            {resource.date}
+                                        </span>
+                                        {resource.author && (
+                                            <span className="text-[var(--color-text-body)] opacity-75 italic">
+                                                by {resource.author}
+                                            </span>
                                         )}
                                     </div>
-
-                                    <div className="space-y-4">
-                                        <div className="flex items-center justify-between border-b border-[var(--color-border)] pb-2 mb-2">
-                                            <span className="text-xs text-[var(--color-primary)] uppercase tracking-wide font-bold">
-                                                {resource.date}
-                                            </span>
-                                            {resource.author && (
-                                                <span className="text-xs text-gray-400 font-serif italic">
-                                                    by {resource.author}
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        <h3 className="font-title text-4xl lg:text-5xl leading-[0.95] group-hover:text-[var(--color-primary)] transition-colors font-medium">
-                                            {resource.title}
-                                        </h3>
-
-                                        <p className="text-[var(--color-text-body)] opacity-70 font-body text-lg leading-relaxed line-clamp-3">
-                                            {resource.description}
-                                        </p>
-
-                                        <div className="pt-4">
-                                            <span className="inline-flex items-center text-xs font-bold tracking-widest uppercase border-b-2 border-transparent group-hover:border-[var(--color-primary)] group-hover:text-[var(--color-primary)] transition-all pb-1">
-                                                {resource.type === 'video' ? 'Watch Now' : resource.type === 'link' ? 'Visit Link' : 'Read Article'}
-                                                {resource.type === 'link' ? <ExternalLink className="ml-2 w-3 h-3" /> : <ArrowRight className="ml-2 w-3 h-3" />}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </Link>
+                                </div>
                             </motion.article>
                         ))}
-                    </div>
+                    </motion.div>
 
                     <div className="flex justify-center lg:justify-end mt-24">
                         <button
