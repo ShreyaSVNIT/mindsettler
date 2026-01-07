@@ -120,9 +120,7 @@ const HeroSection = () => {
 
       {/* CENTERED SCROLL INDICATOR */}
       <div className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-4">
-        <span className="font-body text-[10px] uppercase tracking-[0.4em] text-white/40">
-          Scroll to Discover
-        </span>
+        
         <button 
           onClick={scrollToNextSection}
           className="
