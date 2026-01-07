@@ -7,10 +7,10 @@ import { motion } from "framer-motion";
 
 export default function HowItWorks() {
   return (
-    <main className="min-h-screen bg-[var(--color-bg-app)]">
-      {/* Hero Section */}
-      <section className="min-h-[60vh] flex items-center justify-center bg-[var(--color-bg-app)] px-6 pt-32">
-        <div className="max-w-5xl mx-auto text-center">
+    <main className="relative bg-[var(--color-bg-app)]">
+      {/* Hero Section - Fixed */}
+      <section className="sticky top-0 h-screen flex items-center justify-center bg-[var(--color-bg-app)] px-6 z-0">
+        <div className="max-w-6xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -20,10 +20,10 @@ export default function HowItWorks() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-block mb-6"
+              className="inline-block mb-8"
             >
-              <div className="flex items-center gap-3 px-6 py-2 rounded-full border-2 border-[var(--color-primary)]/30 bg-white/50 backdrop-blur-sm">
-                <span className="text-[var(--color-primary)] text-sm font-body font-bold tracking-wider uppercase">
+              <div className="flex items-center gap-3 px-8 py-3 rounded-full border-2 border-[var(--color-primary)]/40 bg-white/60 backdrop-blur-sm shadow-lg">
+                <span className="text-[var(--color-primary)] text-sm font-body font-bold tracking-[0.2em] uppercase">
                   Your Journey
                 </span>
               </div>
@@ -33,23 +33,34 @@ export default function HowItWorks() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="font-title text-6xl md:text-7xl lg:text-8xl text-[var(--color-text-body)] mb-6 leading-tight"
+              className="font-title text-7xl md:text-8xl lg:text-9xl text-[var(--color-text-body)] mb-8 leading-[1.1]"
             >
               How It{" "}
-              <span className="text-[var(--color-primary)] italic">Works</span>
+              <span className="text-[var(--color-primary)] italic font-light">Works</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="font-body text-lg md:text-xl text-[var(--color-text-body)]/70 max-w-3xl mx-auto"
+              className="font-body text-xl md:text-2xl text-[var(--color-text-body)]/70 max-w-3xl mx-auto leading-relaxed"
             >
               A simple, compassionate process designed to support your mental wellness journey every step of the way
             </motion.p>
+
+            {/* Decorative Element */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+              className="w-24 h-1 bg-[var(--color-primary)] mx-auto mt-12 rounded-full"
+            />
           </motion.div>
         </div>
       </section>
+
+      {/* Spacer to allow scrolling before cards appear */}
+      <div className="h-[50vh]" />
 
       <Parallaxcards />
       <HowItWorksFAQs />
