@@ -5,7 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const words = ['Healer', 'Finder', 'Builder', 'Seeker', 'Settler'];
 
-export default function AnimatedLogo({ className = '', isDark = false }: { className?: string; isDark?: boolean }) {
+export default function AnimatedLogo({
+  className = '',
+  isDark = false,
+}: {
+  className?: string;
+  isDark?: boolean;
+}) {
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [hasCompleted, setHasCompleted] = useState(false);
 
@@ -20,34 +26,35 @@ export default function AnimatedLogo({ className = '', isDark = false }: { class
         }
         return prev + 1;
       });
-    }, 600); // Change word every 600ms
+    }, 600);
 
     return () => clearInterval(interval);
   }, [hasCompleted]);
 
   return (
-    <div className={`inline-flex items-baseline justify-center whitespace-nowrap ${className}`}>
-      <span className={`font-title text-inherit ${isDark ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
+    <span
+      className={`inline-flex items-center justify-center leading-none ${className}`}
+    >
+      {/* Mind */}
+      <span className={isDark ? 'text-white' : 'text-[var(--color-text-body)]'}>
         Mind
       </span>
-      {/*
-        Reserve a fixed slot for the changing word so the overall title width
-        remains constant (prevents 'Mind' from shifting as the second word changes).
-      */}
-      <div className="relative inline-flex items-baseline w-[8ch]">
+
+      {/* Animated word */}
+      <span className="relative inline-flex items-center justify-center w-[5.5ch]">
         <AnimatePresence mode="wait">
           <motion.span
             key={currentWordIndex}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="font-title text-inherit absolute left-1/2 -translate-x-1/2 text-[var(--color-bg-app)]"
+            className="absolute text-[var(--color-bg-app)]"
           >
             {words[currentWordIndex]}
           </motion.span>
         </AnimatePresence>
-      </div>
-    </div>
+      </span>
+    </span>
   );
 }
