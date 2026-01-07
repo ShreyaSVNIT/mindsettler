@@ -327,7 +327,7 @@ function StatusPageContent() {
                   </div>
                 )}
 
-                {statusHelpers.canRequestCancellation(state.data.status) && (
+                {state.data.status !== "CANCELLED" && state.data.status !== "REJECTED" && (
                   <button
                     onClick={handleRequestCancellation}
                     disabled={isCancelling}
@@ -335,14 +335,6 @@ function StatusPageContent() {
                   >
                     {isCancelling ? "Processing..." : "❌ Request Cancellation"}
                   </button>
-                )}
-
-                {state.data.status === "CONFIRMED" && !statusHelpers.canRequestCancellation(state.data.status) && (
-                  <div className="bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 text-center">
-                    <p className="font-body text-gray-700 text-sm">
-                      ℹ️ Cancellation is only allowed up to 24 hours before the session.
-                    </p>
-                  </div>
                 )}
               </div>
             </motion.div>

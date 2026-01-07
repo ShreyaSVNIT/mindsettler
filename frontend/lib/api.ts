@@ -163,7 +163,7 @@ export const bookingAPI = {
 // Status helpers
 export const statusHelpers = {
   canInitiatePayment: (status: string) => status === "APPROVED",
-  canRequestCancellation: (status: string) => status === "CONFIRMED",
+  canRequestCancellation: (status: string) => !["CANCELLED", "REJECTED"].includes(status),
   isTerminal: (status: string) => ["CONFIRMED", "CANCELLED", "COMPLETED", "REJECTED"].includes(status),
   needsEmailVerification: (status: string) => status === "DRAFT",
   awaitingAdmin: (status: string) => status === "PENDING",
