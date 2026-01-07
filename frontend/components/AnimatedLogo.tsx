@@ -32,15 +32,11 @@ export default function AnimatedLogo({
   }, [hasCompleted]);
 
   return (
-    <h1
-      className={`inline-flex items-center justify-center text-center font-title leading-none mx-auto ${className}`}
+    <span
+      className={`inline-flex items-center justify-center leading-none ${className}`}
     >
       {/* Mind */}
-      <span
-        className={`${
-          isDark ? 'text-white' : 'text-[var(--color-text-body)]'
-        }`}
-      >
+      <span className={isDark ? 'text-white' : 'text-[var(--color-text-body)]'}>
         Mind
       </span>
 
@@ -59,6 +55,6 @@ export default function AnimatedLogo({
           </motion.span>
         </AnimatePresence>
       </span>
-    </h1>
+    </span>
   );
 }
