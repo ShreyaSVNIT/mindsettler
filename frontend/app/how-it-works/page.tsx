@@ -2,7 +2,8 @@
 
 import Parallaxcards from "@/components/Parallaxcards";
 import HowItWorksFAQs from "@/components/HowItWorksFAQs";
-import HowItWorksCTA from "@/components/HowItWorksCTA";
+import Orb from "@/components/Orb";
+import FloatingWords from "@/components/FloatingWords";
 import { motion } from "framer-motion";
 
 export default function HowItWorks() {
@@ -64,7 +65,35 @@ export default function HowItWorks() {
 
       <Parallaxcards />
       <HowItWorksFAQs />
-      <HowItWorksCTA />
+      <section className="relative w-screen left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] h-[80vh] bg-[var(--color-bg-app)] overflow-hidden py-24 z-10 flex flex-col items-center justify-center">
+
+        <div className="absolute inset-0 z-0">
+          <Orb
+            hoverIntensity={0.4}
+            rotateOnHover={true}
+            transparent={true}
+          />
+        </div>
+
+        <div className="absolute inset-0 z-10">
+          <FloatingWords />
+        </div>
+
+        {/* Text Overlay - Centered via Flexbox + Text Align Center */}
+        <div className="relative z-20 w-[400px] max-w-[70vw] mx-auto text-center pointer-events-none">
+          <motion.h2
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="font-title text-3xl md:text-4xl lg:text-5xl text-[var(--color-text-body)] leading-tight drop-shadow-sm"
+          >
+            "Healing isn't always a <span className="text-[var(--color-primary)] italic">straight line</span>,
+            <br />
+            but it doesn't have to be <span className="text-[var(--color-primary)] italic">a circle</span>"
+          </motion.h2>
+        </div>
+      </section>
     </main>
   );
 }
