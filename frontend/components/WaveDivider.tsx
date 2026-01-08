@@ -70,34 +70,6 @@ const WaveDivider = () => {
         to-transparent
         z-10
       " />
-      
-      {/* Subtle floating particles */}
-      <div className="
-        absolute
-        inset-0
-        overflow-hidden
-        opacity-30
-      ">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="
-              absolute
-              w-1
-              h-1
-              rounded-full
-              bg-primary/20
-              animate-pulse
-            "
-            style={{
-              left: `${15 + i * 15}%`,
-              top: `${30 + (i % 3) * 20}%`,
-              animationDuration: `${3000 + i * 500}ms`,
-              animationDelay: `${i * 200}ms`
-            }}
-          />
-        ))}
-      </div>
     </div>
   );
 };

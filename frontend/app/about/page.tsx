@@ -184,10 +184,10 @@ export default function AboutPage() {
   };
 
   const values = [
-    { title: 'Complete Confidentiality', description: 'Your stories, your struggles, your victories—they all stay between you and your therapist. Always.' },
-    { title: 'Empathy First', description: 'We listen without judgment. Every session is a safe space where you can be your most authentic self.' },
-    { title: 'Personalized Care', description: 'No two journeys are the same. We match you with therapists who truly understand your unique needs.' },
-    { title: 'Evidence-Based', description: 'Our therapists use proven techniques backed by research and decades of clinical experience.' },
+    { title: 'Complete Confidentiality', description: 'Your stories, your struggles, your victories—they stay between us in our sessions. Always private, always safe.' },
+    { title: 'Empathy First', description: 'I built this platform to listen without judgment. Every session is a safe space where you can be your most authentic self.' },
+    { title: 'Personalized Care', description: 'No two journeys are the same. I tailor each session to truly understand and support your unique needs.' },
+    { title: 'Evidence-Based', description: 'Every technique and approach I use is backed by proven research and clinical experience in mental wellness.' },
   ];
 
   return (
@@ -235,7 +235,7 @@ export default function AboutPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                We're not just a platform. We're your companion in the journey toward 
+                I created MindSettler to be more than just a platform. It's a companion in your journey toward 
                 understanding yourself, embracing your story, and finding peace in the present.
               </motion.p>
 
@@ -284,7 +284,7 @@ export default function AboutPage() {
                     transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
                   >
                     <Image
-                      src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e"
+                      src="/parnika.jpeg"
                       alt="Mental wellness"
                       fill
                       className="object-cover"
@@ -342,112 +342,7 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-card)" />
-
-      {/* Stats Section - Animated Counters */}
-      <section className="py-24 px-6 bg-[var(--color-bg-card)] relative overflow-hidden">
-        {/* Animated background gradient */}
-        <motion.div
-          className="absolute inset-0 opacity-30"
-          animate={{
-            background: [
-              'radial-gradient(circle at 20% 50%, rgba(249, 209, 213, 0.1) 0%, transparent 50%)',
-              'radial-gradient(circle at 80% 50%, rgba(249, 209, 213, 0.1) 0%, transparent 50%)',
-              'radial-gradient(circle at 20% 50%, rgba(249, 209, 213, 0.1) 0%, transparent 50%)',
-            ]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-        />
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { number: '500+', label: 'Lives Transformed', icon: '✨' },
-              { number: '50+', label: 'Licensed Therapists', icon: '🌱' },
-              { number: '95%', label: 'Satisfaction Rate', icon: '💫' },
-              { number: '24/7', label: 'Support Available', icon: '🌙' },
-            ].map((stat, index) => {
-              const ref = useRef(null);
-              const isInView = useInView(ref, { once: true, amount: 0.5 });
-              
-              return (
-                <motion.div
-                  key={index}
-                  ref={ref}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: index * 0.15, ease: [0.21, 1, 0.5, 1] }}
-                  viewport={{ once: true }}
-                  whileHover={{ y: -10 }}
-                  className="text-center p-8 bg-[var(--color-bg-subtle)] rounded-2xl relative overflow-hidden group cursor-pointer border border-white/5"
-                >
-                  {/* Animated background on hover */}
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  />
-                  
-                  {/* Shimmer effect */}
-                  <motion.div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100"
-                    animate={{
-                      backgroundPosition: ['200% 0', '-200% 0']
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                    style={{
-                      background: 'linear-gradient(90deg, transparent, rgba(249, 209, 213, 0.1), transparent)',
-                      backgroundSize: '200% 100%'
-                    }}
-                  />
-                  
-                  {/* Icon with bounce animation */}
-                  <motion.div 
-                    className="text-5xl mb-4 relative z-10"
-                    animate={isInView ? { 
-                      scale: [1, 1.2, 1],
-                      rotate: [0, 10, -10, 0]
-                    } : {}}
-                    transition={{ 
-                      duration: 0.6, 
-                      delay: index * 0.15 + 0.3,
-                      ease: "easeOut"
-                    }}
-                  >
-                    {stat.icon}
-                  </motion.div>
-                  
-                  {/* Animated counter */}
-                  <motion.div 
-                    className="font-title text-5xl text-[var(--color-primary)] mb-2 relative z-10"
-                    initial={{ scale: 0.5, opacity: 0 }}
-                    animate={isInView ? { scale: 1, opacity: 1 } : {}}
-                    transition={{ 
-                      duration: 0.6, 
-                      delay: index * 0.15 + 0.5,
-                      type: "spring",
-                      stiffness: 200
-                    }}
-                  >
-                    <AnimatedCounter value={stat.number} inView={isInView} />
-                  </motion.div>
-                  
-                  <div className="font-body text-sm text-[var(--color-text-body)] opacity-70 uppercase tracking-wider relative z-10">
-                    {stat.label}
-                  </div>
-                  
-                  {/* Bottom glow */}
-                  <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-[var(--color-primary)]/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-app)" />
+      <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-app)" />
 
       {/* What We Offer - MagicBento Grid */}
       <section className="relative py-24 bg-[var(--color-bg-app)] overflow-hidden">
@@ -470,7 +365,7 @@ export default function AboutPage() {
                 What Makes Us <span className="text-[var(--color-primary)] italic">Different</span>
               </h2>
               <p className="font-body text-lg text-[var(--color-text-body)]/60 max-w-2xl mx-auto">
-                Discover the core values and principles that guide our mission to transform mental wellness
+                The core values and principles that guide my mission to make mental wellness accessible to everyone
               </p>
             </motion.div>
           </div>
@@ -568,8 +463,8 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="font-body text-lg text-[var(--color-text-body)] opacity-80 max-w-2xl mx-auto leading-relaxed"
             >
-              Have questions about our services? We're here to help you take the first step 
-              toward your wellness journey.
+              Have questions about MindSettler? I'm here to help you take the first step 
+              toward your wellness journey. Feel free to reach out!
             </motion.p>
           </div>
 
@@ -938,8 +833,8 @@ export default function AboutPage() {
               Ready to Begin Your Journey?
             </h2>
             <p className="font-body text-lg text-[var(--color-text-body)] opacity-80 mb-10 leading-relaxed">
-              Take the first step toward mental clarity and emotional well-being. 
-              Book your confidential session today.
+              I believe everyone deserves support on their mental wellness journey. 
+              Take the first step toward clarity and well-being—book your confidential session today.
             </p>
             <MagneticButton text="Book a Session" />
           </motion.div>

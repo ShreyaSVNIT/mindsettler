@@ -5,7 +5,6 @@ import HowItWorksFAQs from "@/components/HowItWorksFAQs";
 import Orb from "@/components/Orb";
 // import FloatingWords from "@/components/FloatingWords";
 import WatercolorBackground from "@/components/WatercolorBackground";
-import FloatingParticles from "@/components/FloatingParticles";
 import { motion } from "framer-motion";
 
 export default function HowItWorks() {
@@ -72,11 +71,6 @@ export default function HowItWorks() {
         {/* Watercolor Background Layer */}
         <div className="absolute inset-0 z-[-1]">
           <WatercolorBackground />
-        </div>
-
-        {/* Floating Particles Layer */}
-        <div className="absolute inset-0 z-[-1]">
-          <FloatingParticles />
         </div>
 
         {/* Central Glow Effect */}
