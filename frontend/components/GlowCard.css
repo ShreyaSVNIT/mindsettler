@@ -1,0 +1,63 @@
+/* GlowCard Styles */
+
+.glow-card {
+  position: relative;
+  min-height: 200px;
+  width: 100%;
+  padding: 2rem;
+  border-radius: 24px;
+  border: 2px solid rgba(69, 56, 89, 0.2);
+  background: #ffffff;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  /* CSS custom properties for glow effect */
+  --glow-x: 50%;
+  --glow-y: 50%;
+  --glow-intensity: 0;
+  --glow-radius: 300px;
+  --glow-color: 227, 115, 131;
+}
+
+.glow-card:hover {
+  border-color: rgba(227, 115, 131, 0.6);
+}
+
+/* The magical border glow effect */
+.glow-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  
+  /* Radial gradient that follows cursor position */
+  background: radial-gradient(
+    var(--glow-radius) circle at var(--glow-x) var(--glow-y),
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.6)) 0%,
+    rgba(var(--glow-color), calc(var(--glow-intensity) * 0.3)) 30%,
+    transparent 60%
+  );
+  
+  border-radius: inherit;
+  
+  /* This mask creates the border-only effect */
+  /* It shows the gradient everywhere except the content area */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Increase glow intensity on hover */
+.glow-card:hover::after {
+  opacity: 1;
+}

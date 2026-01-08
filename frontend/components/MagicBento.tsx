@@ -20,45 +20,45 @@ interface CardData {
 const cardData: CardData[] = [
   {
     color: '#ffffff',
-    title: 'Your Safe Space',
-    description: 'Every conversation stays between you and your therapist. We prioritize your privacy with enterprise-grade security and complete confidentiality—so you can show up fully, without fear of judgment.',
+    title: 'Complete Confidentiality',
+    description: 'Every conversation stays between us. I prioritize your privacy with complete confidentiality and a judgment-free space—so you can show up fully and authentically in every session.',
     label: '',
-    tags: ['Private', 'Encrypted', 'Judgment‑free']
+    tags: ['Private', 'Safe', 'Judgment‑free']
   },
   {
     color: '#ffffff',
-    title: 'Personalized Care',
-    description: 'We match you with therapists who truly understand your unique journey and needs.',
+    title: 'Personalized Guidance',
+    description: 'I design each therapy session around your unique needs and goals.',
     label: '',
-    tags: ['Matched', 'Specialists', 'Personal']
+    tags: ['Tailored', 'Individual', 'Personal']
   },
   {
     color: '#ffffff',
-    title: 'Breaking Barriers',
-    description: 'No waiting rooms, no stigma—just accessible mental wellness from the comfort of your space. Connect with licensed professionals from anywhere, anytime, and take your next step on your own terms.',
+    title: 'Structured Sessions',
+    description: 'I provide a clear, reliable framework for every 60-minute session so you never feel lost. We begin by checking in on your week, dive deep into core challenges using focused therapeutic exercises, and conclude with actionable \'takeaways\' or reflections.',
     label: '',
-    tags: ['Remote', 'Flexible', 'Accessible']
+    tags: ['All Ages', 'Organized', 'Progressive']
   },
   {
     color: '#ffffff',
-    title: 'Evidence-Based',
-    description: 'Our therapists use proven techniques backed by decades of research and clinical experience. Every approach is grounded in science and tailored to what works best for you.',
+    title: 'Evidence-Based Therapy',
+    description: 'I use proven therapeutic approaches including CBT, DBT, ACT, Schema Therapy, EFT, Mindfulness-Based Cognitive Therapy, and Client-Centred Therapy—all grounded in clinical research.',
     label: '',
     tags: ['Research‑led', 'Proven', 'Clinical']
   },
   {
     color: '#ffffff',
-    title: 'Your Journey, Your Pace',
-    description: 'Whether online or offline, morning or evening—we adapt to your schedule and comfort.',
+    title: 'Flexible & Accessible',
+    description: 'Whether online or offline, morning or evening—I adapt to your schedule and comfort. Just accessible mental wellness from wherever you are.',
     label: '',
-    tags: ['Pace', 'Anytime', 'Choice']
+    tags: ['Online', 'Flexible', 'Convenient']
   },
   {
     color: '#ffffff',
-    title: 'Growing Together',
-    description: 'From first session to lasting transformation, we\'re here as your partner in wellness.',
+    title: 'Holistic Support',
+    description: 'I help you overcome unhelpful patterns, heal from trauma, build self-esteem, strengthen relationships, and navigate parenting challenges.',
     label: '',
-    tags: ['Support', 'Progress', 'Together']
+    tags: ['Healing', 'Growth', 'Support']
   }
 ];
 

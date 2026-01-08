@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring }
 import MagneticButton from '@/components/Button';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
 import MagicBento from '@/components/MagicBento';
+import SectionHeader from '@/components/SectionHeader';
 
 // Animated Counter Component
 const AnimatedCounter = ({ value, inView }: { value: string, inView: boolean }) => {
@@ -193,33 +194,34 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)]">
       {/* Hero Section - Elegant Parallax */}
-      <section ref={heroRef} className="relative py-40 px-6 overflow-hidden min-h-screen flex items-center">
+      <section ref={heroRef} className="relative py-40 px-4 overflow-hidden min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Text Content with subtle parallax */}
             <motion.div
               style={{ y: textY }}
               initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
               <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-block mb-6"
+                className="mb-8"
               >
-                <div className="bg-[var(--color-bg-app)] px-6 py-2 rounded-full border border-[var(--color-primary)]/10">
-                  <p className="uppercase tracking-[0.3em] text-xs font-body text-[var(--color-primary)]">
-                    ✦ About MindSettler ✦
-                  </p>
-                </div>
+                <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
+                  About MindSettler
+                </span>
               </motion.div>
 
               <motion.h1
                 className="font-title text-6xl md:text-8xl text-[var(--color-text-body)] mb-8 leading-[0.95]"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.3 }}
               >
                 Where
@@ -230,9 +232,10 @@ export default function AboutPage() {
               </motion.h1>
 
               <motion.p
-                className="font-body text-xl text-[var(--color-text-body)] opacity-80 leading-relaxed mb-8"
+                className="font-body text-xl md:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed mb-8 body-text"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
                 I created MindSettler to be more than just a platform. It's a companion in your journey toward
@@ -242,7 +245,8 @@ export default function AboutPage() {
               <motion.div
                 className="flex flex-wrap gap-4"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.7 }}
               >
                 <MagneticButton text="Start Your Journey" />
@@ -269,16 +273,20 @@ export default function AboutPage() {
                   }}
                 />
 
-                {/* Main image container with mask reveal */}
+                {/* Primary color shadow box */}
+                <div className="absolute top-10 left-10 w-full h-[500px] bg-[var(--color-primary)] rounded-[3rem] opacity-100" />
+
+                {/* Main image container with mask reveal and hover zoom */}
                 <motion.div
-                  className="relative h-[500px] rounded-[3rem] overflow-hidden"
+                  className="relative h-[500px] rounded-[3rem] overflow-hidden group"
                   initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
                   animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                   transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
+                  whileHover={{ scale: 1.02 }}
                 >
-                  {/* Image wrapper with subtle scale */}
+                  {/* Image wrapper with subtle scale and hover zoom */}
                   <motion.div
-                    className="relative w-full h-full"
+                    className="relative w-full h-full bg-white"
                     initial={{ scale: 1.2 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
@@ -287,7 +295,7 @@ export default function AboutPage() {
                       src="/parnika.jpeg"
                       alt="Mental wellness"
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                       priority
                     />
                     {/* Subtle gradient overlay */}
@@ -298,11 +306,12 @@ export default function AboutPage() {
                   <div className="absolute inset-0 rounded-[3rem] ring-1 ring-white/10" />
                 </motion.div>
 
-                {/* Floating accent elements */}
+                {/* Floating accent elements with rotation on hover */}
                 <motion.div
                   className="absolute -top-6 -right-6 w-24 h-24 rounded-full border border-[var(--color-primary)]/20"
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
+                  whileHover={{ rotate: 180 }}
                   transition={{ duration: 0.6, delay: 1.5 }}
                   style={{
                     boxShadow: '0 0 60px rgba(249, 209, 213, 0.2)'
@@ -310,64 +319,33 @@ export default function AboutPage() {
                 />
 
                 <motion.div
-                  className="absolute -bottom-8 -left-8 w-32 h-32 rounded-2xl border border-[var(--color-primary)]/10 rotate-12"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
+                  className="absolute -bottom-8 -left-8 w-32 h-32 rounded-2xl border border-[var(--color-primary)]/10"
+                  initial={{ scale: 0, opacity: 0, rotate: 12 }}
+                  animate={{ scale: 1, opacity: 1, rotate: 12 }}
+                  whileHover={{ rotate: 192 }}
                   transition={{ duration: 0.6, delay: 1.7 }}
                 />
               </div>
             </motion.div>
           </div>
         </div>
-
-        {/* Subtle scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            <div className="w-5 h-8 border border-[var(--color-text-body)]/20 rounded-full flex justify-center pt-1.5">
-              <motion.div
-                animate={{ opacity: [0, 1, 0], y: [0, 10, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1 h-1.5 bg-[var(--color-primary)] rounded-full"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
       </section>
 
       <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-app)" />
 
       {/* What We Offer - MagicBento Grid */}
-      <section className="relative py-24 bg-[var(--color-bg-app)] overflow-hidden">
+      <section className="relative py-12 bg-[var(--color-bg-app)] overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <div className="flex items-center justify-center gap-4 mb-4">
-                <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
-                <span className="text-[var(--color-primary)] text-[10px] tracking-[0.4em] uppercase font-body font-light">
-                  Our Approach
-                </span>
-                <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
-              </div>
-              <h2 className="font-title text-5xl md:text-6xl lg:text-7xl text-[var(--color-text-body)] mb-4">
-                What Makes Us <span className="text-[var(--color-primary)] italic">Different</span>
-              </h2>
-              <p className="font-body text-lg text-[var(--color-text-body)]/60 max-w-2xl mx-auto">
-                The core values and principles that guide my mission to make mental wellness accessible to everyone
-              </p>
-            </motion.div>
+          <div className="text-center mb-12">
+            <SectionHeader
+              subheader="Our Approach"
+              title={<>What Makes Us <span className="italic">Different</span></>}
+              bodyText="The core values and principles that guide my mission to make mental wellness accessible to everyone"
+              alignment="center"
+              decoration="whiskers"
+              layout="single"
+            />
           </div>
 
           {/* MagicBento Grid */}

@@ -82,11 +82,11 @@ export default function SectionHeader({
   return (
     <div className={`flex flex-col ${alignmentClasses[alignment]} mb-16`}>
       {/* Subheader with decoration */}
-      <div className={`flex items-center gap-4 mb-8 ${justifyClasses[alignment]}`}>
+      <div className={`flex items-center gap-4 mb-4 ${justifyClasses[alignment]}`}>
         {decoration === 'whiskers' && (
           <>
             <div className="h-[1px] w-12 md:w-16 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
-            <span className="text-[var(--color-text-body)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
+            <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
               {subheader}
             </span>
             <div className="h-[1px] w-12 md:w-16 bg-gradient-to-r from-[var(--color-primary)] to-transparent" />
@@ -94,21 +94,21 @@ export default function SectionHeader({
         )}
         {decoration === 'dot' && (
           <>
-            <span className="w-2 h-2 rounded-full bg-[var(--color-text-body)] animate-pulse"></span>
-            <span className="text-[var(--color-text-body)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
+            <span className="w-2 h-2 rounded-full bg-[var(--color-primary)] animate-pulse"></span>
+            <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
               {subheader}
             </span>
           </>
         )}
         {decoration === 'none' && (
-          <span className="text-[var(--color-text-body)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
+          <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
             {subheader}
           </span>
         )}
       </div>
 
       {/* Title */}
-      <h2 className="font-title text-5xl md:text-6xl lg:text-7xl text-[var(--color-text-body)] leading-tight mb-8">
+      <h2 className="font-title text-5xl md:text-6xl lg:text-7xl text-[var(--color-text-body)] leading-tight mb-4">
         {title}
       </h2>
 
