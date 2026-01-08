@@ -8,13 +8,15 @@ interface MagneticButtonProps {
   onClick?: () => void;
   className?: string;
   variant?: 'default' | 'lavender';
+  size?: 'default' | 'small';
 }
 
-const MagneticButton = ({ 
-  text = "Contact us", 
-  onClick, 
+const MagneticButton = ({
+  text = "Contact us",
+  onClick,
   className = "",
-  variant = 'default'
+  variant = 'default',
+  size = 'default'
 }: MagneticButtonProps) => {
   const baseStyles = variant === 'lavender'
     ? "bg-[var(--color-text-body)] border border-[var(--color-text-body)]"
@@ -48,6 +50,12 @@ const MagneticButton = ({
     ? "group-hover:text-[var(--color-bg-lavender)]"
     : "group-hover:text-[var(--color-bg-app)]";
 
+  // Size variations
+  const textSize = size === 'small' ? "text-lg" : "text-3xl";
+  const arrowContainerSize = size === 'small' ? "h-10 w-10" : "h-14 w-14";
+  const arrowIconSize = size === 'small' ? 18 : 24;
+  const buttonPadding = size === 'small' ? "py-2 pl-6 pr-2 gap-3" : "py-2 pl-8 pr-2 gap-4";
+
   return (
     <button
       onClick={onClick}
@@ -56,11 +64,8 @@ const MagneticButton = ({
         relative
         flex
         items-center
-        gap-4
+        ${buttonPadding}
         rounded-full
-        py-2
-        pl-8
-        pr-2
         overflow-hidden
         transition-all
         duration-500
@@ -89,7 +94,7 @@ const MagneticButton = ({
         z-10
         font-title
         font-semibold
-        text-3xl
+        ${textSize}
         uppercase
         tracking-tight 
         transition-colors 
@@ -105,8 +110,7 @@ const MagneticButton = ({
         relative
         z-10
         flex 
-        h-14 
-        w-14 
+        ${arrowContainerSize}
         items-center 
         justify-center 
         rounded-full 
@@ -117,10 +121,10 @@ const MagneticButton = ({
         ${arrowBgHover}
       `}>
         {/* ARROW REPLACEMENT ANIMATION (Horizontal) */}
-        <div className="relative h-6 w-6 overflow-hidden">
+        <div className={`relative overflow-hidden ${size === 'small' ? 'h-4 w-4' : 'h-6 w-6'}`}>
           {/* Original Arrow: Slides out to the RIGHT */}
-          <ArrowRight 
-            size={24} 
+          <ArrowRight
+            size={arrowIconSize}
             strokeWidth={1.5}
             className={`
               absolute 
@@ -131,11 +135,11 @@ const MagneticButton = ({
               ${arrowColorDefault}
               group-hover:translate-x-full 
               group-hover:opacity-0
-            `} 
+            `}
           />
           {/* New Arrow: Slides in from the LEFT */}
-          <ArrowRight 
-            size={24} 
+          <ArrowRight
+            size={arrowIconSize}
             strokeWidth={1.5}
             className={`
               absolute 
@@ -148,7 +152,7 @@ const MagneticButton = ({
               ${arrowColorHover}
               group-hover:translate-x-0 
               group-hover:opacity-100
-            `} 
+            `}
           />
         </div>
       </div>
