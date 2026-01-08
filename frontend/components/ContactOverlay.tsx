@@ -35,12 +35,12 @@ export default function ContactOverlay() {
             className="fixed bottom-0 right-0 z-[100] cursor-pointer group"
             onClick={() => setIsOpen(true)}
           >
-            <div className="relative bg-[var(--color-primary)] text-white px-8 py-6 rounded-tl-[3rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all group-hover:scale-105 origin-bottom-right">
+            <div className="relative bg-[var(--color-primary)] text-white px-5 py-3 md:px-6 md:py-4 rounded-tl-[1.5rem] md:rounded-tl-[2.5rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all group-hover:scale-105 origin-bottom-right">
               <div className="flex flex-col items-start">
-                <span className="font-title text-3xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-lg md:text-xl font-bold uppercase tracking-wider leading-none">
                   LET'S
                 </span>
-                <span className="font-title text-3xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-lg md:text-xl font-bold uppercase tracking-wider leading-none">
                   TALK
                 </span>
               </div>
@@ -60,7 +60,7 @@ export default function ContactOverlay() {
             className="fixed inset-0 z-[200] bg-[var(--color-bg-app)] overflow-y-auto"
           >
             <div className="min-h-screen w-full relative">
-              
+
               {/* Close Button */}
               <motion.button
                 initial={{ opacity: 0 }}
@@ -74,7 +74,7 @@ export default function ContactOverlay() {
 
               <div className="container mx-auto px-6 py-20 max-w-7xl">
                 <div className="grid lg:grid-cols-2 gap-16 items-start">
-                  
+
                   {/* Left Side - Heading & Info */}
                   <motion.div
                     initial={{ opacity: 0, y: 40 }}

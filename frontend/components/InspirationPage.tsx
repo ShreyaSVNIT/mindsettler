@@ -38,9 +38,7 @@ export default function InspirationPage({
     overlayColor = 'transparent',
     isActive = true,
 }: InspirationPageProps) {
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
+
 
     const sectionRef = useRef<HTMLDivElement | null>(null);
     const { scrollYProgress } = useScroll({
@@ -164,8 +162,8 @@ export default function InspirationPage({
                                 variants={feedItem}
                                 className="group cursor-pointer"
                             >
-                                <div>
-                                    <Link href={resource.type === 'link' && resource.externalUrl ? resource.externalUrl : `/resources/${resource.id}`} target={resource.type === 'link' ? '_blank' : undefined} className="block relative h-[400px] lg:h-[500px] overflow-hidden rounded-sm">
+                                <div className="max-w-lg mx-auto">
+                                    <Link href={resource.type === 'link' && resource.externalUrl ? resource.externalUrl : `/resources/${resource.id}`} target={resource.type === 'link' ? '_blank' : undefined} className="block relative h-[300px] lg:h-[400px] overflow-hidden rounded-sm">
 
                                         {/* Background Image */}
                                         <div className="absolute inset-0">
@@ -186,34 +184,38 @@ export default function InspirationPage({
                                         </div>
 
                                         {/* Content Container - slides up on hover */}
-                                        <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-8 transition-all duration-700 ease-out group-hover:-translate-y-12">
+                                        <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-8 transition-all duration-700 ease-out">
                                             {/* Title (Always Visible) */}
                                             <h2 className="font-title text-4xl lg:text-5xl font-bold text-white leading-tight tracking-tight mb-0 transition-all duration-700">
                                                 {resource.title}
                                             </h2>
-                                            
+
                                             {/* Description + CTA (Fade in on hover) */}
-                                            <div className="max-w-xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-150 pointer-events-none">
-                                                <p className="text-white/90 text-base lg:text-lg mt-6 mb-8 font-body leading-relaxed">
-                                                    {resource.description}
-                                                </p>
-                                                <div className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[var(--color-text-body)] font-bold text-sm uppercase tracking-[0.2em] rounded-full border-2 border-white transition-all pointer-events-auto">
-                                                    {resource.type === 'video' ? (
-                                                        <>
-                                                            <Play className="w-4 h-4" />
-                                                            Watch Now
-                                                        </>
-                                                    ) : resource.type === 'link' ? (
-                                                        <>
-                                                            <ExternalLink className="w-4 h-4" />
-                                                            Visit Link
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <ArrowRight className="w-4 h-4" />
-                                                            Read More
-                                                        </>
-                                                    )}
+                                            <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-700 ease-out">
+                                                <div className="overflow-hidden">
+                                                    <div className="max-w-xl opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-700 delay-150 pointer-events-none pt-2">
+                                                        <p className="text-white/90 text-base lg:text-lg mt-6 mb-8 font-body leading-relaxed">
+                                                            {resource.description}
+                                                        </p>
+                                                        <div className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[var(--color-text-body)] font-bold text-sm uppercase tracking-[0.2em] rounded-full border-2 border-white transition-all pointer-events-auto">
+                                                            {resource.type === 'video' ? (
+                                                                <>
+                                                                    <Play className="w-4 h-4" />
+                                                                    Watch Now
+                                                                </>
+                                                            ) : resource.type === 'link' ? (
+                                                                <>
+                                                                    <ExternalLink className="w-4 h-4" />
+                                                                    Visit Link
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <ArrowRight className="w-4 h-4" />
+                                                                    Read More
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -235,14 +237,7 @@ export default function InspirationPage({
                         ))}
                     </motion.div>
 
-                    <div className="flex justify-center lg:justify-end mt-24">
-                        <button
-                            onClick={scrollToTop}
-                            className="flex items-center gap-2 bg-[var(--color-bg-card)] text-[var(--color-text-body)] text-xs font-bold uppercase tracking-widest px-6 py-4 shadow-lg hover:bg-[var(--color-primary)] hover:text-white transition-all border border-[var(--color-border)] rounded-full lg:rounded-none"
-                        >
-                            Back to Top <ArrowUp className="w-4 h-4" />
-                        </button>
-                    </div>
+
                 </div>
 
             </div>

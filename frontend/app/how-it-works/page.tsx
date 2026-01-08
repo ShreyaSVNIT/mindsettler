@@ -119,7 +119,7 @@ export default function HowItWorks() {
             <br />
             but it doesn't have to be <span className="text-[var(--color-primary)] italic">a circle</span>"
           </motion.h2>
-          
+
           {/* CTA Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

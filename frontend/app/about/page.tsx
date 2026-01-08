@@ -15,11 +15,11 @@ const AnimatedCounter = ({ value, inView }: { value: string, inView: boolean }) 
 
   useEffect(() => {
     if (!inView) return;
-    
+
     let start = 0;
     const duration = 2000;
     const increment = numericValue / (duration / 16);
-    
+
     const timer = setInterval(() => {
       start += increment;
       if (start >= numericValue) {
@@ -29,7 +29,7 @@ const AnimatedCounter = ({ value, inView }: { value: string, inView: boolean }) 
         setCount(Math.floor(start));
       }
     }, 16);
-    
+
     return () => clearInterval(timer);
   }, [inView, numericValue]);
 
@@ -48,7 +48,7 @@ interface CardProps {
 const Card = ({ i, title, description, progress, range, targetScale }: CardProps) => {
   const container = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
-  
+
   // This helps the card know when it's in view
   const { scrollYProgress } = useScroll({
     target: container,
@@ -59,56 +59,56 @@ const Card = ({ i, title, description, progress, range, targetScale }: CardProps
   const scale = useTransform(progress, range, [1, targetScale]);
 
   return (
-    <div ref={container} className="h-screen flex items-center justify-center sticky top-0">
+    <div ref={container} className="h-screen flex items-center justify-center sticky top-0 px-4">
       <motion.div
         style={{
           scale,
           backgroundColor: 'var(--color-bg-subtle)',
           // This creates the "stacked" edges at the top
-          top: `calc(5vh + ${i * 28}px)`, 
+          top: `calc(5vh + ${i * 28}px)`,
         }}
-        className="relative h-[450px] w-full max-w-[900px] rounded-[2.5rem] p-8 md:p-12 shadow-2xl border border-white/10 origin-top overflow-hidden group"
+        className="relative min-h-[400px] h-auto md:h-[450px] w-full max-w-[900px] rounded-[2.5rem] p-6 md:p-12 shadow-2xl border border-white/10 origin-top overflow-hidden group flex flex-col justify-center"
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
         whileHover={{ y: -10 }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        <div className="relative z-10 flex flex-col md:flex-row h-full gap-10">
+        <div className="relative z-10 flex flex-col md:flex-row h-full gap-6 md:gap-10 items-center">
           <div className="flex-1 flex flex-col justify-center">
-            <motion.h3 
-              className="font-title text-4xl text-[var(--color-text-body)] mb-6"
+            <motion.h3
+              className="font-title text-3xl md:text-4xl text-[var(--color-text-body)] mb-4 md:mb-6"
               animate={isHovered ? { x: 10 } : { x: 0 }}
             >
               {title}
             </motion.h3>
-            <motion.p 
-              className="font-body text-lg opacity-80 leading-relaxed"
+            <motion.p
+              className="font-body text-base md:text-lg opacity-80 leading-relaxed"
               animate={isHovered ? { x: 10 } : { x: 0 }}
               transition={{ delay: 0.05 }}
             >
-              <span className="text-4xl font-title text-[var(--color-primary)] mr-1">{description[0]}</span>
+              <span className="text-3xl md:text-4xl font-title text-[var(--color-primary)] mr-1">{description[0]}</span>
               {description.substring(1)}
             </motion.p>
           </div>
-          
+
           <div className="hidden md:flex flex-1 items-center justify-center opacity-10 select-none group-hover:opacity-20 transition-opacity duration-300">
-             <span className="text-[12rem] font-title text-[var(--color-primary)]">0{i+1}</span>
+            <span className="text-[8rem] lg:text-[12rem] font-title text-[var(--color-primary)] whitespace-nowrap">0{i + 1}</span>
           </div>
         </div>
-        
+
         {/* Animated gradient wash */}
-        <motion.div 
+        <motion.div
           className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent pointer-events-none"
           animate={isHovered ? { opacity: 1 } : { opacity: 0.5 }}
         />
-        
+
         {/* Edge glow on hover */}
         <motion.div
           className="absolute inset-0 rounded-[2.5rem] pointer-events-none"
-          animate={isHovered ? { 
-            boxShadow: '0 0 80px rgba(249, 209, 213, 0.4), inset 0 0 80px rgba(249, 209, 213, 0.1)' 
-          } : { 
-            boxShadow: '0 0 0px rgba(249, 209, 213, 0)' 
+          animate={isHovered ? {
+            boxShadow: '0 0 80px rgba(249, 209, 213, 0.4), inset 0 0 80px rgba(249, 209, 213, 0.1)'
+          } : {
+            boxShadow: '0 0 0px rgba(249, 209, 213, 0)'
           }}
           transition={{ duration: 0.3 }}
         />
@@ -120,7 +120,7 @@ const Card = ({ i, title, description, progress, range, targetScale }: CardProps
 export default function AboutPage() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
-  
+
   // Subtle parallax for hero
   const { scrollYProgress: heroScrollProgress } = useScroll({
     target: heroRef,
@@ -132,7 +132,7 @@ export default function AboutPage() {
   const textY = useTransform(heroScrollProgress, [0, 1], [0, 100]);
   const scale = useTransform(heroScrollProgress, [0, 0.5], [1, 1.05]);
   const imageOpacity = useTransform(heroScrollProgress, [0, 0.8, 1], [1, 0.8, 0]);
-  
+
   // This scroll progress tracks the ENTIRE values section
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -215,8 +215,8 @@ export default function AboutPage() {
                   </p>
                 </div>
               </motion.div>
-              
-              <motion.h1 
+
+              <motion.h1
                 className="font-title text-6xl md:text-8xl text-[var(--color-text-body)] mb-8 leading-[0.95]"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -228,18 +228,18 @@ export default function AboutPage() {
                 </span>
                 <span className="block mt-2">Meets Hope</span>
               </motion.h1>
-              
-              <motion.p 
+
+              <motion.p
                 className="font-body text-xl text-[var(--color-text-body)] opacity-80 leading-relaxed mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.5 }}
               >
-                I created MindSettler to be more than just a platform. It's a companion in your journey toward 
+                I created MindSettler to be more than just a platform. It's a companion in your journey toward
                 understanding yourself, embracing your story, and finding peace in the present.
               </motion.p>
 
-              <motion.div 
+              <motion.div
                 className="flex flex-wrap gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -256,21 +256,21 @@ export default function AboutPage() {
             >
               <div className="relative">
                 {/* Subtle background accents */}
-                <motion.div 
+                <motion.div
                   className="absolute -inset-4 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent rounded-[3.5rem] blur-2xl"
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.05, 1],
                     opacity: [0.3, 0.5, 0.3]
                   }}
-                  transition={{ 
-                    duration: 4, 
+                  transition={{
+                    duration: 4,
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
                 />
-                
+
                 {/* Main image container with mask reveal */}
-                <motion.div 
+                <motion.div
                   className="relative h-[500px] rounded-[3rem] overflow-hidden"
                   initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
                   animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
@@ -293,7 +293,7 @@ export default function AboutPage() {
                     {/* Subtle gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-subtle)]/20 to-transparent" />
                   </motion.div>
-                  
+
                   {/* Elegant border */}
                   <div className="absolute inset-0 rounded-[3rem] ring-1 ring-white/10" />
                 </motion.div>
@@ -304,11 +304,11 @@ export default function AboutPage() {
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 0.6, delay: 1.5 }}
-                  style={{ 
+                  style={{
                     boxShadow: '0 0 60px rgba(249, 209, 213, 0.2)'
                   }}
                 />
-                
+
                 <motion.div
                   className="absolute -bottom-8 -left-8 w-32 h-32 rounded-2xl border border-[var(--color-primary)]/10 rotate-12"
                   initial={{ scale: 0, opacity: 0 }}
@@ -414,14 +414,14 @@ export default function AboutPage() {
           // Calculation for the range: [start_scroll_percent, end_scroll_percent]
           const start = index * (1 / values.length);
           const targetScale = 1 - ((values.length - index) * 0.05);
-          
+
           return (
-            <Card 
-              key={index} 
-              i={index} 
-              {...value} 
-              progress={scrollYProgress} 
-              range={[start, 1]} 
+            <Card
+              key={index}
+              i={index}
+              {...value}
+              progress={scrollYProgress}
+              range={[start, 1]}
               targetScale={targetScale}
             />
           );
@@ -435,7 +435,7 @@ export default function AboutPage() {
         {/* Background decoration */}
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--color-primary)] opacity-5 blur-[120px] rounded-full" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[var(--color-primary)] opacity-5 blur-[120px] rounded-full" />
-        
+
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-16">
             <motion.p
@@ -463,7 +463,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
               className="font-body text-lg text-[var(--color-text-body)] opacity-80 max-w-2xl mx-auto leading-relaxed"
             >
-              Have questions about MindSettler? I'm here to help you take the first step 
+              Have questions about MindSettler? I'm here to help you take the first step
               toward your wellness journey. Feel free to reach out!
             </motion.p>
           </div>
@@ -479,8 +479,8 @@ export default function AboutPage() {
             >
               {/* Hover glow effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <motion.div 
+
+              <motion.div
                 className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6 relative z-10"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
@@ -520,8 +520,8 @@ export default function AboutPage() {
               className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center relative overflow-hidden group border border-white/5"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <motion.div 
+
+              <motion.div
                 className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6 relative z-10"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
@@ -561,8 +561,8 @@ export default function AboutPage() {
               className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl text-center relative overflow-hidden group border border-white/5"
             >
               <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              
-              <motion.div 
+
+              <motion.div
                 className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mx-auto mb-6 relative z-10"
                 whileHover={{ rotate: 360 }}
                 transition={{ duration: 0.6 }}
@@ -613,11 +613,11 @@ export default function AboutPage() {
                 }}
                 transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
               />
-              
+
               <h3 className="font-title text-3xl text-[var(--color-text-body)] mb-6 text-center relative z-10">
                 Send Us a Message
               </h3>
-              
+
               <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
                 <div className="grid md:grid-cols-2 gap-6">
                   {/* Name Input - Floating Label */}
@@ -730,12 +730,12 @@ export default function AboutPage() {
                         backgroundSize: '200% 100%'
                       }}
                     />
-                    
+
                     {/* Button text */}
                     <span className="relative z-10 font-semibold text-lg">
                       {submitStatus === 'submitting' ? 'Sending...' : 'Send Message'}
                     </span>
-                    
+
                     {/* Ripple effect */}
                     {submitStatus !== 'submitting' && (
                       <motion.div
@@ -760,7 +760,7 @@ export default function AboutPage() {
                 </div>
 
                 {submitStatus === 'success' && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center"
@@ -772,7 +772,7 @@ export default function AboutPage() {
                 )}
 
                 {submitStatus === 'error' && (
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-red-50 border-2 border-red-200 rounded-xl p-4 text-center"
@@ -833,7 +833,7 @@ export default function AboutPage() {
               Ready to Begin Your Journey?
             </h2>
             <p className="font-body text-lg text-[var(--color-text-body)] opacity-80 mb-10 leading-relaxed">
-              I believe everyone deserves support on their mental wellness journey. 
+              I believe everyone deserves support on their mental wellness journey.
               Take the first step toward clarity and well-being—book your confidential session today.
             </p>
             <MagneticButton text="Book a Session" />

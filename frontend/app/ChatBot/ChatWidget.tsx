@@ -49,14 +49,14 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 font-body">
+    <div className="fixed bottom-0 left-0 z-50 font-body">
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
-            className="w-80 sm:w-96 h-[550px] bg-[var(--color-bg-card)] rounded-[2rem] shadow-[0_20px_50px_rgba(229,93,128,0.15)] flex flex-col overflow-hidden border border-[var(--color-border)]"
+            className="fixed bottom-28 left-6 w-80 sm:w-96 h-[550px] bg-[var(--color-bg-card)] rounded-[2rem] shadow-[0_20px_50px_rgba(229,93,128,0.15)] flex flex-col overflow-hidden border border-[var(--color-border)] mb-4"
           >
             {/* Header: Reassuring & Human  */}
             <div className="bg-[var(--color-primary)] p-6 text-[var(--color-bg-app)]">
@@ -64,7 +64,7 @@ export default function ChatWidget() {
                 <div>
                   <h3 className="font-title font-semibold text-xl tracking-tight">MindSettler Guide</h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="w-2 h-2 bg-[var(--color-bg-app)]/80 rounded-full animate-pulse"></span>
+                    <span className="w-4 h-2 bg-[var(--color-bg-app)]/80 rounded-full animate-pulse"></span>
                     <p className="text-xs text-[var(--color-bg-app)]/90 font-light">Online & Confidential</p>
                   </div>
                 </div>
@@ -84,8 +84,8 @@ export default function ChatWidget() {
                   className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`max-w-[85%] p-4 rounded-2xl text-[14px] leading-relaxed shadow-sm ${m.sender === 'user'
-                      ? 'bg-[var(--color-primary)] text-[var(--color-bg-app)] rounded-tr-none'
-                      : 'bg-[var(--color-bg-card)] text-[var(--color-text-body)] border border-[var(--color-border)] rounded-tl-none'
+                    ? 'bg-[var(--color-primary)] text-[var(--color-bg-app)] rounded-tr-none'
+                    : 'bg-[var(--color-bg-card)] text-[var(--color-text-body)] border border-[var(--color-border)] rounded-tl-none'
                     }`}>
                     {m.text}
 
@@ -141,11 +141,21 @@ export default function ChatWidget() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(true)}
-          className="bg-[var(--color-primary)] text-[var(--color-bg-app)] px-6 py-4 rounded-full shadow-[0_10px_30px_rgba(229,93,128,0.3)] flex items-center gap-3 group hover:bg-[var(--color-primary-hover)] transition-colors"
+          className={`
+            bg-[var(--color-primary)] text-[var(--color-bg-app)]
+            h-10 md:h-14
+            w-32 md:w-48
+            pl-3 md:pl-5 pr-2 md:pr-4
+            rounded-tr-[1.25rem] md:rounded-tr-[1.75rem] rounded-tl-none
+            shadow-[0_10px_30px_rgba(229,93,128,0.3)]
+            flex items-center gap-2 md:gap-3
+            origin-bottom-left
+            group hover:bg-[var(--color-primary-hover)] transition-colors
+            absolute bottom-0 left-0
+          `}
         >
-          <span className="font-semibold tracking-wide">Guidance</span>
-          <span className="text-xl group-hover:rotate-12 transition-transform">💬</span>
+          <span className="font-title text-sm md:text-xl font-bold uppercase tracking-wider leading-none">Guidance</span>
+          <span className="text-base md:text-xl group-hover:rotate-12 transition-transform">💬</span>
         </motion.button>
       )}
     </div>
