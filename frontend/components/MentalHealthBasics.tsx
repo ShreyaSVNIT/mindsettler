@@ -41,7 +41,7 @@ const mentalHealthBasics: TermData[] = [
 
 const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => (
   <div className="w-full h-full breathing-hex group">
-    <div className="relative w-full h-full" style={{ perspective: '1200px' }}>
+    <div className="relative w-full h-full transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)]" style={{ perspective: '1200px' }}>
       <div
         className="relative w-full h-full transition-transform duration-700 ease-out group-hover:rotate-y-180"
         style={{ transformStyle: 'preserve-3d' }}
@@ -55,24 +55,24 @@ const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => (
             backfaceVisibility: 'hidden'
           }}
         >
-          <div className="font-title text-3xl mb-1 text-[var(--color-primary)]">
+          <div className="font-title text-4xl md:text-5xl mb-1 text-[var(--color-primary)]">
             {data.letter}
           </div>
-          <div className="font-body text-sm font-medium">{data.term}</div>
-          <div className="font-body text-xs opacity-60">({data.hindi})</div>
+          <div className="font-body text-base md:text-lg font-medium">{data.term}</div>
+          <div className="font-body text-sm opacity-60">({data.hindi})</div>
         </div>
 
         {/* BACK */}
         <div
           className="absolute inset-0 flex items-center justify-center p-4"
           style={{
-            backgroundColor: 'var(--color-bg-subtle)',
+            backgroundColor: 'var(--color-bg-lavender)',
             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
             backfaceVisibility: 'hidden',
             transform: 'rotateY(180deg)'
           }}
         >
-          <p className="font-body text-[11px] md:text-xs text-center leading-tight">
+          <p className="font-body text-sm md:text-base text-center leading-snug text-[var(--color-text-secondary)]">
             {data.explanation}
           </p>
         </div>
@@ -133,8 +133,8 @@ export default function MentalHealthBasics() {
   };
 
   return (
-    <section className="relative py-24 px-6 overflow-hidden bg-[var(--color-bg-card)]">
-      <div className="relative max-w-7xl mx-auto flex flex-col items-center">
+    <section className="relative py-24 px-0 overflow-hidden bg-[var(--color-bg-card)]">
+      <div className="relative w-full flex flex-col items-center">
         {/* TITLE - Centered for symmetry */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -143,30 +143,36 @@ export default function MentalHealthBasics() {
           transition={{ duration: 0.8 }}
           className="max-w-3xl mb-20 text-center"
         >
-          <p className="uppercase tracking-widest text-xs mb-4 opacity-70 font-body">
-            Emotional Alphabet
-          </p>
-          <h2 className="font-title text-4xl md:text-5xl leading-tight mb-6">
-            When feelings don’t scream,<br />
+          {/* Emotional Alphabet with decorative whiskers */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="h-[1px] w-12 md:w-16 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
+            <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
+              Emotional Alphabet
+            </span>
+            <div className="h-[1px] w-12 md:w-16 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
+          </div>
+          
+          <h2 className="font-title text-5xl md:text-6xl lg:text-7xl leading-tight mb-8">
+            When feelings don't scream,<br />
             they <em>whisper</em>.
           </h2>
-          <p className="font-body text-lg opacity-80">
+          <p className="font-body text-xl md:text-2xl opacity-80">
             A gentle A–Z of emotions — explore, pause, breathe.
           </p>
         </motion.div>
 
         {/* GRID - Centered with equal side spacing */}
         <motion.div
-          className="flex flex-col items-center gap-4 w-full"
+          className="flex flex-col items-center gap-4 w-full md:snap-none snap-y snap-mandatory overflow-y-auto md:overflow-visible"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-100px", amount: 0.2 }}
         >
           {rows.map((row, r) => (
             <div
               key={r}
-              className="flex flex-wrap justify-center gap-3 md:gap-4 w-full"
+              className="flex flex-wrap justify-center gap-3 md:gap-4 w-full snap-start"
             >
               {row.map((term, c) => (
                 <motion.div
@@ -174,6 +180,9 @@ export default function MentalHealthBasics() {
                   custom={{ r, c, rowLen: row.length }}
                   variants={cardVariants}
                   className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40"
+                  viewport={{ once: true, amount: 0.3 }}
+                  initial="hidden"
+                  whileInView="visible"
                 >
                   <HexagonCard data={term} />
                 </motion.div>
