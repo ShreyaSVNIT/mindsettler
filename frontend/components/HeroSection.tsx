@@ -68,7 +68,7 @@ const HeroSection = () => {
             type="video/mp4" 
           />
         </video>
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-black/20" />
       </div>
 
       {/* MAIN CONTENT - Animated from below */}
@@ -81,7 +81,7 @@ const HeroSection = () => {
         >
         
         {/* TOP SUBTITLE */}
-        <p className="font-body uppercase tracking-[0.6em] text-white/60 text-[clamp(0.7rem,1.2vw,0.9rem)] mb-8">
+        <p className="font-body font-bold uppercase tracking-[0.6em] text-white text-[clamp(0.7rem,1.2vw,0.9rem)] mb-8 ">
           Your Journey Inward Begins Here
         </p>
 
@@ -106,14 +106,17 @@ const HeroSection = () => {
         </div>
 
         {/* REFINED SUPPORTING TEXT */}
-        <p className="font-body leading-relaxed text-white/80 text-[clamp(1rem,1.8vw,1.5rem)] max-w-[50ch] mb-12">
+        <p className="font-body leading-relaxed text-white text-[clamp(1rem,1.8vw,1.5rem)] max-w-[50ch] mb-12">
           Discover a sanctuary for <span className="text-white">emotional well-being</span>. 
           Expert psycho-education designed to help you navigate life's quieter, more profound moments.
         </p>
 
         {/* CALL TO ACTION */}
         <div>
-          <MagneticButton text="Explore Further" />
+          <MagneticButton 
+            text="Explore" 
+            onClick={() => window.location.href = '/how-it-works'}
+          />
         </div>
       </motion.div>
       )}

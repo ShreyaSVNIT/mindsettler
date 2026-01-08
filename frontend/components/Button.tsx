@@ -56,10 +56,10 @@ const MagneticButton = ({
         relative
         flex
         items-center
-        gap-6
+        gap-4
         rounded-full
         py-3
-        pl-10
+        pl-8
         pr-3
         overflow-hidden
         transition-all
@@ -87,8 +87,10 @@ const MagneticButton = ({
       <span className={`
         relative
         z-10
-        font-body 
-        text-xl 
+        font-title
+        font-semibold
+        text-2xl
+        uppercase
         tracking-tight 
         transition-colors 
         duration-500 

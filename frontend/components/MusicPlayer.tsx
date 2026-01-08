@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Volume2, VolumeX, Play, Pause } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 
 interface MusicPlayerProps {
   youtubeUrl?: string;
@@ -9,7 +9,6 @@ interface MusicPlayerProps {
 
 const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU&t=4s' }: MusicPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const playerRef = useRef<any>(null);
@@ -148,22 +147,6 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     }
   };
 
-  const toggleMute = () => {
-    if (!playerRef.current || !isLoaded) return;
-    
-    try {
-      if (isMuted) {
-        playerRef.current.unMute();
-        setIsMuted(false);
-      } else {
-        playerRef.current.mute();
-        setIsMuted(true);
-      }
-    } catch (err) {
-      console.error('Error toggling mute:', err);
-    }
-  };
-
   return (
     <>
       {/* Hidden YouTube Player */}
@@ -199,17 +182,6 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
             </span>
           </div>
         </button>
-        
-        {isPlaying && (
-          <button
-            onClick={toggleMute}
-            className="bg-[var(--color-primary)] text-white px-6 py-2 ml-8 mb-2 rounded-r-2xl opacity-70 hover:opacity-100 transition-all flex items-center gap-2 shadow-lg"
-            aria-label={isMuted ? 'Unmute music' : 'Mute music'}
-          >
-            {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-            <span className="font-body text-xs">{isMuted ? 'Unmute' : 'Mute'}</span>
-          </button>
-        )}
       </div>
     </>
   );
