@@ -3,7 +3,9 @@
 import Parallaxcards from "@/components/Parallaxcards";
 import HowItWorksFAQs from "@/components/HowItWorksFAQs";
 import Orb from "@/components/Orb";
-import FloatingWords from "@/components/FloatingWords";
+// import FloatingWords from "@/components/FloatingWords";
+import WatercolorBackground from "@/components/WatercolorBackground";
+import FloatingParticles from "@/components/FloatingParticles";
 import { motion } from "framer-motion";
 
 export default function HowItWorks() {
@@ -67,17 +69,48 @@ export default function HowItWorks() {
       <HowItWorksFAQs />
       <section className="relative w-screen left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] h-[80vh] bg-[var(--color-bg-app)] overflow-hidden py-24 z-10 flex flex-col items-center justify-center">
 
+        {/* Watercolor Background Layer */}
+        <div className="absolute inset-0 z-[-1]">
+          <WatercolorBackground />
+        </div>
+
+        {/* Floating Particles Layer */}
+        <div className="absolute inset-0 z-[-1]">
+          <FloatingParticles />
+        </div>
+
+        {/* Central Glow Effect */}
+        <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.7, 0.9, 0.7],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="w-[500px] h-[500px] rounded-full"
+            style={{
+              background: "radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 250, 240, 0.6) 25%, rgba(255, 235, 200, 0.3) 50%, transparent 70%)",
+              filter: "blur(50px)",
+              boxShadow: "0 0 100px rgba(255, 255, 255, 0.5), 0 0 150px rgba(255, 235, 200, 0.3)",
+            }}
+          />
+        </div>
+
         <div className="absolute inset-0 z-0">
           <Orb
-            hoverIntensity={0.4}
+            hoverIntensity={3}
             rotateOnHover={true}
             transparent={true}
           />
         </div>
 
-        <div className="absolute inset-0 z-10">
+        {/* <div className="absolute inset-0 z-10">
           <FloatingWords />
-        </div>
+        </div> */}
 
         {/* Text Overlay - Centered via Flexbox + Text Align Center */}
         <div className="relative z-20 w-[400px] max-w-[70vw] mx-auto text-center pointer-events-none">
@@ -92,6 +125,22 @@ export default function HowItWorks() {
             <br />
             but it doesn't have to be <span className="text-[var(--color-primary)] italic">a circle</span>"
           </motion.h2>
+          
+          {/* CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mt-8 pointer-events-auto"
+          >
+            <a
+              href="/book"
+              className="inline-block px-8 py-4 bg-[var(--color-primary)] text-white font-body font-semibold rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              Book a Session
+            </a>
+          </motion.div>
         </div>
       </section>
     </main>
