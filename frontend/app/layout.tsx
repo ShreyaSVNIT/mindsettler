@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ClientLayout from "@/components/ClientLayout";
 import ContactOverlay from "@/components/ContactOverlay";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const imbue = Imbue({
   variable: "--font-title",
@@ -26,6 +27,15 @@ const ivyPresto = localFont({
   display: "swap",
 });
 
+export const metadata: Metadata = {
+  title: "MindSettler - Your Journey to Mental Wellness",
+  description: "Book confidential counseling sessions with qualified psychologists. Online or offline mental health support when you need it.",
+  icons: {
+    icon: "/MindSettlerLogo.png",
+    apple: "/MindSettlerLogo.png",
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -44,6 +54,7 @@ export default function RootLayout({
           <Footer />
           <ContactOverlay />
         </ClientLayout>
+        <SpeedInsights />
       </body>
     </html>
   );
