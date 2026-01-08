@@ -76,11 +76,10 @@ export default function IntegratedHeader() {
           </nav>
 
           <div className="flex-grow relative flex items-center justify-center px-8 isolate">
-            {/* Cloud Shape Background - Smaller & Cleaner */}
-            {/* Cloud Shape Background - Stronger Visibility */}
+            {/* Cloud Shape Background - Reduced Size & Opacity */}
             {pathname === '/' && isAtTop && (
               <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
-                <div className="w-[240px] h-[100px] bg-white shadow-[0_0_60px_rgba(255,255,255,1)] rounded-[100%] blur-xl opacity-100"></div>
+                <div className="w-[240px] h-[60px] bg-white shadow-[0_0_40px_rgba(255,255,255,0.7)] rounded-[100%] blur-xl opacity-70"></div>
               </div>
             )}
             <Link href="/" className="absolute left-1/2 -translate-x-1/2 mt-2 w-auto h-auto block">

@@ -35,14 +35,15 @@
   inset: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 6vw 10vw;
+  padding: 6vw 12vw;
+  gap: 2vw;
   color: white;
   background: rgba(0, 0, 0, 0.35);
   z-index: 10;
 }
 
 .textSide {
-  max-width: 600px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -89,9 +90,8 @@
 }
 
 .descriptionText {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-ivy), serif;
   font-size: 1.15rem;
-  font-weight: 700;
   line-height: 1.8;
   color: rgba(255, 255, 255, 0.9);
   max-width: 560px;
@@ -107,7 +107,7 @@
   justify-content: flex-end;
   align-items: center;
   height: 100%;
-  padding-left: 4rem;
+  padding-left: 1rem;
 }
 
 .timeline {
@@ -144,20 +144,22 @@
 }
 
 .step h3 { 
-  font-size: 1.4rem; 
+  font-size: 1.75rem; 
   margin: 0 0 0.5rem 0; 
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
+  font-family: var(--font-title), serif;
+  font-weight: 400;
   color: #ffffff;
   letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
 .step p { 
-  font-size: 0.95rem; 
-  font-family: 'Playfair Display', serif;
-  font-weight: 700;
+  font-size: 1.25rem; 
+  font-family: var(--font-ivy), serif;
+  font-weight: 400;
   color: rgba(255, 255, 255, 0.85);
-  line-height: 1.6;
+  line-height: 1.85;
+  letter-spacing: 0.02em;
   margin: 0; 
   max-width: 280px;
 }

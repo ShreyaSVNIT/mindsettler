@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import styles from "./missionStatement.module.css";
 import MagneticButton from "./Button";
@@ -43,18 +44,20 @@ export default function MissionStatement() {
           <motion.div style={{ opacity }} className={styles.overlay}>
              <div className={styles.textSide}>
               {/* The Header with glowing dot */}
-              <div className={styles.headerLabel}>
-                <span className={styles.glowingDot}></span>
-                <span className={styles.label}>OUR MISSION</span>
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
+                <span className="text-white text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
+                  Our Mission
+                </span>
               </div>
 
               {/* Mixed Style Heading */}
-              <h2 className={styles.heading}>
-                A safe space where <span>growth meets compassion </span> and <span> clarity.</span>
+              <h2 className="font-title text-5xl md:text-6xl lg:text-7xl leading-tight mb-6 text-white">
+                A safe space where <span className="italic">growth</span> meets <span className="italic">compassion</span> and <span className="italic">clarity.</span>
               </h2>
 
               {/* Description for MindSettler */}
-              <p className={styles.descriptionText}>
+              <p className="text-xl md:text-2xl text-white mb-8 body-text">
                 MindSettler is your digital sanctuary for mental well-being. 
                 Connect with licensed psychotherapists through structured, 
                 confidential sessions designed to help you navigate life's 
@@ -62,7 +65,9 @@ export default function MissionStatement() {
               </p>
 
               <div className={styles.buttonWrapper}>
-                <MagneticButton text="BOOK A SESSION" />
+                <Link href="/book">
+                  <MagneticButton text="BOOK A SESSION" />
+                </Link>
               </div>
             </div>
              <div className={styles.timelineSide}>

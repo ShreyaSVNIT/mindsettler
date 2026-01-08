@@ -22,10 +22,8 @@
   /* Fonts */
   --font-title: var(--font-title), serif;
   --font-body: var(--font-ivy), serif;
-  /* Original fonts (temporarily replaced body only):
-  --font-title: "Imbue", serif;
-  --font-body: "Playfair Display", serif;
-  */
+  --font-playfair: "Playfair Display", serif;
+
 
   /* Layout */
   --header-h: 5rem;
@@ -50,6 +48,18 @@ html {
 /* Apply IvyPresto only to .font-body class */
 .font-body {
   font-family: var(--font-ivy) !important;
+}
+
+/* Body text styling */
+.body-text {
+  font-family: var(--font-ivy);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+}
+
+/* Playfair Display font class */
+.font-playfair {
+  font-family: "Playfair Display", serif !important;
 }
 
 /* 3D perspective for card flip effect */
