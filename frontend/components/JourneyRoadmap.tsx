@@ -10,6 +10,7 @@ import {
   useInView
 } from "framer-motion";
 import MagneticButton from "./Button";
+import SectionHeader from "./SectionHeader";
 
 /* ---------------------------------- */
 /* Timeline Section */
@@ -136,12 +137,12 @@ export default function MindSettlerJourney() {
   /* ---------------- PERFECT PATH ---------------- */
   // Adjusted curves for a smoother central flow that waves between the content
   const pathD = `
-    M 500 0
-    C 500 200, 500 400, 500 600
-    C 200 800, 200 1200, 500 1400
-    C 800 1600, 800 2000, 500 2200
-    C 200 2400, 200 2800, 500 3000
-    L 500 3200
+    M 500 -100
+    C 500 150, 500 350, 500 550
+    C 200 750, 200 1150, 500 1350
+    C 800 1550, 800 1950, 500 2150
+    C 200 2350, 200 2750, 500 2950
+    L 500 3400
   `;
 
   return (
@@ -165,7 +166,7 @@ export default function MindSettlerJourney() {
             d={pathD}
             fill="none"
             stroke="var(--color-border)"
-            strokeWidth="2"
+            strokeWidth="1"
             strokeDasharray="8 12"
           />
 
@@ -175,13 +176,13 @@ export default function MindSettlerJourney() {
             d={pathD}
             fill="none"
             stroke="var(--color-primary)"
-            strokeWidth="4"
+            strokeWidth="2"
             style={{ pathLength: pathProgress }}
             strokeLinecap="round"
           />
 
           {/* MILESTONES */}
-          {[600, 1400, 2200].map((yPos, i) => (
+          {[550, 1350, 2150].map((yPos, i) => (
             <g key={i}>
               <circle
                 cx="500"
@@ -190,15 +191,6 @@ export default function MindSettlerJourney() {
                 fill="var(--color-bg-subtle)"
                 stroke="var(--color-primary)"
                 strokeWidth="2"
-              />
-              <circle
-                cx="500"
-                cy={yPos}
-                r="16"
-                stroke="var(--color-primary)"
-                strokeWidth="1"
-                className="animate-pulse opacity-40"
-                fill="none"
               />
             </g>
           ))}
@@ -217,30 +209,15 @@ export default function MindSettlerJourney() {
       {/* CONTENT */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
         {/* HEADER */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-24 relative max-w-full mx-auto">
-          {/* Left Side: Title */}
-          <motion.div
-            style={{ x: titleX, opacity: headerOpacity }}
-            className="w-full md:w-[45%] text-center md:text-right md:pr-12"
-          >
-            <h2 className="font-title text-5xl md:text-7xl text-[var(--color-text-body)] leading-tight">
-              Your Path to Balance
-            </h2>
-          </motion.div>
-
-          {/* Right Side: Description */}
-          <motion.div
-            style={{ x: descX, opacity: headerOpacity }}
-            className="w-full md:w-[45%] text-center md:text-left md:pl-12 mt-8 md:mt-0"
-          >
-            <p className="uppercase tracking-[0.2em] text-sm text-[var(--color-primary)] font-bold mb-4">
-              Guided Wellness Journey
-            </p>
-            <p className="text-lg md:text-xl opacity-70 font-body leading-relaxed max-w-lg">
-              A structured approach to mental clarity. Each stage creates a foundation for the next, ensuring sustainable growth and long-term stability.
-            </p>
-          </motion.div>
-        </div>
+        <motion.div style={{ opacity: headerOpacity }}>
+          <SectionHeader
+            subheader="Guided Wellness Journey"
+            title={<>Build your <span className="italic">peace</span> on a foundation of <span className="italic">presence.</span></>}
+            bodyText="Lasting clarity isn't found in a single breakthrough, but in the steady accumulation of small, intentional pauses. This is how you build a foundation that doesn't just hold, but heals. Every session is a step towards understanding yourself more deeply."
+            layout="split"
+            decoration="none"
+          />
+        </motion.div>
 
         {/* SECTIONS */}
         <div className="space-y-12">

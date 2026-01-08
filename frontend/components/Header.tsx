@@ -82,7 +82,7 @@ export default function IntegratedHeader() {
                 <div className="w-[240px] h-[60px] bg-white shadow-[0_0_40px_rgba(255,255,255,0.7)] rounded-[100%] blur-xl opacity-70"></div>
               </div>
             )}
-            <Link href="/" className="absolute left-1/2 -translate-x-1/2 mt-2 w-auto h-auto block">
+            <Link href="/home" className="absolute left-1/2 -translate-x-1/2 mt-2 w-auto h-auto block">
               <Image src="/MindSettlerLogo.png" alt="Logo" width={180} height={115} priority className="max-w-none" />
             </Link>
           </div>
