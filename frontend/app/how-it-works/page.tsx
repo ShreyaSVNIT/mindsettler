@@ -11,8 +11,26 @@ export default function HowItWorks() {
   return (
     <main className="relative bg-[var(--color-bg-app)]">
       {/* Hero Section - Fixed */}
-      <section className="sticky top-0 h-screen flex items-center justify-center bg-[var(--color-bg-app)] px-6 z-0">
-        <div className="max-w-6xl mx-auto text-center">
+      <section className="sticky top-0 h-screen flex items-center justify-center bg-[var(--color-bg-app)] px-6 z-0 overflow-hidden">
+        {/* Left Decorative Couch */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[70vh] w-auto hidden xl:block z-0 pointer-events-none">
+          <img
+            src="/pinkcouch1.png"
+            alt="Relaxing couch"
+            className="h-full w-auto object-cover rounded-r-[3rem] shadow-2xl opacity-90"
+          />
+        </div>
+
+        {/* Right Decorative Couch */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[70vh] w-auto hidden xl:block z-0 pointer-events-none">
+          <img
+            src="/pinkcouch2.png"
+            alt="Comfortable setting"
+            className="h-full w-auto object-cover rounded-l-[3rem] shadow-2xl opacity-90"
+          />
+        </div>
+
+        <div className="max-w-6xl mx-auto text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
