@@ -58,9 +58,9 @@ const MagneticButton = ({
         items-center
         gap-4
         rounded-full
-        py-3
+        py-2
         pl-8
-        pr-3
+        pr-2
         overflow-hidden
         transition-all
         duration-500
@@ -89,7 +89,7 @@ const MagneticButton = ({
         z-10
         font-title
         font-semibold
-        text-2xl
+        text-3xl
         uppercase
         tracking-tight 
         transition-colors 

@@ -50,6 +50,13 @@ html {
   font-family: var(--font-ivy) !important;
 }
 
+/* Body text styling */
+.body-text {
+  font-family: var(--font-ivy);
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+}
+
 /* Playfair Display font class */
 .font-playfair {
   font-family: "Playfair Display", serif !important;
