@@ -135,7 +135,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
 
   const togglePlay = () => {
     if (!playerRef.current || !isLoaded) return;
-    
+
     try {
       if (isPlaying) {
         playerRef.current.pauseVideo();
@@ -155,29 +155,32 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       </div>
 
       {/* Music Control Corner */}
-      <div className="fixed bottom-0 left-0 z-50 flex flex-col items-start">
+      <div className="fixed bottom-10 md:bottom-14 left-0 z-50 flex flex-col items-start">
         <button
           onClick={togglePlay}
           disabled={!isLoaded}
           className={`
             group relative
             bg-[var(--color-primary)] text-white
-            px-8 py-6 rounded-tr-[3rem]
+            h-10 md:h-14
+            w-28 md:w-36
+            pl-3 md:pl-5 pr-2 md:pr-4
+            rounded-tr-[1.25rem] md:rounded-tr-[1.75rem]
             shadow-2xl hover:shadow-[var(--color-primary)]/50
             transition-all hover:scale-105
             origin-bottom-left
             disabled:opacity-50 disabled:cursor-not-allowed
-            flex items-center gap-3
+            flex items-center gap-2 md:gap-3
           `}
           aria-label={isPlaying ? 'Pause music' : 'Play music'}
         >
           {isPlaying ? (
-            <Pause className="w-6 h-6" fill="currentColor" />
+            <Pause className="w-4 h-4 md:w-6 md:h-6" fill="currentColor" />
           ) : (
-            <Play className="w-6 h-6 ml-0.5" fill="currentColor" />
+            <Play className="w-4 h-4 md:w-6 md:h-6 ml-0.5" fill="currentColor" />
           )}
           <div className="flex flex-col items-start">
-            <span className="font-title text-xl font-bold uppercase tracking-wider leading-none">
+            <span className="font-title text-sm md:text-xl font-bold uppercase tracking-wider leading-none">
               {isPlaying ? 'PAUSE' : 'PLAY'}
             </span>
           </div>

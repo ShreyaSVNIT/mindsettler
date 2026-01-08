@@ -51,7 +51,7 @@ const cardData: CardData[] = [
     title: 'Your Journey, Your Pace',
     description: 'Whether online or offline, morning or evening—we adapt to your schedule and comfort.',
     label: '',
-    tags: ['Your pace', 'Anytime', 'Choice']
+    tags: ['Pace', 'Anytime', 'Choice']
   },
   {
     color: '#ffffff',
