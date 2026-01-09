@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import MagneticButton from "@/components/Button";
+import TitleHeader from "@/components/TitleHeader";
 
 export default function GetStartedPage() {
   return (
@@ -34,28 +35,12 @@ export default function GetStartedPage() {
             </span>
           </motion.div>
 
-          {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.7 }}
-            className="font-title text-6xl md:text-7xl lg:text-8xl leading-[0.9] tracking-tight text-[var(--color-text-body)] mb-8"
-          >
-            TRANSFORM YOUR{" "}
-            <span className="block text-[var(--color-primary)] mt-3">
-              MENTAL WELLNESS
-            </span>
-          </motion.h1>
-
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.7 }}
-            className="font-body text-lg leading-relaxed text-[var(--color-text-body)]/80 mb-10 max-w-xl"
-          >
-            MindSettler offers structured, confidential mental wellness sessions designed to help you understand yourself better. Start your journey to emotional clarity today.
-          </motion.p>
+          <TitleHeader
+            subheader="Get Started"
+            title={<>TRANSFORM YOUR{" "}<span className="block text-[var(--color-primary)] mt-3">MENTAL WELLNESS</span></>}
+            description="MindSettler offers structured, confidential mental wellness sessions designed to help you understand yourself better. Start your journey to emotional clarity today."
+            alignment="left"
+          />
 
           {/* CTA Buttons */}
           <motion.div
