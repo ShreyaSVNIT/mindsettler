@@ -40,6 +40,25 @@ if DEBUG:
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 
 # ───────────────────────────────
+# CORS (Frontend ↔ Backend)
+# ───────────────────────────────
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    FRONTEND_URL,
+]
+
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = list(default_headers)
+
+CORS_ALLOW_CREDENTIALS = False
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    FRONTEND_URL,
+]
+
+# ───────────────────────────────
 # Application definition
 # ───────────────────────────────
 

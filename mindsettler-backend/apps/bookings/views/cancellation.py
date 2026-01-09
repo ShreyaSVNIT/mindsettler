@@ -39,7 +39,12 @@ class RequestCancellationView(APIView):
         # APPROVED / PAYMENT_PENDING → instant cancel
         # ─────────────────────────
         if booking.status in {"APPROVED", "PAYMENT_PENDING"}:
-            cancel_by_user(booking)
+            try:
+                cancel_by_user(booking)
+                booking.refresh_from_db()
+            except Exception as e:
+                raise ValidationError(str(e))
+
             return Response({
                 "message": "Booking cancelled successfully",
                 "status": booking.status,
@@ -51,7 +56,8 @@ class RequestCancellationView(APIView):
         send_cancellation_verification_email(booking)
 
         return Response({
-            "message": "Cancellation verification email sent"
+            "message": "Cancellation verification email sent",
+            "status": booking.status,
         })
 
 
@@ -78,7 +84,11 @@ class VerifyCancellationView(APIView):
         except Booking.DoesNotExist:
             raise ValidationError("Invalid or expired cancellation link")
 
-        cancel_by_user(booking)
+        try:
+            cancel_by_user(booking)
+            booking.refresh_from_db()
+        except Exception as e:
+            raise ValidationError(str(e))
 
         return Response({
             "message": "Booking cancelled successfully",

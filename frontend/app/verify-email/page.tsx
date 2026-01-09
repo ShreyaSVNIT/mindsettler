@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
+import { useEffect, useState, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
@@ -53,6 +53,26 @@ function VerifyEmailContent() {
         setState({ kind: "error", message });
       });
   }, [token]);
+
+  const handleCancelBooking = async () => {
+    if (state.kind !== "success") return;
+
+    try {
+      setState({ kind: "loading" });
+
+      await bookingAPI.requestCancellation({
+        acknowledgement_id: state.data.booking.acknowledgement_id,
+      });
+
+      router.push(
+        `/status?id=${state.data.booking.acknowledgement_id}`
+      );
+    } catch (err: any) {
+      const message =
+        err?.message || "Failed to cancel booking. Please try again.";
+      setState({ kind: "error", message });
+    }
+  };
 
   const navigateToStatus = () => {
     if (state.kind === "success" && state.data.booking.acknowledgement_id) {
@@ -201,7 +221,7 @@ function VerifyEmailContent() {
                     Proceed to Payment
                   </button>
                   <button
-                    onClick={() => router.push(`/status?id=${state.data.booking.acknowledgement_id}`)}
+                    onClick={handleCancelBooking}
                     className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
                   >
                     Cancel Booking
@@ -211,7 +231,7 @@ function VerifyEmailContent() {
               
               {state.data.booking.status === "CONFIRMED" && (
                 <button
-                  onClick={() => router.push(`/status?id=${state.data.booking.acknowledgement_id}`)}
+                  onClick={handleCancelBooking}
                   className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
                 >
                   Cancel Booking

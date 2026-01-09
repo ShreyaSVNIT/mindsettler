@@ -11,7 +11,7 @@ ALLOWED_TRANSITIONS = {
     "PAYMENT_PENDING": {
         "CONFIRMED",
         "PAYMENT_FAILED",
-        "CANCELLED",          
+        "CANCELLED",   #
     },
     "CONFIRMED": {"COMPLETED", "CANCELLED"},
 }
@@ -40,7 +40,7 @@ def ensure_email_verified(booking):
     Hard gate before:
     - payment initiation
     - confirmations
-    - booking details access
+    - protected booking actions
     """
     if not booking.email_verified:
         raise ValidationError(
