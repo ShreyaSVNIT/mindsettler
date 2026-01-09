@@ -55,9 +55,9 @@ export default function HealingJourneySection() {
                     transition={{ duration: 1, ease: "easeOut" }}
                     className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] leading-tight drop-shadow-sm"
                 >
-                    &quot;Healing happens in <br /> <span className="text-[var(--color-primary)] italic">circles,</span> not <span className="text-[var(--color-primary)] italic">lines,</span>
+                    Healing happens in <br /> <span className="text-[var(--color-primary)] italic">circles,</span> not <span className="text-[var(--color-primary)] italic">lines.</span>
                     <br />
-                    You&apos;ll return to <span className="text-[var(--color-primary)] italic">old </span> <br /> places with <span className="text-[var(--color-primary)] italic">new eyes</span>&quot;
+                    You&apos;ll return to <span className="text-[var(--color-primary)] italic">old </span> <br /> places with <span className="text-[var(--color-primary)] italic">new eyes.</span>
                 </motion.h2>
 
                 {/* CTA Button */}

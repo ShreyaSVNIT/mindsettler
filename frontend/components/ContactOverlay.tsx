@@ -120,8 +120,8 @@ export default function ContactOverlay() {
                         <h3 className="font-body text-sm font-bold uppercase tracking-wider text-[var(--color-text-body)]/60 mb-3">
                           Send us an email
                         </h3>
-                        <a href="mailto:support@mindsettler.in" className="font-body text-2xl text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors underline">
-                          support@mindsettler.in
+                        <a href="mailto:mindsettler.dev@gmail.com" className="font-body text-2xl text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors underline">
+                          mindsettler.dev@gmail.com
                         </a>
                       </div>
 
@@ -206,6 +206,7 @@ export default function ContactOverlay() {
                           value={formData.phone}
                           onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                           className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body bg-[var(--color-bg-lavender)]"
+                          placeholder="9876543210"
                         />
                       </div>
 

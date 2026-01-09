@@ -15,7 +15,7 @@ export default function PolicyLayout({
   children,
 }: PolicyLayoutProps) {
   return (
-    <main className="min-h-screen" style={{ background: '#FEF5F6' }}>
+    <main className="min-h-screen" style={{ background: '#FCEBED' }}>
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div

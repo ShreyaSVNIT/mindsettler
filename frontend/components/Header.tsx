@@ -100,7 +100,7 @@ export default function IntegratedHeader() {
             </Link>
             <div className="flex items-center gap-3 px-8">
               <Phone size={20} className={isAtTop ? 'text-white' : 'text-[var(--color-primary)]'} />
-              <span className={`text-[15px] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>+44 (0)330 311 7799</span>
+              <span className={`text-[15px] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>+91 98765 43210</span>
             </div>
           </div>
         </div>
@@ -155,7 +155,7 @@ export default function IntegratedHeader() {
                 ))}
               </div>
               <div className="mt-20 space-y-2 text-white/90">
-                <p className="text-xl font-medium">+44 (0)330 311 7799</p>
+                <p className="text-xl font-medium">+91 98765 43210</p>
                 <p className="text-xl font-medium underline cursor-pointer">hello@mindsettler.com</p>
               </div>
             </div>
