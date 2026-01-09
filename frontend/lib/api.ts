@@ -15,15 +15,18 @@ import type {
 // Backend URL configuration - must be set in production
 const getBackendURL = () => {
   const url = process.env.NEXT_PUBLIC_BACKEND_URL;
-  
-  // In production, fail fast if not configured
-  if (process.env.NODE_ENV === 'production' && !url) {
-    throw new Error(
-      'NEXT_PUBLIC_BACKEND_URL is not set. Configure it in your Vercel environment variables.'
-    );
+
+  // Production must be explicit
+  if (process.env.NODE_ENV === "production") {
+    if (!url) {
+      throw new Error(
+        "NEXT_PUBLIC_BACKEND_URL is not set in production"
+      );
+    }
+    return url.replace(/\/$/, "");
   }
-  
-  // Use localhost for development
+
+  // Local dev fallback
   return (url ?? "http://127.0.0.1:8000").replace(/\/$/, "");
 };
 

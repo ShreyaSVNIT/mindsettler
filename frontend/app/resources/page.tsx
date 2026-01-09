@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { resources } from '@/src/data/resources';
 import InspirationPage from '@/components/InspirationPage';
 import MirroredInspirationPage from '@/components/MirroredInspirationPage';
+import TitleHeader from '@/components/TitleHeader';
 
 export default function ResourcesPage() {
     const blogs = resources.filter(r => r.type === 'blog');
@@ -17,36 +18,20 @@ export default function ResourcesPage() {
 
             {/* Hero Section */}
             <section className="relative px-6 py-24 md:py-32 text-center bg-[var(--color-bg-app)]">
+                <TitleHeader
+                    subheader="Resources"
+                    title={<><span className="block">Resources</span><span className="block text-[var(--color-primary)] italic mt-2">for your Mind</span></>}
+                    description="Curated content to support your mental wellness journey. Explore articles, videos, and tools designed to help you thrive."
+                    alignment="center"
+                />
+
+                {/* Optional Decorative Element */}
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="mx-auto max-w-5xl"
-                >
-                    {/* Main Title */}
-                    <h1 className="font-title text-[var(--color-text-body)] mb-8 leading-[1.1]">
-                        <span className="block text-6xl md:text-9xl font-normal mb-2">Resources</span>
-                        <span className="block text-4xl md:text-6xl italic text-[var(--color-primary)] font-light">for your Mind</span>
-                    </h1>
-
-                    {/* Tagline */}
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, delay: 0.3 }}
-                        className="text-lg md:text-2xl text-[var(--color-text-body)] opacity-70 font-body max-w-3xl mx-auto leading-relaxed"
-                    >
-                        Curated content to support your mental wellness journey. Explore articles, videos, and tools designed to help you thrive.
-                    </motion.p>
-
-                    {/* Optional Decorative Element */}
-                    <motion.div
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ duration: 0.6, delay: 0.6 }}
-                        className="w-24 h-1 bg-[var(--color-primary)] mx-auto mt-12 rounded-full"
-                    />
-                </motion.div>
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    className="w-24 h-1 bg-[var(--color-primary)] mx-auto mt-12 rounded-full"
+                />
             </section>
 
             <div className="flex flex-col gap-16 md:gap-24">

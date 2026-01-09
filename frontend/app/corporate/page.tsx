@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import MagneticButton from '@/components/Button';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
 import HealingJourneySection from '@/components/HealingJourneySection';
+import SectionHeader from '@/components/SectionHeader';
+import TitleHeader from '@/components/TitleHeader';
 
 export default function CorporatePage() {
   const [formData, setFormData] = useState({
@@ -132,28 +134,20 @@ export default function CorporatePage() {
         />
 
         <div className="max-w-6xl mx-auto text-center relative z-10">
+          <TitleHeader
+            subheader="For Organizations"
+            title={<>Corporate{' '}<span className="text-[var(--color-primary)] italic">Wellness</span></>}
+            description="Empowering organizations to prioritize mental health through transformative workshops, group sessions, and strategic collaborations"
+            alignment="center"
+          />
+
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="mt-12"
           >
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
-              <span className="text-[var(--color-primary)] text-[10px] tracking-[0.4em] uppercase font-body font-light">
-                For Organizations
-              </span>
-              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
-            </div>
-
-            <h1 className="font-title text-6xl md:text-7xl lg:text-8xl text-[var(--color-text-body)] mb-6 leading-[1.1]">
-              Corporate{' '}
-              <span className="text-[var(--color-primary)] italic font-light">Wellness</span>
-            </h1>
-
-            <p className="font-body text-xl md:text-2xl text-[var(--color-text-body)]/70 max-w-3xl mx-auto leading-relaxed mb-12">
-              Empowering organizations to prioritize mental health through transformative workshops, group sessions, and strategic collaborations
-            </p>
-
             <MagneticButton text="Get Started" onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })} />
           </motion.div>
         </div>
@@ -168,21 +162,16 @@ export default function CorporatePage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16"
           >
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
-              <span className="text-[var(--color-primary)] text-[10px] tracking-[0.4em] uppercase font-body font-light">
-                Our Services
-              </span>
-              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
-            </div>
-            <h2 className="font-title text-5xl md:text-6xl lg:text-7xl text-[var(--color-text-body)] mb-4">
-              What We <span className="text-[var(--color-primary)] italic">Offer</span>
-            </h2>
-            <p className="font-body text-lg text-[var(--color-text-body)]/60 max-w-2xl mx-auto">
-              Comprehensive mental wellness solutions tailored for modern workplaces
-            </p>
+            <SectionHeader
+              subheader="Our Services"
+              title={<>What We <span className="text-[var(--color-primary)] italic">Offer</span></>}
+              bodyText="Comprehensive mental wellness solutions tailored for modern workplaces"
+              alignment="center"
+              decoration="whiskers"
+              layout="single"
+            />
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -224,21 +213,16 @@ export default function CorporatePage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16"
           >
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
-              <span className="text-[var(--color-primary)] text-[10px] tracking-[0.4em] uppercase font-body font-light">
-                Impact
-              </span>
-              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
-            </div>
-            <h2 className="font-title text-5xl md:text-6xl text-[var(--color-text-body)] mb-4">
-              Proven <span className="text-[var(--color-primary)] italic">Results</span>
-            </h2>
-            <p className="font-body text-lg text-[var(--color-text-body)]/60 max-w-2xl mx-auto">
-              Our corporate wellness programs deliver measurable improvements
-            </p>
+            <SectionHeader
+              subheader="Impact"
+              title={<>Proven <span className="text-[var(--color-primary)] italic">Results</span></>}
+              bodyText="Our corporate wellness programs deliver measurable improvements"
+              alignment="center"
+              decoration="whiskers"
+              layout="single"
+            />
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -273,21 +257,16 @@ export default function CorporatePage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="mb-12"
           >
-            <div className="flex items-center justify-center gap-4 mb-4">
-              <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
-              <span className="text-[var(--color-primary)] text-[10px] tracking-[0.4em] uppercase font-body font-light">
-                Get in Touch
-              </span>
-              <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
-            </div>
-            <h2 className="font-title text-5xl md:text-6xl text-[var(--color-text-body)] mb-4">
-              Request <span className="text-[var(--color-primary)] italic">Services</span>
-            </h2>
-            <p className="font-body text-lg text-[var(--color-text-body)]/60">
-              Let's discuss how we can support your organization's mental wellness goals
-            </p>
+            <SectionHeader
+              subheader="Get in Touch"
+              title={<>Request <span className="text-[var(--color-primary)] italic">Services</span></>}
+              bodyText="Let's discuss how we can support your organization's mental wellness goals"
+              alignment="center"
+              decoration="whiskers"
+              layout="single"
+            />
           </motion.div>
 
           <motion.form

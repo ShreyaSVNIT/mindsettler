@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import SectionHeader from './SectionHeader';
 
 interface TermData {
   letter: string;
@@ -143,22 +144,14 @@ export default function MentalHealthBasics() {
           transition={{ duration: 0.8 }}
           className="max-w-3xl mb-20 text-center"
         >
-          {/* Emotional Alphabet with decorative whiskers */}
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="h-[1px] w-12 md:w-16 bg-gradient-to-r from-transparent to-[var(--color-primary)]" />
-            <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
-              Emotional Alphabet
-            </span>
-            <div className="h-[1px] w-12 md:w-16 bg-gradient-to-l from-transparent to-[var(--color-primary)]" />
-          </div>
-          
-          <h2 className="font-title text-5xl md:text-6xl lg:text-7xl leading-tight mb-8">
-            When feelings don't scream,<br />
-            they <em>whisper</em>.
-          </h2>
-          <p className="font-body text-xl md:text-2xl opacity-80">
-            A gentle A–Z of emotions — explore, pause, breathe.
-          </p>
+          <SectionHeader
+            subheader="Emotional Alphabet"
+            title={<>When feelings don't scream,<br />they <em>whisper</em>.</>}
+            bodyText="A gentle A–Z of emotions — explore, pause, breathe."
+            alignment="center"
+            decoration="whiskers"
+            layout="single"
+          />
         </motion.div>
 
         {/* GRID - Centered with equal side spacing */}

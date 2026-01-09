@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import SectionHeader from "./SectionHeader";
 
 const faqSections = [
   {
@@ -171,21 +172,14 @@ export default function HowItWorksFAQs() {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <motion.div
-            className="mb-4"
-            whileHover={{ x: 5 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
-            <span className="inline-block px-5 py-2 bg-gradient-to-r from-[var(--color-primary)]/20 to-[var(--color-primary)]/10 rounded-full text-[var(--color-primary)] text-sm font-semibold tracking-wide border border-[var(--color-primary)]/20">
-              FAQs
-            </span>
-          </motion.div>
-          <h2 className="font-title text-5xl md:text-6xl text-[var(--color-text-body)] mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="font-body text-[var(--color-text-body)]/70 text-lg leading-relaxed">
-            Find answers to common questions about our services
-          </p>
+          <SectionHeader
+            subheader="FAQs"
+            title="Frequently Asked Questions"
+            bodyText="Find answers to common questions about our services"
+            alignment="left"
+            decoration="dot"
+            layout="single"
+          />
         </motion.div>
 
         <div className="flex gap-12">

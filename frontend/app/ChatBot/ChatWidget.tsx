@@ -28,9 +28,11 @@ export default function ChatWidget() {
     const userMsg: Message = { text: input, sender: 'user' };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
-
+  const CHATBOT_BACKEND =
+  process.env.NEXT_PUBLIC_CHATBOT_BACKEND_URL ??
+  "http://127.0.0.1:8000";
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/chat/', {
+      const res = await fetch(`${CHATBOT_BACKEND}/api/chat/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: input }),

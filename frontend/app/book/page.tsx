@@ -6,9 +6,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
 import MagneticButton from "@/components/Button";
+import TitleHeader from "@/components/TitleHeader";
 import { bookingAPI } from "@/lib/api";
 import type { BookingDraftRequest } from "@/types";
 import { trackBookingFormOpened, trackBookingSubmitted } from "@/lib/analytics";
+import GlowCard from "@/components/GlowCard";
 
 /* ---------------- Zod Schema Following Backend Contract ---------------- */
 
@@ -165,48 +167,77 @@ export default function BookPage() {
   const minDate = new Date().toISOString().split("T")[0];
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-lavender)]">
+    <main className="min-h-screen bg-white relative overflow-hidden">
+      {/* Animated background orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div
+          className="absolute w-96 h-96 rounded-full bg-[var(--color-primary)]/10 blur-3xl"
+          animate={{
+            x: [0, 100, 0],
+            y: [0, -100, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          style={{ top: '10%', left: '10%' }}
+        />
+        <motion.div
+          className="absolute w-96 h-96 rounded-full bg-purple-400/10 blur-3xl"
+          animate={{
+            x: [0, -100, 0],
+            y: [0, 100, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          style={{ bottom: '10%', right: '10%' }}
+        />
+      </div>
       
       {/* Hero Section - Mode Selection */}
       {!selectedMode && bookingStatus === "idle" && (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-24">
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center max-w-4xl mx-auto"
           >
-            <h1 className="font-title text-6xl md:text-7xl lg:text-8xl text-[var(--color-text-body)] mb-6 leading-tight">
-              Let's begin your{" "}
-              <span className="text-[var(--color-primary)] italic">healing journey.</span>
-            </h1>
-            
-            <p className="font-body text-lg md:text-xl text-[var(--color-text-body)]/70 mb-8 max-w-2xl mx-auto">
-              Choose your session type to get started. It only takes a few minutes to share your details and move things forward.
-            </p>
+            <TitleHeader
+              subheader="BOOK A SESSION"
+              title={
+                <>
+                  Let's begin your{" "}
+                  <span className="text-[var(--color-primary)] italic">healing journey.</span>
+                </>
+              }
+              description="Choose your session type to get started. It only takes a few minutes to share your details and move things forward."
+              alignment="center"
+            />
 
             {/* Session Info Cards */}
-            <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto mb-12">
-              <div className="bg-[var(--color-bg-lavender)] rounded-2xl p-4 border border-[var(--color-primary)]/20">
-                <div className="text-2xl mb-2">⏱️</div>
-                <div className="font-body text-sm text-[var(--color-text-body)]/90">
-                  <span className="font-bold block mb-1">Session Duration</span>
+            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12 mt-12">
+              <GlowCard>
+                <div className="font-body text-2xl text-[var(--color-text-body)]">
+                  <span className="font-bold block mb-4 text-3xl">Session Duration</span>
                   60 minutes per session
                 </div>
-              </div>
-              <div className="bg-gradient-to-br from-[var(--color-primary)]/10 to-[var(--color-primary)]/5 backdrop-blur-sm rounded-2xl p-4 border-2 border-[var(--color-primary)]/40">
-                <div className="text-2xl mb-2">✨</div>
-                <div className="font-body text-sm text-[var(--color-text-body)]/90">
-                  <span className="font-bold block mb-1 text-[var(--color-primary)]">First Session</span>
+              </GlowCard>
+              <GlowCard className="border-2 border-[var(--color-primary)]/40">
+                <div className="font-body text-2xl text-[var(--color-text-body)]">
+                  <span className="font-bold block mb-4 text-3xl text-[var(--color-primary)]">First Session</span>
                   Introductory assessment & goal setting
                 </div>
-              </div>
-              <div className="bg-[var(--color-bg-lavender)] rounded-2xl p-4 border border-[var(--color-primary)]/20">
-                <div className="text-2xl mb-2">🏢</div>
-                <div className="font-body text-sm text-[var(--color-text-body)]/90">
-                  <span className="font-bold block mb-1">Location</span>
+              </GlowCard>
+              <GlowCard>
+                <div className="font-body text-2xl text-[var(--color-text-body)]">
+                  <span className="font-bold block mb-4 text-3xl">Location</span>
                   Online platform or offline studio
                 </div>
-              </div>
+              </GlowCard>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -221,19 +252,8 @@ export default function BookPage() {
                 setSelectedMode("OFFLINE");
                 setValue("mode", "OFFLINE");
               }}>
-                <MagneticButton text="Offline Session" className="bg-transparent border-2 border-[var(--color-text-body)]" />
+                <MagneticButton text="Offline Session" />
               </div>
-            </div>
-
-            <div className="mt-16 flex items-start gap-2 text-sm text-[var(--color-text-body)]/60 font-body max-w-lg mx-auto">
-              <span className="flex-shrink-0 mt-0.5">ℹ️</span>
-              <p className="text-left">
-                Not booking a session? For collaborations, podcasts, or other opportunities,{" "}
-                <a href="/about#contact" className="underline hover:text-[var(--color-primary)] transition-colors">
-                  get in touch with us
-                </a>
-                .
-              </p>
             </div>
           </motion.div>
         </div>

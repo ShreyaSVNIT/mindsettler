@@ -9,6 +9,7 @@ import MagicBento from '@/components/MagicBento';
 import SectionHeader from '@/components/SectionHeader';
 import HealingJourneySection from '@/components/HealingJourneySection';
 import FounderIntroduction from '@/components/FounderIntroduction';
+import TitleHeader from '@/components/TitleHeader';
 
 // Animated Counter Component
 const AnimatedCounter = ({ value, inView }: { value: string, inView: boolean }) => {
@@ -112,42 +113,20 @@ export default function AboutPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="mb-8"
-              >
-                <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
-                  About MindSettler
-                </span>
-              </motion.div>
+              <TitleHeader
+                subheader="About MindSettler"
+                title={<>
+                  Where
+                  <span className="block text-[var(--color-primary)] italic mt-2">
+                    Healing
+                  </span>
+                  <span className="block mt-2">Meets Hope</span>
+                </>}
+                description="I created MindSettler to be more than just a platform. It's a companion in your journey toward understanding yourself, embracing your story, and finding peace in the present."
+                alignment="left"
+              />
 
-              <motion.h1
-                className="font-title text-6xl md:text-8xl text-[var(--color-text-body)] mb-8 leading-[0.95]"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-              >
-                Where
-                <span className="block text-[var(--color-primary)] italic mt-2">
-                  Healing
-                </span>
-                <span className="block mt-2">Meets Hope</span>
-              </motion.h1>
-
-              <motion.p
-                className="font-body text-xl md:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed mb-8 body-text"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.5 }}
-              >
-                I created MindSettler to be more than just a platform. It's a companion in your journey toward
-                understanding yourself, embracing your story, and finding peace in the present.
-              </motion.p>
+              <div className="mb-8" />
 
               <motion.div
                 className="flex flex-wrap gap-4"
