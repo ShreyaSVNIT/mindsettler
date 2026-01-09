@@ -239,7 +239,9 @@ function VerifyEmailContent() {
               )}
               
               <button
-                onClick={() => router.push("/")}
+                onClick={() => {
+                  window.location.href = "https://mindsettler.vercel.app/";
+                }}
                 className="bg-white hover:bg-green-50 text-green-700 font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-green-200"
               >
                 Go to Home
