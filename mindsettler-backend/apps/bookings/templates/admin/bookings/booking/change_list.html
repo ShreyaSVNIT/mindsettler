@@ -1,0 +1,23 @@
+{% extends "admin/change_list.html" %}
+
+{% block object-tools %}
+<div class="object-tools">
+    <ul class="object-tools">
+        <li>
+            <a href="{% url 'admin:booking-calendar' %}"
+               class="addlink"
+               style="background:#2563eb;color:white;border-radius:6px;">
+                📅 Calendar View
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'admin:booking-calendar-list' %}"
+               class="addlink"
+               style="background:#16a34a;color:white;border-radius:6px;">
+                📋 Calendar List
+            </a>
+        </li>
+    </ul>
+</div>
+{{ block.super }}
+{% endblock %}
