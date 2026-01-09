@@ -60,13 +60,18 @@ function VerifyEmailContent() {
     try {
       setState({ kind: "loading" });
 
-      await bookingAPI.requestCancellation({
+      const response = await bookingAPI.requestCancellation({
         acknowledgement_id: state.data.booking.acknowledgement_id,
       });
 
-      router.push(
-        `/status?id=${state.data.booking.acknowledgement_id}`
-      );
+      if (response?.message?.toLowerCase().includes("email")) {
+        alert("A cancellation verification email has been sent. Please check your inbox to complete the cancellation.");
+      } else {
+        alert("Your booking has been cancelled successfully.");
+      }
+      // Do not redirect to status page.
+      // The verify-email page already reflects the latest booking state.
+      // Let the user stay here and see the updated status.
     } catch (err: any) {
       const message =
         err?.message || "Failed to cancel booking. Please try again.";
