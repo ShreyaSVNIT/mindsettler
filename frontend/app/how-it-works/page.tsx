@@ -15,8 +15,8 @@ export default function HowItWorks() {
             How It <span className="text-[var(--color-primary)] italic">Works</span>
           </>
         }
-        description="A simple, compassionate process designed to support
-your mental wellness journey every step of the way"
+        description="A simple, compassionate process designed to support 
+        your mental wellness journey every step of the way"
         alignment="center"
         layout="sticky"
       />

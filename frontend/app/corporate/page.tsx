@@ -97,7 +97,7 @@ export default function CorporatePage() {
         subheader="For Organizations"
         title={
           <>
-            Corporate <span className="text-[var(--color-primary)] italic">Wellness</span>
+            Corporate <span className="text-primary italic">Wellness</span>
           </>
         }
         description={`Empowering organizations to prioritize mental health through transformative
@@ -116,7 +116,7 @@ workshops, group sessions, and strategic collaborations`}
       />
 
       {/* Services Section - similar layout to About page cards */}
-      <section className="relative py-24 px-6 bg-[var(--color-bg-app)] overflow-hidden">
+      <section className="relative py-24 px-6 bg-bg-app overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -126,7 +126,7 @@ workshops, group sessions, and strategic collaborations`}
           >
             <SectionHeader
               subheader="Our Services"
-              title={<>What We <span className="text-[var(--color-primary)] italic">Offer</span></>}
+              title={<>What We <span className="text-primary italic">Offer</span></>}
               bodyText="Comprehensive mental wellness solutions tailored for modern workplaces"
               alignment="center"
               decoration="whiskers"
@@ -153,7 +153,7 @@ workshops, group sessions, and strategic collaborations`}
       </section>
 
       {/* Contact Form Section */}
-      <section id="contact-form" className="py-24 px-6 bg-[var(--color-bg-card)]">
+      <section id="contact-form" className="py-24 px-6 bg-bg-card">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -163,7 +163,7 @@ workshops, group sessions, and strategic collaborations`}
           >
             <SectionHeader
               subheader="Get in Touch"
-              title={<>Request <span className="text-[var(--color-primary)] italic">Services</span></>}
+              title={<>Request <span className="text-primary italic">Services</span></>}
               bodyText="Let's discuss how we can support your organization's mental wellness goals"
               alignment="center"
               decoration="whiskers"
@@ -177,12 +177,12 @@ workshops, group sessions, and strategic collaborations`}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             onSubmit={handleSubmit}
-            className="bg-white/50 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-[var(--color-border)] shadow-lg"
+            className="bg-white/50 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-border shadow-lg"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label htmlFor="companyName" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
-                  Company Name <span className="text-[var(--color-primary)]">*</span>
+                <label htmlFor="companyName" className="block font-body font-medium text-text-body mb-2.5 text-sm">
+                  Company Name <span className="text-primary">*</span>
                 </label>
                 <input
                   type="text"
@@ -191,14 +191,14 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.companyName}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body placeholder:text-text-body/40"
                   placeholder="Your company name"
                 />
               </div>
 
               <div>
-                <label htmlFor="contactPerson" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
-                  Contact Person <span className="text-[var(--color-primary)]">*</span>
+                <label htmlFor="contactPerson" className="block font-body font-medium text-text-body mb-2.5 text-sm">
+                  Contact Person <span className="text-primary">*</span>
                 </label>
                 <input
                   type="text"
@@ -207,14 +207,14 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.contactPerson}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body placeholder:text-text-body/40"
                   placeholder="Full name"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
-                  Email Address <span className="text-[var(--color-primary)]">*</span>
+                <label htmlFor="email" className="block font-body font-medium text-text-body mb-2.5 text-sm">
+                  Email Address <span className="text-primary">*</span>
                 </label>
                 <input
                   type="email"
@@ -223,14 +223,14 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body placeholder:text-text-body/40"
                   placeholder="you@company.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="phone" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
-                  Phone Number <span className="text-[var(--color-primary)]">*</span>
+                <label htmlFor="phone" className="block font-body font-medium text-text-body mb-2.5 text-sm">
+                  Phone Number <span className="text-primary">*</span>
                 </label>
                 <input
                   type="tel"
@@ -239,13 +239,13 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body placeholder:text-text-body/40"
                   placeholder="+1 (555) 000-0000"
                 />
               </div>
 
               <div>
-                <label htmlFor="employeeCount" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
+                <label htmlFor="employeeCount" className="block font-body font-medium text-text-body mb-2.5 text-sm">
                   Number of Employees
                 </label>
                 <select
@@ -253,7 +253,7 @@ workshops, group sessions, and strategic collaborations`}
                   name="employeeCount"
                   value={formData.employeeCount}
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body appearance-none cursor-pointer"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body appearance-none cursor-pointer"
                   style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23453859'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.25rem' }}
                 >
                   <option value="">Select range</option>
@@ -266,8 +266,8 @@ workshops, group sessions, and strategic collaborations`}
               </div>
 
               <div>
-                <label htmlFor="serviceType" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
-                  Service Interest <span className="text-[var(--color-primary)]">*</span>
+                <label htmlFor="serviceType" className="block font-body font-medium text-text-body mb-2.5 text-sm">
+                  Service Interest <span className="text-primary">*</span>
                 </label>
                 <select
                   id="serviceType"
@@ -275,7 +275,7 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.serviceType}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body appearance-none cursor-pointer"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body appearance-none cursor-pointer"
                   style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23453859'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.25rem' }}
                 >
                   <option value="">Select service</option>
@@ -288,8 +288,8 @@ workshops, group sessions, and strategic collaborations`}
             </div>
 
             <div className="mb-8">
-              <label htmlFor="message" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
-                Tell Us More <span className="text-[var(--color-primary)]">*</span>
+              <label htmlFor="message" className="block font-body font-medium text-text-body mb-2.5 text-sm">
+                Tell Us More <span className="text-primary">*</span>
               </label>
               <textarea
                 id="message"
@@ -298,7 +298,7 @@ workshops, group sessions, and strategic collaborations`}
                 onChange={handleChange}
                 required
                 rows={6}
-                className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body resize-none placeholder:text-[var(--color-text-body)]/40"
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body resize-none placeholder:text-text-body/40"
                 placeholder="Tell us about your organization's wellness needs, goals, and any specific challenges you'd like to address..."
               />
             </div>
@@ -330,11 +330,10 @@ workshops, group sessions, and strategic collaborations`}
             <div className="flex justify-center">
               <MagneticButton
                 text={isSubmitting ? 'Sending...' : 'Submit Request'}
-                disabled={isSubmitting}
-                onClick={(e) => {
+                onClick={() => {
                   // MagneticButton doesn't have type="submit" by default, so we handle it via onClick
                   if (!isSubmitting) {
-                    const form = (e.target as HTMLElement).closest('form');
+                    const form = document.querySelector('#contact-form form') as HTMLFormElement;
                     form?.requestSubmit();
                   }
                 }}
