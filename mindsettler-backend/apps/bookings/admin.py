@@ -41,71 +41,120 @@ class BookingAdmin(admin.ModelAdmin):
 <head>
     <title>Booking Calendar</title>
     <meta charset="utf-8" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
     <style>
         body {
             margin: 0;
-            padding: 20px;
+            padding: 24px;
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
-            background: #f5f7fa;
-            color: #333;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            color: #0f172a;
         }
+
         .toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 20px auto;
-            padding: 10px 20px;
+            max-width: 1300px;
+            margin: 0 auto 24px auto;
+            padding: 16px 24px;
             background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 6px 28px rgba(30, 41, 59, 0.10), 0 1.5px 4px rgba(30,41,59,0.03);
         }
+
         .toolbar h1 {
             margin: 0;
-            font-weight: 600;
-            font-size: 1.5rem;
-            color: #111827;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.02em;
+            color: #0f172a;
         }
+
+        .toolbar button {
+            background: #fff;
+            border: 1.5px solid #2563eb;
+            border-radius: 10px;
+            color: #2563eb;
+            font-weight: 600;
+            padding: 8px 16px;
+            margin-left: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(37,99,235,0.06);
+            transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }
+        .toolbar button:hover {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+            transform: translateY(-1px) scale(1.03);
+            box-shadow: 0 6px 16px rgba(37,99,235,0.18);
+        }
+
         #calendar {
-            max-width: 1200px;
+            max-width: 1300px;
             margin: 0 auto;
             background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 15px;
+            border-radius: 18px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 12px 32px rgba(30,41,59,0.09), 0 2px 8px rgba(30,41,59,0.04);
+            padding: 20px;
         }
+
         .fc {
-            border-radius: 12px;
             font-size: 14px;
         }
+
         .fc .fc-toolbar-title {
-            font-weight: 600;
-            font-size: 1.25rem;
-            color: #111827;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #1e293b;
         }
+
+        .fc-theme-standard td,
+        .fc-theme-standard th {
+            border-color: #e5e7eb;
+        }
+
+        .fc-timegrid-slot {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .fc-timegrid-slot-label,
+        .fc-col-header-cell-cushion {
+            color: #334155;
+            font-weight: 500;
+        }
+
         .fc .fc-button {
-            background-color: #2563eb;
-            border: none;
-            border-radius: 6px;
-            color: white;
+            background: #fff;
+            border: 1.5px solid #2563eb;
+            border-radius: 10px;
+            color: #2563eb;
             font-weight: 600;
-            padding: 6px 12px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
+            padding: 6px 14px;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+            box-shadow: none;
         }
         .fc .fc-button:hover {
-            background-color: #1e40af;
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
         }
+
         .fc-event {
-            border-radius: 8px !important;
-            font-size: 0.9rem !important;
+            border-radius: 14px !important;
+            padding: 6px 8px !important;
             font-weight: 600;
-            color: white !important;
-            padding: 4px 6px !important;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(30,41,59,0.10);
+        }
+
+        .fc-event-title {
+            white-space: normal;
         }
     </style>
 </head>
@@ -113,11 +162,12 @@ class BookingAdmin(admin.ModelAdmin):
     <div class="toolbar">
         <h1>Booking Calendar</h1>
         <div>
-            <button type="button" id="prevBtn">Prev</button>
-            <button type="button" id="nextBtn">Next</button>
+            <button type="button" id="prevBtn">‹</button>
             <button type="button" id="todayBtn">Today</button>
+            <button type="button" id="nextBtn">›</button>
         </div>
     </div>
+
     <div id="calendar"></div>
 
     <script>
@@ -138,30 +188,26 @@ class BookingAdmin(admin.ModelAdmin):
                 events: '/admin/bookings/booking/calendar/data/',
                 eventDidMount: function(info) {
                     const status = info.event.extendedProps.status;
+                    // Soften the gradients for light theme readability
                     if (status === 'CONFIRMED') {
-                        info.el.style.backgroundColor = '#16a34a';
+                        info.el.style.background = 'linear-gradient(135deg, #22c55e 70%, #bbf7d0 100%)';
+                        info.el.style.color = '#14532d';
                     } else if (status === 'APPROVED') {
-                        info.el.style.backgroundColor = '#2563eb';
+                        info.el.style.background = 'linear-gradient(135deg, #3b82f6 70%, #dbeafe 100%)';
+                        info.el.style.color = '#1e3a8a';
                     }
                 },
                 eventClick: function(info) {
                     const bookingId = info.event.id;
-                    const adminUrl = `/admin/bookings/booking/${bookingId}/change/`;
-                    window.open(adminUrl, '_blank');
+                    window.open(`/admin/bookings/booking/${bookingId}/change/`, '_blank');
                 }
             });
 
             calendar.render();
 
-            document.getElementById('prevBtn').addEventListener('click', function() {
-                calendar.prev();
-            });
-            document.getElementById('nextBtn').addEventListener('click', function() {
-                calendar.next();
-            });
-            document.getElementById('todayBtn').addEventListener('click', function() {
-                calendar.today();
-            });
+            document.getElementById('prevBtn').onclick = () => calendar.prev();
+            document.getElementById('nextBtn').onclick = () => calendar.next();
+            document.getElementById('todayBtn').onclick = () => calendar.today();
         });
     </script>
 </body>

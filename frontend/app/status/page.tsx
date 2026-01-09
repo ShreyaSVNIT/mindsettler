@@ -61,10 +61,15 @@ function StatusPageContent() {
     try {
       const data = await bookingAPI.getStatus(acknowledgementId);
       if (fetchId === lastFetchIdRef.current) {
-        setState({ kind: "success", data });
+        if (cancellationPending && data.status === "CONFIRMED") {
+          // Keep success state unchanged if cancellation pending and still CONFIRMED
+          setState({ kind: "success", data });
+        } else {
+          setState({ kind: "success", data });
 
-        if (["CANCELLED", "REJECTED"].includes(data.status)) {
-          setCancellationPending(false);
+          if (["CANCELLED", "REJECTED"].includes(data.status)) {
+            setCancellationPending(false);
+          }
         }
       }
     } catch (err: any) {
@@ -147,8 +152,7 @@ function StatusPageContent() {
           : "Booking cancelled successfully."
       );
 
-      // Lock UI immediately by fetching without loader
-      await fetchStatus(false);
+      // Removed fetchStatus call here as per instructions
     } catch (err: any) {
       alert(err.message || "Failed to request cancellation");
     } finally {
