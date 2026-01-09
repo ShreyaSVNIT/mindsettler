@@ -45,7 +45,7 @@ def get_intent_embeddings():
         with _lock:
             if _intent_embeddings is None:
                 model = get_model()
-                print("🔹 Precomputing intent embeddings...")
+                
 
                 _intent_embeddings = {
                     intent: model.encode(
@@ -55,7 +55,7 @@ def get_intent_embeddings():
                     for intent, data in INTENTS.items()
                 }
 
-                print("✅ Intent embeddings ready")
+                
 
     return _intent_embeddings
 
@@ -74,6 +74,48 @@ INTENTS = {
             "towards well-being."
         ),
         "link": None,
+    },
+    # FAQ 1: First Session Expectations
+    "first_session": {
+        "examples": ["what happens in first session", "initial assessment", "what to expect", "first meeting", "goal setting", "how do we start"],
+        "responses": ["Your first session includes an initial assessment, goal setting, and building rapport with your psychologist. We'll discuss your concerns and create a personalized plan for your mental wellness journey."],
+        "link": "/about",
+    },
+    # FAQ 2: Duration
+    "session_duration": {
+        "examples": ["how long is a session", "duration", "how many minutes", "session length", "time limit"],
+        "responses": ["Each session lasts approximately 60 minutes, providing ample time for meaningful discussion and structured guidance."],
+        "link": None,
+    },
+    # FAQ 3: Pricing
+    "pricing_info": {
+        "examples": ["how much does it cost", "price", "fees", "session rate", "online vs offline cost", "cost of therapy"],
+        "responses": ["Session pricing varies based on the type and location. Online sessions start at $50, while offline sessions range from $75–$100. Feel free to contact us for detailed pricing."],
+        "link": "/booking",
+    },
+    # FAQ 4: Cancellation/Rescheduling
+    "reschedule_cancel": {
+        "examples": ["cancel my session", "reschedule", "change appointment time", "refund policy", "missed session"],
+        "responses": ["Yes, you can cancel or reschedule up to 24 hours before your session without penalty. Please contact us as soon as possible if you need to make changes."],
+        "link": "/contact",
+    },
+    # FAQ 5: Confidentiality
+    "confidentiality_safety": {
+        "examples": ["is it private", "confidentiality", "data safety", "is my info safe", "anonymous", "privacy policy"],
+        "responses": ["Absolutely. All sessions are conducted under strict confidentiality agreements. Your personal information and session details are protected and never shared without your explicit consent."],
+        "link": "/privacy",
+    },  
+    # FAQ 6: Online vs Offline
+    "session_modes": {
+        "examples": ["online or offline", "video call", "in person", "face to face", "do you have a clinic", "visit the studio"],
+        "responses": ["Yes, we provide both online video sessions for convenience and in-person sessions at our designated locations for those who prefer face-to-face interaction."],
+        "link": "/booking",
+    },
+    # FAQ 7: Qualifications
+    "expert_qualifications": {
+        "examples": ["who are the psychologists", "qualifications", "are they licensed", "experience", "expert credentials", "degrees"],
+        "responses": ["Our psychologists are licensed professionals with extensive experience in mental health support and psycho-education. They undergo regular training and follow strict ethical guidelines."],
+        "link": "/about",
     },
     "booking": {
         "examples": [
@@ -129,6 +171,11 @@ INTENTS = {
         ),
         "link": "/contact",
     },
+    "crisis": {
+        "examples": ["I want to die", "panic attack", "emergency", "suicidal", "hurt myself", "help me now"],
+        "responses": ["I hear you, and I want you to know you're not alone. While I am an AI and cannot provide emergency clinical help, please reach out to a professional immediately. Your safety is the most important thing right now."],
+        "link": "/emergency-resources",
+    }
 }
 
 
@@ -148,7 +195,7 @@ def get_best_intent(user_query: str) -> str:
     )
 
     best_intent = "unknown"
-    highest_score = 0.20  # Safety threshold
+    highest_score = 0.40  # Safety threshold
 
     for intent, embeddings in intent_embeddings.items():
         cos_scores = util.cos_sim(query_embedding, embeddings)[0]
