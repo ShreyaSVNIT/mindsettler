@@ -25,6 +25,7 @@ function StatusPageContent() {
   const [acknowledgementId, setAcknowledgementId] = useState("");
   const [inputId, setInputId] = useState("");
   const [isCancelling, setIsCancelling] = useState(false);
+  const [cancellationPending, setCancellationPending] = useState(false);
 
   const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const lastFetchIdRef = useRef(0);
@@ -61,6 +62,10 @@ function StatusPageContent() {
       const data = await bookingAPI.getStatus(acknowledgementId);
       if (fetchId === lastFetchIdRef.current) {
         setState({ kind: "success", data });
+
+        if (["CANCELLED", "REJECTED"].includes(data.status)) {
+          setCancellationPending(false);
+        }
       }
     } catch (err: any) {
       if (fetchId === lastFetchIdRef.current) {
@@ -132,14 +137,18 @@ function StatusPageContent() {
 
       trackCancellationRequested();
 
+      if (needsEmail) {
+        setCancellationPending(true);
+      }
+
       alert(
         needsEmail
-          ? "Cancellation email sent. Please check your inbox."
+          ? "Cancellation verification email sent. Please check your inbox to complete cancellation."
           : "Booking cancelled successfully."
       );
 
-      // Lock UI immediately by fetching with loader
-      await fetchStatus(true);
+      // Lock UI immediately by fetching without loader
+      await fetchStatus(false);
     } catch (err: any) {
       alert(err.message || "Failed to request cancellation");
     } finally {
@@ -233,6 +242,30 @@ function StatusPageContent() {
         {state.kind === "success" && (
           <>
             {/* UI remains unchanged below */}
+
+            {/* Example Actions Section */}
+            {statusHelpers.canRequestCancellation(state.data.status) &&
+             state.data.status !== "CANCELLED" && (
+              <button
+                onClick={handleRequestCancellation}
+                disabled={isCancelling || cancellationPending}
+                className="bg-red-600 text-white px-6 py-3 rounded-full"
+              >
+                {cancellationPending
+                  ? "Cancellation Pending (Check Email)"
+                  : isCancelling
+                  ? "Processing..."
+                  : "❌ Request Cancellation"}
+              </button>
+            )}
+
+            {cancellationPending && (
+              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4 text-center">
+                <p className="font-body text-yellow-800">
+                  📧 Cancellation requested. Please verify using the link sent to your email.
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>

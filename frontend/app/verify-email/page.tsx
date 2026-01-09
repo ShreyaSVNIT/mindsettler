@@ -60,13 +60,18 @@ function VerifyEmailContent() {
     try {
       setState({ kind: "loading" });
 
-      await bookingAPI.requestCancellation({
+      const response = await bookingAPI.requestCancellation({
         acknowledgement_id: state.data.booking.acknowledgement_id,
       });
 
-      router.push(
-        `/status?id=${state.data.booking.acknowledgement_id}`
-      );
+      if (response?.message?.toLowerCase().includes("email")) {
+        alert("A cancellation verification email has been sent. Please check your inbox to complete the cancellation.");
+      } else {
+        alert("Your booking has been cancelled successfully.");
+      }
+      // Do not redirect to status page.
+      // The verify-email page already reflects the latest booking state.
+      // Let the user stay here and see the updated status.
     } catch (err: any) {
       const message =
         err?.message || "Failed to cancel booking. Please try again.";
@@ -239,7 +244,9 @@ function VerifyEmailContent() {
               )}
               
               <button
-                onClick={() => router.push("/")}
+                onClick={() => {
+                  window.location.href = "https://mindsettler.vercel.app/";
+                }}
                 className="bg-white hover:bg-green-50 text-green-700 font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-green-200"
               >
                 Go to Home
