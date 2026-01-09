@@ -454,6 +454,7 @@ export default function CorporatePage() {
           </motion.form>
         </div>
       </section>
+
       <HealingJourneySection />
     </main>
   );

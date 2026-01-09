@@ -40,20 +40,20 @@ export default function HealingJourneySection() {
 
             <div className="absolute inset-0 z-0">
                 <Orb
-                    hoverIntensity={3}
+                    hoverIntensity={1}
                     rotateOnHover={true}
                     transparent={true}
                 />
             </div>
 
             {/* Text Overlay - Centered via Flexbox + Text Align Center */}
-            <div className="relative z-20 w-[400px] max-w-[70vw] mx-auto text-center pointer-events-none">
+            <div className="relative z-20 w-[90vw] sm:w-[80vw] md:w-[600px] lg:w-[700px] max-w-[90vw] mx-auto text-center pointer-events-none px-4">
                 <motion.h2
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, ease: "easeOut" }}
-                    className="font-title text-2xl md:text-3xl lg:text-4xl text-[var(--color-text-body)] leading-tight drop-shadow-sm"
+                    className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] leading-tight drop-shadow-sm"
                 >
                     &quot;Healing happens in <br /> <span className="text-[var(--color-primary)] italic">circles,</span> not <span className="text-[var(--color-primary)] italic">lines,</span>
                     <br />
@@ -66,12 +66,11 @@ export default function HealingJourneySection() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8, delay: 0.5 }}
-                    className="mt-8 pointer-events-auto flex justify-center"
+                    className="mt-8 md:mt-10 lg:mt-12 pointer-events-auto flex justify-center"
                 >
                     <MagneticButton
                         text="BOOK A SESSION"
                         onClick={() => router.push('/book')}
-                        size="small"
                     />
                 </motion.div>
             </div>
