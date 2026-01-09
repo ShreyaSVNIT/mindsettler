@@ -79,12 +79,6 @@ function VerifyEmailContent() {
     }
   };
 
-  const navigateToStatus = () => {
-    if (state.kind === "success" && state.data.booking.acknowledgement_id) {
-      router.push(`/status?id=${state.data.booking.acknowledgement_id}`);
-    }
-  };
-
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)] flex items-center justify-center px-6 py-24">
       <div className="max-w-2xl w-full">
@@ -182,6 +176,41 @@ function VerifyEmailContent() {
                 </span>
               </div>
             </div>
+
+            {["APPROVED", "PAYMENT_PENDING", "CONFIRMED"].includes(state.data.booking.status) && (
+              <div className="bg-white/60 rounded-2xl p-6 space-y-3 mb-6">
+                <h3 className="font-body font-semibold text-green-700 mb-2">
+                  Session Details
+                </h3>
+
+                {state.data.booking.approved_slot_start && (
+                  <div className="flex justify-between">
+                    <span className="font-body text-green-700">Start Time</span>
+                    <span className="font-body font-semibold text-green-800">
+                      {new Date(state.data.booking.approved_slot_start).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+
+                {state.data.booking.approved_slot_end && (
+                  <div className="flex justify-between">
+                    <span className="font-body text-green-700">End Time</span>
+                    <span className="font-body font-semibold text-green-800">
+                      {new Date(state.data.booking.approved_slot_end).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+
+                {state.data.booking.amount && (
+                  <div className="flex justify-between">
+                    <span className="font-body text-green-700">Amount</span>
+                    <span className="font-body font-bold text-green-800">
+                      ₹{state.data.booking.amount}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
 
             <div className="bg-gradient-to-r from-green-600/10 to-green-500/10 rounded-xl p-5 mb-6">
               <p className="font-body text-sm text-green-700 text-center">
