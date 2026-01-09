@@ -23,6 +23,24 @@ export default function PrivacyPolicy() {
         <li>To improve our services</li>
       </ul>
 
+      <h2>How We Keep Your Data Safe</h2>
+      <p>
+        We use secure servers and encrypted communication to protect your
+        information. Only authorized personnel have access to your data.
+      </p>
+
+      <h2>Cookies & Tracking</h2>
+      <p>
+        Our website may use cookies to enhance your experience. You can manage
+        cookie preferences in your browser settings.
+      </p>
+
+      <h2>Policy Updates</h2>
+      <p>
+        We may update this policy from time to time. Please check this page for
+        the latest information.
+      </p>
+
       <h2>Data Protection</h2>
       <p>
         We take reasonable measures to protect your information from
