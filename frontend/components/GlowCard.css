@@ -1,4 +1,4 @@
-/* GlowCard Styles */
+/* Enhanced GlowCard Styles */
 
 .glow-card {
   position: relative;
@@ -9,7 +9,9 @@
   border: 2px solid rgba(69, 56, 89, 0.2);
   background: #ffffff;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease;
+  will-change: transform, box-shadow;
+  transform-style: preserve-3d;
 
   /* CSS custom properties for glow effect */
   --glow-x: 50%;
@@ -17,10 +19,19 @@
   --glow-intensity: 0;
   --glow-radius: 300px;
   --glow-color: 227, 115, 131;
+  
+  box-shadow: 0 12px 40px rgba(69, 56, 89, 0.1);
 }
 
 .glow-card:hover {
-  border-color: rgba(227, 115, 131, 0.6);
+  border-color: rgba(227, 115, 131, 0.5);
+  background: linear-gradient(135deg, rgba(69, 56, 89, 0.05) 0%, #ffffff 100%);
+}
+
+.glow-card:active {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(69, 56, 89, 0.1) 0%, #ffffff 100%);
+  border-color: rgba(227, 115, 131, 0.7);
 }
 
 /* The magical border glow effect */
@@ -60,4 +71,21 @@
 /* Increase glow intensity on hover */
 .glow-card:hover::after {
   opacity: 1;
+}
+
+/* Particle styles */
+.glow-card-particle {
+  will-change: transform, opacity;
+}
+
+.glow-card-particle::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: rgba(227, 115, 131, 0.2);
+  border-radius: 50%;
+  z-index: -1;
 }

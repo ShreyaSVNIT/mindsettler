@@ -6,7 +6,8 @@ import MagneticButton from '@/components/Button';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
 import HealingJourneySection from '@/components/HealingJourneySection';
 import SectionHeader from '@/components/SectionHeader';
-import TitleHeader from '@/components/TitleHeader';
+import CouchHero from '@/components/CouchHero';
+import MagicBento from '@/components/MagicBento';
 
 export default function CorporatePage() {
   const [formData, setFormData] = useState({
@@ -52,111 +53,70 @@ export default function CorporatePage() {
     }
   };
 
-  const services = [
-    {
-      title: 'Corporate Workshops',
-      description: 'Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
-        </svg>
-      ),
-    },
-    {
-      title: 'Group Therapy Sessions',
-      description: 'Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-        </svg>
-      ),
-    },
-    {
-      title: 'Organizational Consultations',
-      description: 'Strategic mental health planning and consultation services to create a culture of well-being within your organization.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-        </svg>
-      ),
-    },
-    {
-      title: 'Custom Programs',
-      description: 'Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry.',
-      icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-10 h-10">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
-    },
+  const benefits = [
+    { stat: '40%', label: 'Increase in Employee Productivity' },
+    { stat: '60%', label: 'Reduction in Workplace Stress' },
+    { stat: '80%', label: 'Improved Team Collaboration' },
+    { stat: '95%', label: 'Client Satisfaction Rate' },
   ];
 
-  const benefits = [
+  const services = [
     {
-      stat: '40%',
-      label: 'Increase in Employee Productivity',
+      color: '#ffffff',
+      title: 'Corporate Workshops',
+      description: 'Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team\'s specific challenges and goals.',
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
     },
     {
-      stat: '60%',
-      label: 'Reduction in Workplace Stress',
+      color: '#ffffff',
+      title: 'Group Therapy Sessions',
+      description: 'Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing. These sessions create a safe space for employees to share experiences, develop coping strategies, and build meaningful connections with their colleagues. Professional guidance ensures productive and transformative outcomes.',
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
     },
     {
-      stat: '80%',
-      label: 'Improved Team Collaboration',
+      color: '#ffffff',
+      title: 'Organizational Consultations',
+      description: 'Strategic mental health planning and consultation services to create a culture of well-being within your organization. We work closely with leadership to develop comprehensive mental health policies, implement effective support systems, and create sustainable wellness initiatives that prioritize employee mental health at every level.',
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
     },
     {
-      stat: '95%',
-      label: 'Client Satisfaction Rate',
+      color: '#ffffff',
+      title: 'Custom Programs',
+      description: 'Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry. Whether you need stress management training, burnout prevention, or leadership development, we craft solutions that align with your company culture and deliver measurable results for long-term success.',
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
     },
   ];
 
   return (
-    <main className="relative bg-[var(--color-bg-app)]">
-      {/* Hero Section */}
-      <section className="relative min-h-[80vh] flex items-center justify-center px-6 py-20 overflow-hidden">
-        {/* Background decorative elements */}
-        <motion.div
-          className="absolute top-20 right-10 w-96 h-96 bg-[var(--color-primary)]/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.15, 0.1],
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        <motion.div
-          className="absolute bottom-20 left-10 w-80 h-80 bg-white/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.05, 0.1, 0.05],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        <div className="max-w-6xl mx-auto text-center relative z-10">
-          <TitleHeader
-            subheader="For Organizations"
-            title={<>Corporate{' '}<span className="text-[var(--color-primary)] italic">Wellness</span></>}
-            description="Empowering organizations to prioritize mental health through transformative workshops, group sessions, and strategic collaborations"
-            alignment="center"
+    <main className="relative bg-white">
+      <CouchHero
+        subheader="For Organizations"
+        title={
+          <>
+            Corporate <span className="text-[var(--color-primary)] italic">Wellness</span>
+          </>
+        }
+        description={`Empowering organizations to prioritize mental health through transformative
+workshops, group sessions, and strategic collaborations`}
+        alignment="center"
+        layout="static"
+        backgroundColor="white"
+        cta={
+          <MagneticButton
+            text="Get Started"
+            onClick={() =>
+              document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })
+            }
           />
+        }
+      />
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="mt-12"
-          >
-            <MagneticButton text="Get Started" onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })} />
-          </motion.div>
-        </div>
-      </section>
-
-      <WaveDividerSolid topColor="var(--color-bg-app)" bottomColor="var(--color-bg-card)" />
-
-      {/* Services Section */}
-      <section className="py-24 px-6 bg-[var(--color-bg-card)]">
+      {/* Services Section - similar layout to About page cards */}
+      <section className="relative py-24 px-6 bg-[var(--color-bg-app)] overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -174,81 +134,23 @@ export default function CorporatePage() {
             />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {services.map((service, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-                className="bg-[var(--color-bg-subtle)] p-8 rounded-2xl border border-white/10 relative overflow-hidden group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                <div className="relative z-10">
-                  <div className="w-16 h-16 rounded-full bg-[var(--color-bg-app)] flex items-center justify-center mb-6 text-[var(--color-primary)]">
-                    {service.icon}
-                  </div>
-                  <h3 className="font-title text-2xl text-[var(--color-text-body)] mb-4">
-                    {service.title}
-                  </h3>
-                  <p className="font-body text-[var(--color-text-body)]/70 leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <WaveDividerSolid topColor="var(--color-bg-card)" bottomColor="var(--color-bg-subtle)" />
-
-      {/* Benefits Section */}
-      <section className="py-24 px-6 bg-[var(--color-bg-subtle)]">
-        <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mb-16"
+            transition={{ duration: 0.6 }}
           >
-            <SectionHeader
-              subheader="Impact"
-              title={<>Proven <span className="text-[var(--color-primary)] italic">Results</span></>}
-              bodyText="Our corporate wellness programs deliver measurable improvements"
-              alignment="center"
-              decoration="whiskers"
-              layout="single"
+            <MagicBento
+              cards={services}
+              enableStars={false}
+              enableMagnetism={true}
+              enableTilt={true}
+              enableSpotlight={true}
+              enableBorderGlow={true}
             />
           </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="bg-white p-8 rounded-2xl text-center shadow-lg border border-[var(--color-primary)]/10"
-              >
-                <div className="font-title text-6xl text-[var(--color-primary)] mb-4">
-                  {benefit.stat}
-                </div>
-                <p className="font-body text-[var(--color-text-body)]/80">
-                  {benefit.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
-
-      <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-card)" />
 
       {/* Contact Form Section */}
       <section id="contact-form" className="py-24 px-6 bg-[var(--color-bg-card)]">
@@ -275,12 +177,12 @@ export default function CorporatePage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             onSubmit={handleSubmit}
-            className="bg-[var(--color-bg-subtle)] p-8 md:p-12 rounded-3xl border border-white/10"
+            className="bg-white/50 backdrop-blur-sm p-8 md:p-12 rounded-3xl border border-[var(--color-border)] shadow-lg"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label htmlFor="companyName" className="block font-body text-[var(--color-text-body)] mb-2">
-                  Company Name *
+                <label htmlFor="companyName" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
+                  Company Name <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <input
                   type="text"
@@ -289,13 +191,14 @@ export default function CorporatePage() {
                   value={formData.companyName}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 transition-all font-body"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  placeholder="Your company name"
                 />
               </div>
 
               <div>
-                <label htmlFor="contactPerson" className="block font-body text-[var(--color-text-body)] mb-2">
-                  Contact Person *
+                <label htmlFor="contactPerson" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
+                  Contact Person <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <input
                   type="text"
@@ -304,13 +207,14 @@ export default function CorporatePage() {
                   value={formData.contactPerson}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 transition-all font-body"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  placeholder="Full name"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block font-body text-[var(--color-text-body)] mb-2">
-                  Email Address *
+                <label htmlFor="email" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
+                  Email Address <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <input
                   type="email"
@@ -319,13 +223,14 @@ export default function CorporatePage() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 transition-all font-body"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  placeholder="you@company.com"
                 />
               </div>
 
               <div>
-                <label htmlFor="phone" className="block font-body text-[var(--color-text-body)] mb-2">
-                  Phone Number *
+                <label htmlFor="phone" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
+                  Phone Number <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <input
                   type="tel"
@@ -334,12 +239,13 @@ export default function CorporatePage() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 transition-all font-body"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body placeholder:text-[var(--color-text-body)]/40"
+                  placeholder="+1 (555) 000-0000"
                 />
               </div>
 
               <div>
-                <label htmlFor="employeeCount" className="block font-body text-[var(--color-text-body)] mb-2">
+                <label htmlFor="employeeCount" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
                   Number of Employees
                 </label>
                 <select
@@ -347,20 +253,21 @@ export default function CorporatePage() {
                   name="employeeCount"
                   value={formData.employeeCount}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 transition-all font-body"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body appearance-none cursor-pointer"
+                  style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23453859'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.25rem' }}
                 >
                   <option value="">Select range</option>
-                  <option value="1-50">1-50</option>
-                  <option value="51-200">51-200</option>
-                  <option value="201-500">201-500</option>
-                  <option value="501-1000">501-1000</option>
-                  <option value="1000+">1000+</option>
+                  <option value="1-50">1-50 employees</option>
+                  <option value="51-200">51-200 employees</option>
+                  <option value="201-500">201-500 employees</option>
+                  <option value="501-1000">501-1,000 employees</option>
+                  <option value="1000+">1,000+ employees</option>
                 </select>
               </div>
 
               <div>
-                <label htmlFor="serviceType" className="block font-body text-[var(--color-text-body)] mb-2">
-                  Service Interest *
+                <label htmlFor="serviceType" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
+                  Service Interest <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <select
                   id="serviceType"
@@ -368,7 +275,8 @@ export default function CorporatePage() {
                   value={formData.serviceType}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 transition-all font-body"
+                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body appearance-none cursor-pointer"
+                  style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23453859'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.25rem' }}
                 >
                   <option value="">Select service</option>
                   <option value="workshops">Corporate Workshops</option>
@@ -380,8 +288,8 @@ export default function CorporatePage() {
             </div>
 
             <div className="mb-8">
-              <label htmlFor="message" className="block font-body text-[var(--color-text-body)] mb-2">
-                Message *
+              <label htmlFor="message" className="block font-body font-medium text-[var(--color-text-body)] mb-2.5 text-sm">
+                Tell Us More <span className="text-[var(--color-primary)]">*</span>
               </label>
               <textarea
                 id="message"
@@ -390,8 +298,8 @@ export default function CorporatePage() {
                 onChange={handleChange}
                 required
                 rows={6}
-                className="w-full px-4 py-3 rounded-xl border border-[var(--color-border)] bg-white focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/50 transition-all font-body resize-none"
-                placeholder="Tell us about your organization's wellness needs..."
+                className="w-full px-5 py-3.5 rounded-2xl border-2 border-[var(--color-border)] bg-white focus:outline-none focus:border-[var(--color-primary)] focus:ring-4 focus:ring-[var(--color-primary)]/10 transition-all font-body resize-none placeholder:text-[var(--color-text-body)]/40"
+                placeholder="Tell us about your organization's wellness needs, goals, and any specific challenges you'd like to address..."
               />
             </div>
 
@@ -399,10 +307,10 @@ export default function CorporatePage() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl"
+                className="mb-6 p-5 bg-emerald-50 border-2 border-emerald-200 rounded-2xl"
               >
-                <p className="font-body text-green-800 text-center">
-                  Thank you! We'll get back to you within 24 hours.
+                <p className="font-body text-emerald-800 text-center font-medium">
+                  ✓ Thank you! We'll get back to you within 24 hours.
                 </p>
               </motion.div>
             )}
@@ -411,24 +319,26 @@ export default function CorporatePage() {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl"
+                className="mb-6 p-5 bg-red-50 border-2 border-red-200 rounded-2xl"
               >
-                <p className="font-body text-red-800 text-center">
+                <p className="font-body text-red-800 text-center font-medium">
                   Something went wrong. Please try again or contact us directly.
                 </p>
               </motion.div>
             )}
 
             <div className="flex justify-center">
-              <button
-                type="submit"
+              <MagneticButton
+                text={isSubmitting ? 'Sending...' : 'Submit Request'}
                 disabled={isSubmitting}
-                className="group relative flex items-center gap-6 rounded-full py-4 px-12 overflow-hidden transition-all duration-500 bg-[var(--color-primary)] hover:bg-[var(--color-text-body)] disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span className="relative z-10 font-body text-xl tracking-tight transition-colors duration-500 text-white">
-                  {isSubmitting ? 'Sending...' : 'Submit Request'}
-                </span>
-              </button>
+                onClick={(e) => {
+                  // MagneticButton doesn't have type="submit" by default, so we handle it via onClick
+                  if (!isSubmitting) {
+                    const form = (e.target as HTMLElement).closest('form');
+                    form?.requestSubmit();
+                  }
+                }}
+              />
             </div>
           </motion.form>
         </div>

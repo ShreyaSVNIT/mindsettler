@@ -481,6 +481,7 @@ interface MagicBentoProps {
   glowColor?: string;
   clickEffect?: boolean;
   enableMagnetism?: boolean;
+  cards?: CardData[];
 }
 
 const MagicBento = ({
@@ -494,11 +495,13 @@ const MagicBento = ({
   enableTilt = true,
   glowColor = DEFAULT_GLOW_COLOR,
   clickEffect = false,
-  enableMagnetism = true
+  enableMagnetism = true,
+  cards
 }: MagicBentoProps) => {
   const gridRef = useRef<HTMLDivElement>(null);
   const isMobile = useMobileDetection();
   const shouldDisableAnimations = disableAnimations || isMobile;
+  const cardsToRender = cards || cardData;
 
   return (
     <>
@@ -513,7 +516,7 @@ const MagicBento = ({
       )}
 
       <BentoCardGrid gridRef={gridRef}>
-        {cardData.map((card, index) => {
+        {cardsToRender.map((card, index) => {
           const baseClassName = `magic-bento-card ${textAutoHide ? 'magic-bento-card--text-autohide' : ''} ${enableBorderGlow ? 'magic-bento-card--border-glow' : ''}`;
 
           const clampDesc = index === 2 || index === 0 || index === 3 ? 6 : 4;
@@ -547,13 +550,15 @@ const MagicBento = ({
                 <div className="magic-bento-card__content">
                   <h2 className="magic-bento-card__title">{card.title}</h2>
                   <p className="magic-bento-card__description">{card.description}</p>
-                  <div className="magic-bento-card__tags" aria-label="Tags">
-                    {card.tags.map(tag => (
-                      <span key={tag} className="magic-bento-card__tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                  {card.tags.some(tag => tag.trim() !== '') && (
+                    <div className="magic-bento-card__tags" aria-label="Tags">
+                      {card.tags.filter(tag => tag.trim() !== '').map(tag => (
+                        <span key={tag} className="magic-bento-card__tag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </ParticleCard>
             );
@@ -567,13 +572,15 @@ const MagicBento = ({
               <div className="magic-bento-card__content">
                 <h2 className="magic-bento-card__title">{card.title}</h2>
                 <p className="magic-bento-card__description">{card.description}</p>
-                <div className="magic-bento-card__tags" aria-label="Tags">
-                  {card.tags.map(tag => (
-                    <span key={tag} className="magic-bento-card__tag">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                {card.tags.some(tag => tag.trim() !== '') && (
+                  <div className="magic-bento-card__tags" aria-label="Tags">
+                    {card.tags.filter(tag => tag.trim() !== '').map(tag => (
+                      <span key={tag} className="magic-bento-card__tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           );

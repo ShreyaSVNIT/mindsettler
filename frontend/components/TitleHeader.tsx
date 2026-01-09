@@ -48,7 +48,7 @@ export default function TitleHeader({
       {/* Description */}
       {description && (
         <motion.p
-          className="font-body text-xl md:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed body-text"
+          className="font-body text-xl md:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed body-text whitespace-pre-line"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
