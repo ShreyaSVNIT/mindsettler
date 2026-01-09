@@ -70,9 +70,8 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Allow preflight OPTIONS requests
-CORS_ALLOW_HEADERS = list(default_headers)
-CORS_ALLOW_METHODS = list(default_methods)
+
+
 
 # ─────────────────────────────
 # SECURITY
