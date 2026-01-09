@@ -42,7 +42,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # ─────────────────────────────
-# EMAIL (SendGrid – REQUIRED in prod)
+# EMAIL 
 # ─────────────────────────────
 
 SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY")
@@ -61,10 +61,24 @@ FRONTEND_URL = os.environ.get(
 )
 
 # ─────────────────────────────
+# CORS 
+# ─────────────────────────────
+
+CORS_ALLOWED_ORIGINS = [
+    FRONTEND_URL,
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+
+
+
+# ─────────────────────────────
 # SECURITY
 # ─────────────────────────────
 
 CSRF_TRUSTED_ORIGINS = [
+    FRONTEND_URL,
     "https://*.onrender.com",
 ]
 

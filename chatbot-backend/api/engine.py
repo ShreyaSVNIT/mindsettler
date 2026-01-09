@@ -11,14 +11,13 @@ _lock = threading.Lock()
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 
-
 # ─────────────────────────
-# MODEL LOADER (singleton)
+# MODEL LOADER (Singleton)
 # ─────────────────────────
 def get_model():
     """
     Loads SentenceTransformer only once per process.
-    Safe for Gunicorn --preload and threaded workers.
+    Thread-safe for Gunicorn workers.
     """
     global _model
 
@@ -33,11 +32,81 @@ def get_model():
 
 
 # ─────────────────────────
+# INTENT DEFINITIONS
+# ─────────────────────────
+INTENTS = {
+    "greeting": {
+        "examples": ["Hi", "Hello", "Hey", "Good morning", "Anyone there?"],
+        "responses": [
+            "Hello! I'm your MindSettler guide. I'm here to help you understand our services and begin your well-being journey."
+        ],
+        "link": None,
+    },
+
+    "first_session": {
+        "examples": ["what happens in first session", "initial assessment", "first meeting"],
+        "responses": [
+            "Your first session includes an assessment, goal setting, and understanding your concerns to create a personalized plan."
+        ],
+        "link": "/about",
+    },
+
+    "session_duration": {
+        "examples": ["how long is a session", "duration", "session length"],
+        "responses": [
+            "Each session lasts approximately 60 minutes."
+        ],
+        "link": None,
+    },
+
+    "pricing_info": {
+        "examples": ["fees", "price", "cost", "how much does it cost"],
+        "responses": [
+            "Session pricing varies by mode. Online sessions start at ₹999, while offline sessions vary. Please visit booking for details."
+        ],
+        "link": "/booking",
+    },
+
+    "reschedule_cancel": {
+        "examples": ["cancel session", "reschedule", "refund"],
+        "responses": [
+            "You may cancel or reschedule up to 24 hours before the session without penalty."
+        ],
+        "link": "/contact",
+    },
+
+    "confidentiality": {
+        "examples": ["confidential", "privacy", "is it safe"],
+        "responses": [
+            "All sessions are strictly confidential and your data is protected."
+        ],
+        "link": "/privacy",
+    },
+
+    "booking": {
+        "examples": ["book a session", "schedule appointment"],
+        "responses": [
+            "You can book a session by visiting our booking page."
+        ],
+        "link": "/booking",
+    },
+
+    "crisis": {
+        "examples": ["suicidal", "panic attack", "emergency"],
+        "responses": [
+            "I'm really sorry you're feeling this way. Please reach out to a mental health professional or emergency services immediately."
+        ],
+        "link": "/emergency-resources",
+    },
+}
+
+
+# ─────────────────────────
 # INTENT EMBEDDINGS CACHE
 # ─────────────────────────
 def get_intent_embeddings():
     """
-    Precomputes and caches intent embeddings once.
+    Computes and caches embeddings for all intent examples.
     """
     global _intent_embeddings
 
@@ -45,8 +114,6 @@ def get_intent_embeddings():
         with _lock:
             if _intent_embeddings is None:
                 model = get_model()
-                print("🔹 Precomputing intent embeddings...")
-
                 _intent_embeddings = {
                     intent: model.encode(
                         data["examples"],
@@ -55,89 +122,15 @@ def get_intent_embeddings():
                     for intent, data in INTENTS.items()
                 }
 
-                print("✅ Intent embeddings ready")
-
     return _intent_embeddings
 
 
 # ─────────────────────────
-# MINDSETTLER INTENTS
-# ─────────────────────────
-INTENTS = {
-    "greeting": {
-        "examples": [
-            "Hi", "Hello", "Hey", "Good morning", "Anyone there?"
-        ],
-        "response": (
-            "Hello! I'm your MindSettler guide. "
-            "I'm here to help you understand our services and start your journey "
-            "towards well-being."
-        ),
-        "link": None,
-    },
-    "booking": {
-        "examples": [
-            "I want to book a session",
-            "How to schedule?",
-            "offline session",
-            "first consultation",
-            "book now",
-        ],
-        "response": (
-            "You can begin with an introductory 60-minute session. "
-            "We offer both online and offline sessions at our Studio."
-        ),
-        "link": "/booking",
-    },
-    "counseling_caution": {
-        "examples": [
-            "I feel depressed",
-            "I have anxiety",
-            "Can you give me advice?",
-            "help me with my mental health",
-        ],
-        "response": (
-            "I hear you. While I cannot provide clinical advice, "
-            "I can help you schedule a confidential session with our experts."
-        ),
-        "link": "/booking",
-    },
-    "services": {
-        "examples": [
-            "What is MindSettler?",
-            "what do you do?",
-            "psycho-education awareness",
-            "how can you help?",
-        ],
-        "response": (
-            "MindSettler is a platform for psycho-education and mental well-being, "
-            "focusing on awareness and personalized support."
-        ),
-        "link": "/about",
-    },
-    "payment": {
-        "examples": [
-            "payment mode",
-            "how to pay?",
-            "UPI",
-            "cash payment",
-            "pricing",
-        ],
-        "response": (
-            "Payments are handled manually via UPI ID or cash. "
-            "We will confirm your appointment once the payment is verified."
-        ),
-        "link": "/contact",
-    },
-}
-
-
-# ─────────────────────────
-# INTENT MATCHING
+# INTENT MATCHING LOGIC
 # ─────────────────────────
 def get_best_intent(user_query: str) -> str:
     """
-    Returns best matching intent using cosine similarity.
+    Returns best intent based on cosine similarity.
     """
     model = get_model()
     intent_embeddings = get_intent_embeddings()
@@ -148,14 +141,35 @@ def get_best_intent(user_query: str) -> str:
     )
 
     best_intent = "unknown"
-    highest_score = 0.20  # Safety threshold
+    highest_score = 0.35  # tuned threshold
 
     for intent, embeddings in intent_embeddings.items():
         cos_scores = util.cos_sim(query_embedding, embeddings)[0]
-        max_score = torch.max(cos_scores).item()
+        score = torch.max(cos_scores).item()
 
-        if max_score > highest_score:
-            highest_score = max_score
+        if score > highest_score:
+            highest_score = score
             best_intent = intent
 
     return best_intent
+
+
+# ─────────────────────────
+# RESPONSE FETCHER (SAFE)
+# ─────────────────────────
+def get_response(intent: str):
+    """
+    Returns a safe chatbot response.
+    """
+    if intent not in INTENTS:
+        return {
+            "reply": "I'm not sure I understood that. Could you please rephrase?",
+            "link": None,
+        }
+
+    data = INTENTS[intent]
+
+    return {
+        "reply": data["responses"][0],
+        "link": data["link"],
+    }
