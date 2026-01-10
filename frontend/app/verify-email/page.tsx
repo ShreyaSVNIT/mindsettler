@@ -217,7 +217,7 @@ function VerifyEmailContent() {
                   </div>
                 )}
 
-                {state.data.amount && (
+                {"amount" in state.data && state.data.amount && (
                   <div className="flex justify-between">
                     <span className="font-body text-green-700">Amount</span>
                     <span className="font-body font-bold text-green-800">
