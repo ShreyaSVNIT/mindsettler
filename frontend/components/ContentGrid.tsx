@@ -2,80 +2,59 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import type { Resource } from '@/src/data/resources';
 
-const categories = [
-  'View All',
-  'Articles',
-  'Blogs',
-  'Links',
-  'Videos',
-  'Podcasts',
-];
 
-const posts = [
-  {
-    id: 1,
-    title: 'The Art of Product Design: Creating Products that Connect with Customers',
-    description:
-      'We explore the principles of great product design and how designers can build emotional connections with users.',
-    image: '/images/post-1.jpg',
-    category: 'Articles',
-    type: 'NEWS',
-  },
-  {
-    id: 2,
-    title: 'The Future of Startups: Key Trends Shaping the Tech Industry',
-    description:
-      'A deep dive into emerging startup trends and how technology is redefining innovation.',
-    image: '/images/post-2.jpg',
-    category: 'Podcasts',
-    type: 'INSIGHTS',
-  },
-  {
-    id: 3,
-    title: 'Exploring the Benefits and Risks of Automation',
-    description:
-      'Industry experts discuss automation, AI-driven workflows, and the future of work.',
-    image: '/images/post-3.jpg',
-    category: 'Videos',
-    type: 'PODCAST',
-  },
-  {
-    id: 4,
-    title: 'Creating Intuitive Products that Delight Users',
-    description:
-      'We explore user-first product strategies and design systems that drive engagement.',
-    image: '/images/post-4.jpg',
-    category: 'Blogs',
-    type: 'PODCAST',
-  },
-  {
-    id: 5,
-    title: 'The Power of Storytelling in Tech: Building Brands that Resonate',
-    description:
-      'Why storytelling matters in SaaS branding and how great narratives build trust.',
-    image: '/images/post-5.jpg',
-    category: 'Links',
-    type: 'INSIGHTS',
-  },
-  {
-    id: 6,
-    title: 'Scaling Your Startup: Lessons Learned from Successful Founders',
-    description:
-      'Founders share lessons, mistakes, and growth strategies for scaling sustainably.',
-    image: '/images/post-6.jpg',
-    category: 'Videos',
-    type: 'NEWS',
-  },
-];
+type GridCategory = 'View All' | 'Articles' | 'Blogs' | 'Links' | 'Videos';
 
-export default function ContentGrid() {
+const CATEGORY_ORDER: GridCategory[] = ['View All', 'Articles', 'Blogs', 'Links', 'Videos'];
+
+const TYPE_TO_CATEGORY: Record<Resource['type'], Exclude<GridCategory, 'View All'>> = {
+  article: 'Articles',
+  blog: 'Blogs',
+  link: 'Links',
+  video: 'Videos',
+};
+
+type GridItem = {
+  id: Resource['id'];
+  title: string;
+  description: string;
+  image: string;
+  category: Exclude<GridCategory, 'View All'>;
+  type: string;
+  href: string;
+  external: boolean;
+};
+
+export default function ContentGrid({ data }: { data: Resource[] }) {
   const [activeCategory, setActiveCategory] = useState('View All');
+
+  const items: GridItem[] = data.map((r) => {
+    const category = TYPE_TO_CATEGORY[r.type];
+    const href = r.type === 'link' && r.externalUrl ? r.externalUrl : `/resources/${r.id}`;
+
+    return {
+      id: r.id,
+      title: r.title,
+      description: r.description,
+      image: r.imageUrl,
+      category,
+      type: r.type.toUpperCase(),
+      href,
+      external: r.type === 'link',
+    };
+  });
+
+  const categories = CATEGORY_ORDER.filter(
+    (cat) => cat === 'View All' || items.some((i) => i.category === cat)
+  );
 
   const filtered =
     activeCategory === 'View All'
-      ? posts
-      : posts.filter((p) => p.category === activeCategory);
+      ? items
+      : items.filter((p) => p.category === activeCategory);
 
   return (
     <section
@@ -120,8 +99,11 @@ export default function ContentGrid() {
         {/* Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((post, i) => (
-            <article
+            <Link
               key={post.id}
+              href={post.href}
+              target={post.external ? '_blank' : undefined}
+              rel={post.external ? 'noopener noreferrer' : undefined}
               className="group overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md animate-in fade-in slide-in-from-bottom-4"
               style={{
                 backgroundColor: 'var(--color-bg-card)',
@@ -168,7 +150,7 @@ export default function ContentGrid() {
                   {post.description}
                 </p>
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </div>
