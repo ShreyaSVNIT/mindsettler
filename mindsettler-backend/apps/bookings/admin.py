@@ -2,6 +2,13 @@ from django.urls import path
 from django.http import HttpResponse, JsonResponse
 from django.contrib import admin, messages
 
+# ─────────────────────────
+# ADMIN PANEL BRANDING
+# ─────────────────────────
+admin.site.site_header = "MindSettler Admin"
+admin.site.site_title = "MindSettler Admin"
+admin.site.index_title = "MindSettler Dashboard"
+
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
 from apps.bookings.email import (
@@ -51,47 +58,6 @@ class BookingAdmin(admin.ModelAdmin):
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
             background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
             color: #0f172a;
-        }
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1300px;
-            margin: 0 auto 24px auto;
-            padding: 16px 24px;
-            background: #fff;
-            border-radius: 14px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 6px 28px rgba(30, 41, 59, 0.10), 0 1.5px 4px rgba(30,41,59,0.03);
-        }
-
-        .toolbar h1 {
-            margin: 0;
-            font-weight: 700;
-            font-size: 1.6rem;
-            letter-spacing: -0.02em;
-            color: #0f172a;
-        }
-
-        .toolbar button {
-            background: #fff;
-            border: 1.5px solid #2563eb;
-            border-radius: 10px;
-            color: #2563eb;
-            font-weight: 600;
-            padding: 8px 16px;
-            margin-left: 8px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(37,99,235,0.06);
-            transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-        }
-        .toolbar button:hover {
-            background: #2563eb;
-            color: #fff;
-            border-color: #2563eb;
-            transform: translateY(-1px) scale(1.03);
-            box-shadow: 0 6px 16px rgba(37,99,235,0.18);
         }
 
         #calendar {
@@ -159,15 +125,6 @@ class BookingAdmin(admin.ModelAdmin):
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <h1>Booking Calendar</h1>
-        <div>
-            <button type="button" id="prevBtn">‹</button>
-            <button type="button" id="todayBtn">Today</button>
-            <button type="button" id="nextBtn">›</button>
-        </div>
-    </div>
-
     <div id="calendar"></div>
 
     <script>
@@ -204,10 +161,6 @@ class BookingAdmin(admin.ModelAdmin):
             });
 
             calendar.render();
-
-            document.getElementById('prevBtn').onclick = () => calendar.prev();
-            document.getElementById('nextBtn').onclick = () => calendar.next();
-            document.getElementById('todayBtn').onclick = () => calendar.today();
         });
     </script>
 </body>

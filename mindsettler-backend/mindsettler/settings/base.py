@@ -219,3 +219,20 @@ JAZZMIN_SETTINGS = {
 
     "custom_css": "admin/css/mindsettler.css",
 }
+
+JAZZMIN_SETTINGS = {
+    "custom_links": {
+        "bookings": [
+            {
+                "name": "Booking Calendar",
+                "url": "/admin/bookings/booking/calendar/",
+                "icon": "fas fa-calendar-alt",
+            },
+            {
+                "name": "Booking List View",
+                "url": "/admin/bookings/booking/calendar/list/",
+                "icon": "fas fa-list",
+            },
+        ]
+    }
+}
