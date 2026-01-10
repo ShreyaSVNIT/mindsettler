@@ -37,6 +37,15 @@ export default function ConfidentialityPolicy() {
         By proceeding with the first session, you acknowledge that you have
         read, understood, and agreed to this confidentiality policy.
       </p>
+
+      <h2>Respect & Professionalism</h2>
+      <p>
+        Our team is committed to treating every client with respect and professionalism. Confidentiality is a cornerstone of our practice.
+      </p>
+      <h2>Questions & Concerns</h2>
+      <p>
+        If you have any questions about confidentiality, please contact us at <a href="mailto:mindsettler.dev@gmail.com">mindsettler.dev@gmail.com</a>.
+      </p>
     </PolicyLayout>
   );
 }

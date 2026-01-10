@@ -15,7 +15,7 @@ export default function PolicyLayout({
   children,
 }: PolicyLayoutProps) {
   return (
-    <main className="min-h-screen bg-[var(--color-bg-app)] relative overflow-hidden">
+    <main className="min-h-screen" style={{ background: '#FCEBED' }}>
       {/* Background decorative elements */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
@@ -50,8 +50,11 @@ export default function PolicyLayout({
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-block mb-6"
           >
-            <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-full border-2 border-[var(--color-primary)]/30 bg-white/50 backdrop-blur-sm hover:border-[var(--color-primary)]/50 transition-all group">
-              <span className="text-[var(--color-primary)] text-xs font-bold tracking-wider uppercase">← Back to Home</span>
+            <Link href="/" aria-label="Back to Home" className="group flex items-center gap-2 px-2 py-1 rounded-full bg-transparent hover:bg-white/40 transition-all focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L10 14L18 22" stroke="var(--color-primary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-all group-hover:fill-[var(--color-primary)]" />
+              </svg>
+              <span className="text-xs font-bold tracking-wider uppercase text-[var(--color-text-body)] group-hover:text-[var(--color-primary)] transition-colors">Back to Home</span>
             </Link>
           </motion.div>
 
@@ -63,17 +66,6 @@ export default function PolicyLayout({
           >
             {title}
           </motion.h1>
-
-          {lastUpdated && (
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-[var(--color-text-body)]/60 font-body text-sm tracking-wide"
-            >
-              Last updated: {lastUpdated}
-            </motion.p>
-          )}
         </motion.div>
 
         {/* Content Card */}
@@ -90,6 +82,9 @@ export default function PolicyLayout({
       </div>
 
       <style jsx global>{`
+        .policy-content > * + * {
+          margin-top: 2.5rem;
+        }
         .policy-content p {
           color: var(--color-text-body);
           font-family: var(--font-body);
@@ -99,13 +94,23 @@ export default function PolicyLayout({
         }
         
         .policy-content h2 {
-          color: var(--color-primary);
+          color: var(--color-text-secondary);
           font-family: var(--font-title);
           font-size: 1.875rem;
           font-weight: 700;
           margin-top: 3rem;
           margin-bottom: 1.25rem;
           line-height: 1.2;
+          position: relative;
+        }
+        .policy-content h2:not(:first-child)::before {
+          content: "";
+          display: block;
+          width: 100%;
+          height: 1px;
+          background: linear-gradient(90deg, transparent 0%, var(--color-border) 50%, transparent 100%);
+          margin-bottom: 2rem;
+          margin-top: 2rem;
         }
         
         .policy-content h2:first-of-type {

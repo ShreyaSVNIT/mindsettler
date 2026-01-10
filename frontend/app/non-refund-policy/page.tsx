@@ -30,6 +30,24 @@ export default function NonRefundPolicy() {
         Any exceptions are solely at the discretion of MindSettler and will be
         evaluated on a case-by-case basis.
       </p>
+
+      <h2>Why We Have a Non-Refund Policy</h2>
+      <p>
+        Our professionals reserve their time and resources for each session.
+        This policy helps us maintain fairness and respect for their commitment.
+      </p>
+      <h2>How to Avoid Missed Sessions</h2>
+      <p>
+        We recommend setting reminders and communicating any changes as early as
+        possible to avoid missed sessions and maximize your experience.
+      </p>
+      <h2>Contact & Support</h2>
+      <p>
+        If you have questions about this policy or need assistance, please reach
+        out to our support team at{" "}
+        <a href="mailto:mindsettler.dev@gmail.com">mindsettler.dev@gmail.com</a>
+        .
+      </p>
     </PolicyLayout>
   );
 }
