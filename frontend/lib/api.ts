@@ -48,12 +48,17 @@ async function handleResponse<T>(response: Response): Promise<T> {
   
   const contentType = response.headers.get('content-type');
   if (!contentType || !contentType.includes('application/json')) {
-    const text = await response.text();
-    console.error('Non-JSON response:', { status: response.status, contentType, text });
-    throw new APIError(
-      response.status,
-      `Expected JSON response but got: ${text.substring(0, 100)}`
-    );
+    console.error('Non-JSON response detected', {
+      status: response.status,
+      contentType,
+    });
+
+    if (typeof window !== "undefined") {
+      // Redirect user to verify-email page on backend HTML/500 errors
+      window.location.href = "/verify-email";
+    }
+
+    throw new Error("Non-JSON response received from backend");
   }
   
   let data;
@@ -171,4 +176,3 @@ export const statusHelpers = {
   needsEmailVerification: (status: string) => status === "DRAFT",
   awaitingAdmin: (status: string) => status === "PENDING",
 };
-

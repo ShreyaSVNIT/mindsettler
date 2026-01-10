@@ -54,6 +54,20 @@ function VerifyEmailContent() {
       });
   }, [token]);
 
+  const refetchVerification = async () => {
+    if (!token) return;
+    setState({ kind: "loading" });
+    try {
+      const data = await bookingAPI.verifyEmail(token);
+      setState({ kind: "success", data });
+    } catch (err: any) {
+      setState({
+        kind: "error",
+        message: err?.message || "Failed to refresh booking status",
+      });
+    }
+  };
+
   const handleCancelBooking = async () => {
     if (state.kind !== "success") return;
 
@@ -65,17 +79,19 @@ function VerifyEmailContent() {
       });
 
       if (response?.message?.toLowerCase().includes("email")) {
-        alert("A cancellation verification email has been sent. Please check your inbox to complete the cancellation.");
+        alert(
+          "A cancellation verification email has been sent. Please check your inbox to complete the cancellation."
+        );
       } else {
         alert("Your booking has been cancelled successfully.");
       }
-      // Do not redirect to status page.
-      // The verify-email page already reflects the latest booking state.
-      // Let the user stay here and see the updated status.
+
+      await refetchVerification();
     } catch (err: any) {
-      const message =
-        err?.message || "Failed to cancel booking. Please try again.";
-      setState({ kind: "error", message });
+      setState({
+        kind: "error",
+        message: err?.message || "Failed to cancel booking. Please try again.",
+      });
     }
   };
 
