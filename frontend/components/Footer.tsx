@@ -7,10 +7,10 @@ import ScrollVelocity from "./ScrollVelocity";
 
 export default function Footer() {
   return (
-    <footer className="relative bg-gradient-to-b from-[var(--color-bg-subtle)] to-[var(--color-bg-card)] overflow-hidden">
+    <footer className="relative bg-gradient-to-b from-[var(--color-bg-subtle)] to-[var(--color-bg-card)] overflow-hidden group">
 
       {/* Marquee */}
-      <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-6">
+      <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-8">
         <ScrollVelocity
           texts={['MINDFUL HEALING ✦ COMPASSIONATE CARE ✦ TRANSFORMATIVE JOURNEY ✦']}
           velocity={170}
@@ -19,8 +19,8 @@ export default function Footer() {
       </div>
 
       {/* Background Text */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none select-none">
-        <h2 className="text-[clamp(160px,30vw,420px)] font-title font-bold text-[var(--color-text-body)] opacity-[0.02] whitespace-nowrap leading-none">
+      <div className="absolute bottom-10 left-0 right-0 pointer-events-none select-none">
+        <h2 className="text-[clamp(160px,30vw,420px)] font-title font-bold text-[var(--color-text-body)] opacity-[0.02] group-hover:opacity-[0.07] transition-opacity duration-300 whitespace-nowrap leading-none">
           MindSettler
         </h2>
       </div>
@@ -30,12 +30,12 @@ export default function Footer() {
       <div className="absolute bottom-32 left-20 w-80 h-80 bg-[var(--color-primary)] opacity-[0.02] blur-[120px] rounded-full" />
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 pt-14 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 pt-20 relative z-10">
 
         {/* MAIN GRID */}
         <div
           className="
-            grid gap-12 mb-14 items-start
+            grid gap-20 mb-36 items-start
             grid-cols-1
             md:[grid-template-columns:0.9fr_1.4fr_1fr]
           "
@@ -151,7 +151,7 @@ export default function Footer() {
         </div>
 
         {/* COPYRIGHT */}
-        <div className="border-t border-[var(--color-border)] pt-6 pb-4 text-center text-xs opacity-60">
+        <div className="border-t border-[var(--color-border)] pt-14 pb-12 text-center text-xs opacity-60">
           © {new Date().getFullYear()} MindSettler — All rights reserved
         </div>
 

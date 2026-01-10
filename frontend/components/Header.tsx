@@ -39,6 +39,25 @@ export default function IntegratedHeader() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const { body, documentElement } = document;
+    const prevOverflow = body.style.overflow;
+    const prevPaddingRight = body.style.paddingRight;
+    const scrollBarWidth = window.innerWidth - documentElement.clientWidth;
+
+    body.style.overflow = 'hidden';
+    if (scrollBarWidth > 0) {
+      body.style.paddingRight = `${scrollBarWidth}px`;
+    }
+
+    return () => {
+      body.style.overflow = prevOverflow;
+      body.style.paddingRight = prevPaddingRight;
+    };
+  }, [menuOpen]);
+
   // Home page at top: white, else: primary
   const isHome = pathname === '/' || pathname === '/home';
   const isHomeAtTop = isHome && isAtTop;
@@ -55,7 +74,7 @@ export default function IntegratedHeader() {
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className={`p-2 hover:scale-110 transition-all relative z-[140] ${isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}
+              className={`p-2 hover:scale-110 transition-all relative z-[140] hover:text-[var(--color-primary)] hover:opacity-100 ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -77,10 +96,10 @@ export default function IntegratedHeader() {
                 key={item}
                 href={`/${item.toLowerCase().replace(/ /g, '-')}`}
                 className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors group/link
-                  ${isHomeAtTop ? 'text-white hover:text-[var(--color-secondary-text)]' : isOtherPageAtTop ? 'text-[var(--color-primary)] hover:text-[var(--color-secondary-text)]' : 'text-[var(--color-text-body)] hover:text-[var(--color-secondary-text)]'}`}
+                  ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
               >
                 {item}
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-secondary-text)] transition-all duration-300 group-hover/link:w-full"></span>
+                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
               </Link>
             ))}
           </nav>
@@ -92,32 +111,39 @@ export default function IntegratedHeader() {
                 <div className="w-[240px] h-[60px] bg-white shadow-[0_0_40px_rgba(255,255,255,0.7)] rounded-[100%] blur-xl opacity-70"></div>
               </div>
             )}
-            <Link href="/home" className="absolute left-1/2 -translate-x-1/2 mt-2 w-auto h-auto block">
-              <Image src="/MindSettlerLogo.png" alt="Logo" width={180} height={115} priority className="max-w-none" />
+            <Link href="/home" className="absolute left-1/2 -translate-x-1/2 mt-2 w-auto h-auto block group/logo">
+              <Image
+                src="/MindSettlerLogo.png"
+                alt="Logo"
+                width={180}
+                height={115}
+                priority
+                className="max-w-none transition-[filter] duration-300 group-hover/logo:[filter:brightness(0)_saturate(100%)_invert(67%)_sepia(19%)_saturate(1655%)_hue-rotate(307deg)_brightness(94%)_contrast(90%)]"
+              />
             </Link>
           </div>
 
           <div className={`hidden lg:flex items-stretch border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <Link href="/about" className={`flex items-center justify-center px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
               <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors
-                ${isHomeAtTop ? 'text-white hover:text-[var(--color-secondary-text)]' : isOtherPageAtTop ? 'text-[var(--color-primary)] hover:text-[var(--color-secondary-text)]' : 'text-[var(--color-text-body)] hover:text-[var(--color-secondary-text)]'}`}
+                ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/link:text-[var(--color-primary)] group-hover/link:opacity-100`}
               >
                 About
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-secondary-text)] transition-all duration-300 group-hover/link:w-full"></span>
+                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
               </span>
             </Link>
             <Link href="/book" className={`flex items-center gap-3 px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              <Calendar size={20} className={isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'} />
+              <Calendar size={20} className={`${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} transition-colors group-hover/book:text-[var(--color-primary)] group-hover/book:opacity-100`} />
               <span className={`relative text-[14px] uppercase tracking-[0.15em] font-black transition-colors
-                ${isHomeAtTop ? 'text-white hover:text-[var(--color-secondary-text)]' : isOtherPageAtTop ? 'text-[var(--color-primary)] hover:text-[var(--color-secondary-text)]' : 'text-[var(--color-text-body)] hover:text-[var(--color-secondary-text)]'}`}
+                ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/book:text-[var(--color-primary)] group-hover/book:opacity-100`}
               >
                 Book Session
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-secondary-text)] transition-all duration-300 group-hover/book:w-full"></span>
+                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/book:w-full"></span>
               </span>
             </Link>
             <div className="flex items-center gap-3 px-8">
-              <Phone size={20} className={isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'} />
-              <span className={`text-[15px] font-black ${isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}>+91 98765 43210</span>
+              <Phone size={20} className={isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} />
+              <span className={`text-[15px] font-black ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>+91 98765 43210</span>
             </div>
           </div>
         </div>

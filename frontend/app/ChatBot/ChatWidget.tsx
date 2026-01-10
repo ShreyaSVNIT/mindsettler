@@ -143,6 +143,8 @@ export default function ChatWidget() {
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
+          type="button"
+          onClick={() => setIsOpen(true)}
           className={`
             bg-[var(--color-primary)] text-[var(--color-bg-app)]
             h-10 md:h-14
