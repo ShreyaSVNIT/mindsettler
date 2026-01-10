@@ -235,10 +235,14 @@ function PaymentPageContent() {
               </ul>
             </div>
             <button
-              onClick={() => router.push(`/status?id=${state.acknowledgementId}`)}
+              onClick={() => {
+                alert(
+                  "Your booking has been confirmed. Please check your email and open the verification link to view your booking details."
+                );
+              }}
               className="w-full bg-green-600 hover:bg-green-700 text-white font-body font-semibold px-8 py-4 rounded-full transition-all shadow-lg"
             >
-              View Booking Details →
+              Check Email for Booking Details →
             </button>
           </motion.div>
         )}

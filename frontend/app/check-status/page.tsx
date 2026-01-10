@@ -3,31 +3,35 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import TitleHeader from "@/components/TitleHeader";
 import MagneticButton from "@/components/Button";
+import { BACKEND_URL } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function CheckStatusPage() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleCheckStatus = async () => {
     setLoading(true);
     setError("");
     setStatus(null);
     try {
-      const res = await fetch("/api/bookings/check-status/", {
+      const res = await fetch(`${BACKEND_URL}/api/bookings/check-status/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (data.message) {
-        setStatus(data.message);
-      } else if (data.has_booking === false) {
+
+      if (data.has_booking === false) {
         setStatus("No active booking found.");
-      } else {
-        setStatus("Unknown response.");
+        return;
       }
+
+      // Booking exists → backend has sent verification email
+      setStatus("A verification email has been sent. Please check your inbox to continue.");
     } catch (err) {
       setError("Something went wrong. Please try again.");
     } finally {
