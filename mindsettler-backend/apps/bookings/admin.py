@@ -181,45 +181,88 @@ class BookingAdmin(admin.ModelAdmin):
 <head>
     <title>Booking List View</title>
     <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
-            background: #f5f7fa;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 28px;
+            color: #0f172a;
         }
+
         h1 {
             max-width: 1200px;
-            margin: 0 auto 20px auto;
-            font-weight: 600;
-            font-size: 1.75rem;
+            margin: 0 auto 24px auto;
+            font-weight: 700;
+            font-size: 1.9rem;
             color: #111827;
         }
+
         table {
             border-collapse: collapse;
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 12px 32px rgba(30,41,59,0.10);
             overflow: hidden;
         }
+
         thead {
             background: #2563eb;
-            color: white;
+            color: #ffffff;
         }
-        th, td {
+
+        th {
             text-align: left;
-            padding: 12px 16px;
+            padding: 14px 18px;
+            font-size: 13px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 14px 18px;
             border-bottom: 1px solid #e5e7eb;
             font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
         }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
         tbody tr:hover {
-            background-color: #f3f4f6;
+            background-color: #eef2ff;
             cursor: pointer;
         }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-APPROVED {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-CONFIRMED {
+            background: #dcfce7;
+            color: #166534;
+        }
+
         a {
             color: inherit;
             text-decoration: none;
@@ -227,37 +270,41 @@ class BookingAdmin(admin.ModelAdmin):
             width: 100%;
             height: 100%;
         }
+
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr {
                 display: block;
             }
-            thead tr {
+
+            thead {
                 display: none;
             }
+
             tbody tr {
-                margin-bottom: 15px;
-                border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                background: #fff;
-                padding: 12px 16px;
+                margin-bottom: 18px;
+                border-radius: 16px;
+                box-shadow: 0 6px 18px rgba(30,41,59,0.10);
+                background: #ffffff;
+                padding: 16px;
             }
+
             tbody td {
                 border: none;
-                padding: 8px 0;
+                padding: 10px 0;
                 font-size: 13px;
                 position: relative;
-                padding-left: 50%;
-                text-align: left;
+                padding-left: 48%;
             }
+
             tbody td::before {
                 position: absolute;
-                top: 8px;
+                top: 10px;
                 left: 16px;
                 width: 45%;
                 white-space: nowrap;
                 font-weight: 600;
                 content: attr(data-label);
-                color: #6b7280;
+                color: #64748b;
                 font-size: 12px;
             }
         }
