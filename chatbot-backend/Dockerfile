@@ -5,6 +5,8 @@ FROM python:3.10-slim
 # ─────────────────────────
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV TRANSFORMERS_CACHE=/tmp/huggingface
+ENV HF_HOME=/tmp/huggingface
 
 WORKDIR /app
 
@@ -16,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ─────────────────────────
-# Python deps (cached)
+# Python deps (cached layer)
 # ─────────────────────────
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
@@ -29,6 +31,11 @@ COPY . .
 EXPOSE 8000
 
 # ─────────────────────────
-# Production server
+# Gunicorn (OPTIMIZED, PRELOAD)
 # ─────────────────────────
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "1", "--timeout", "120"]
+CMD ["gunicorn", "core.wsgi:application", \
+     "--bind", "0.0.0.0:8000", \
+     "--workers", "1", \
+     "--threads", "1", \
+     "--timeout", "120", \
+     "--preload"]
