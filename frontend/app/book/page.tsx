@@ -245,15 +245,11 @@ export default function BookPage() {
                 setSelectedMode("ONLINE");
                 setValue("mode", "ONLINE");
               }}>
-                <MagneticButton text="Online Session" />
+                <MagneticButton text="Book a Session" />
               </div>
-              
-              <div onClick={() => {
-                setSelectedMode("OFFLINE");
-                setValue("mode", "OFFLINE");
-              }}>
-                <MagneticButton text="Offline Session" />
-              </div>
+              <a href="/check-status" className="mt-4 sm:mt-0">
+                <MagneticButton text="Check Status" />
+              </a>
             </div>
           </motion.div>
         </div>
@@ -397,7 +393,7 @@ export default function BookPage() {
                         type="email"
                         {...register("email")}
                         className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
-                        placeholder="your.email@example.com"
+                        placeholder="mindsettler.dev@gmail.com"
                         disabled={bookingStatus === "submitting"}
                       />
                       {errors.email && (
@@ -413,7 +409,7 @@ export default function BookPage() {
                         type="tel"
                         {...register("phone_number")}
                         className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
-                        placeholder="10-digit number"
+                        placeholder="9876543210"
                         maxLength={10}
                         disabled={bookingStatus === "submitting"}
                       />

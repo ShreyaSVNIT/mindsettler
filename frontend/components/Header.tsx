@@ -39,6 +39,11 @@ export default function IntegratedHeader() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Home page at top: white, else: primary
+  const isHome = pathname === '/' || pathname === '/home';
+  const isHomeAtTop = isHome && isAtTop;
+  const isOtherPageAtTop = !isHome && isAtTop;
+
   return (
     <>
       {/* --- MAIN HEADER --- */}
@@ -50,7 +55,7 @@ export default function IntegratedHeader() {
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className={`p-2 hover:scale-110 transition-all relative z-[140] ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}
+              className={`p-2 hover:scale-110 transition-all relative z-[140] ${isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -68,9 +73,14 @@ export default function IntegratedHeader() {
 
           <nav className={`hidden xl:flex items-center px-12 gap-10 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             {['How It Works', 'Corporate', 'Resources'].map((item) => (
-              <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className={`relative text-[15px] uppercase tracking-[0.25em] font-bold hover:text-[var(--color-primary)] transition-colors group/link ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
+              <Link
+                key={item}
+                href={`/${item.toLowerCase().replace(/ /g, '-')}`}
+                className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors group/link
+                  ${isHomeAtTop ? 'text-white hover:text-[var(--color-secondary-text)]' : isOtherPageAtTop ? 'text-[var(--color-primary)] hover:text-[var(--color-secondary-text)]' : 'text-[var(--color-text-body)] hover:text-[var(--color-secondary-text)]'}`}
+              >
                 {item}
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
+                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-secondary-text)] transition-all duration-300 group-hover/link:w-full"></span>
               </Link>
             ))}
           </nav>
@@ -89,18 +99,25 @@ export default function IntegratedHeader() {
 
           <div className={`hidden lg:flex items-stretch border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <Link href="/about" className={`flex items-center justify-center px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold hover:text-[var(--color-primary)] transition-colors ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>
+              <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors
+                ${isHomeAtTop ? 'text-white hover:text-[var(--color-secondary-text)]' : isOtherPageAtTop ? 'text-[var(--color-primary)] hover:text-[var(--color-secondary-text)]' : 'text-[var(--color-text-body)] hover:text-[var(--color-secondary-text)]'}`}
+              >
                 About
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
+                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-secondary-text)] transition-all duration-300 group-hover/link:w-full"></span>
               </span>
             </Link>
             <Link href="/book" className={`flex items-center gap-3 px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              <Calendar size={20} className={isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'} />
-              <span className={`text-[14px] uppercase tracking-[0.15em] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>Book Session</span>
+              <Calendar size={20} className={isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'} />
+              <span className={`relative text-[14px] uppercase tracking-[0.15em] font-black transition-colors
+                ${isHomeAtTop ? 'text-white hover:text-[var(--color-secondary-text)]' : isOtherPageAtTop ? 'text-[var(--color-primary)] hover:text-[var(--color-secondary-text)]' : 'text-[var(--color-text-body)] hover:text-[var(--color-secondary-text)]'}`}
+              >
+                Book Session
+                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-secondary-text)] transition-all duration-300 group-hover/book:w-full"></span>
+              </span>
             </Link>
             <div className="flex items-center gap-3 px-8">
-              <Phone size={20} className={isAtTop ? 'text-white' : 'text-[var(--color-primary)]'} />
-              <span className={`text-[15px] font-black ${isAtTop ? 'text-white' : 'text-[var(--color-text-body)]'}`}>+91 98765 43210</span>
+              <Phone size={20} className={isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'} />
+              <span className={`text-[15px] font-black ${isHomeAtTop ? 'text-white' : isOtherPageAtTop ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-body)]'}`}>+91 98765 43210</span>
             </div>
           </div>
         </div>
