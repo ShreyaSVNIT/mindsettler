@@ -98,7 +98,7 @@ function VerifyCancellationContent() {
               </p>
             </div>
             <button
-              onClick={() => router.push("/status")}
+              onClick={() => router.push("/")}
               className="mt-6 bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
             >
               Go to Status Page
@@ -127,13 +127,16 @@ function VerifyCancellationContent() {
             
             <div className="bg-white/60 rounded-2xl p-6 mb-6">
               <p className="font-body text-center text-orange-700">
-                {state.data.message || "Your booking has been cancelled and you'll receive a confirmation email shortly."}
+                {"message" in state.data && state.data.message
+                  ? state.data.message
+                  : "Your booking has been cancelled and you'll receive a confirmation email shortly."}
               </p>
             </div>
 
             <div className="bg-gradient-to-r from-orange-600/10 to-orange-500/10 rounded-xl p-5 mb-6">
               <p className="font-body text-sm text-orange-700 text-center">
-                <span className="font-bold">Status:</span> {state.data.status}
+                <span className="font-bold">Status:</span>{" "}
+                {"status" in state.data ? state.data.status : "CANCELLED"}
               </p>
             </div>
 
