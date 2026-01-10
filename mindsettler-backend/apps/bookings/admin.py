@@ -133,14 +133,20 @@ class BookingAdmin(admin.ModelAdmin):
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
+                buttonText: {
+                    today: 'Today',
+                    month: 'Month',
+                    week: 'Week',
+                    day: 'Day'
+                },
                 slotMinTime: '08:00:00',
                 slotMaxTime: '22:00:00',
                 allDaySlot: false,
                 nowIndicator: true,
                 headerToolbar: {
-                    left: '',
+                    left: 'prev,next today',
                     center: 'title',
-                    right: ''
+                    right: 'timeGridDay,timeGridWeek,dayGridMonth'
                 },
                 events: '/admin/bookings/booking/calendar/data/',
                 eventDidMount: function(info) {
