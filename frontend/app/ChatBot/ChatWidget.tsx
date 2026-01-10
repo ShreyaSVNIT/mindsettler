@@ -138,28 +138,17 @@ export default function ChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* Floating Toggle: Calm & Interactive [cite: 66] */}
+      {/* Single rounded chat button at bottom-left (refactor of existing guidance) */}
       {!isOpen && (
         <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.06 }}
+          whileTap={{ scale: 0.98 }}
           type="button"
           onClick={() => setIsOpen(true)}
-          className={`
-            bg-[var(--color-primary)] text-[var(--color-bg-app)]
-            h-10 md:h-14
-            w-32 md:w-48
-            pl-3 md:pl-5 pr-2 md:pr-4
-            rounded-tr-[1.25rem] md:rounded-tr-[1.75rem] rounded-tl-none
-            shadow-[0_10px_30px_rgba(229,93,128,0.3)]
-            flex items-center gap-2 md:gap-3
-            origin-bottom-left
-            group hover:bg-[var(--color-primary-hover)] transition-colors
-            absolute bottom-0 left-0
-          `}
+          className="fixed bottom-6 left-6 bg-[var(--color-primary)] w-16 h-16 md:w-18 md:h-18 rounded-full flex items-center justify-center shadow-xl hover:bg-[var(--color-primary-hover)] transition-colors z-[220] p-0"
+          aria-label="Open Chatbot"
         >
-          <span className="font-title text-sm md:text-xl font-bold uppercase tracking-wider leading-none">Guidance</span>
-          <span className="text-base md:text-xl group-hover:rotate-12 transition-transform">💬</span>
+          <img src="/chatlogo.png" alt="Chatbot" className="w-9 h-9 md:w-11 md:h-11" />
         </motion.button>
       )}
     </div>

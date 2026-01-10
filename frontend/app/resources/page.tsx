@@ -1,6 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import CouchHero from '@/components/CouchHero';
+import SectionHeader from '@/components/SectionHeader';
 import { resources } from '@/src/data/resources';
 import TitleHeader from '@/components/TitleHeader';
 import ContentGrid from '@/components/ContentGrid';
@@ -24,41 +26,28 @@ export default function ResourcesPage() {
     ].filter(Boolean);
 
     return (
-        <main className="min-h-screen bg-[var(--color-bg-app)]">
+        <main className="min-h-screen bg-white">
+            {/* Hero Section using CouchHero */}
+            <CouchHero
+                subheader="Resources"
+                title={<><span className="block">Resources</span><span className="block text-[var(--color-primary)] italic mt-2">for your Mind</span></>}
+                description="Curated content to support your mental wellness journey. Explore articles, videos, and tools designed to help you thrive."
+                alignment="center"
+                layout="static"
+            />
 
-            {/* Hero Section */}
-            <section className="relative px-6 py-24 md:py-32 text-center bg-[var(--color-bg-app)]">
-                <TitleHeader
-                    subheader="Resources"
-                    title={<><span className="block">Resources</span><span className="block text-[var(--color-primary)] italic mt-2">for your Mind</span></>}
-                    description="Curated content to support your mental wellness journey. Explore articles, videos, and tools designed to help you thrive."
-                    alignment="center"
-                />
-
-                {/* Optional Decorative Element */}
-                <motion.div
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                    className="w-24 h-1 bg-[var(--color-primary)] mx-auto mt-12 rounded-full"
-                />
-            </section>
-
-            <section className="px-6 pb-10">
+            <section className="px-6 pb-12 bg-white">
                 <div className="mx-auto max-w-7xl">
-                    <div className="mb-8">
-                        <div className="text-[var(--color-primary)] text-sm tracking-[0.5em] uppercase font-playfair font-bold">
-                            Featured
-                        </div>
-                        <div className="mt-3 font-title text-4xl md:text-5xl text-[var(--color-text-body)]">
-                            Handpicked for you
-                        </div>
-                        <div className="mt-3 text-[var(--color-text-body)]/70 font-body text-base md:text-lg max-w-2xl">
-                            Start here — a quick selection of our most popular reads, videos, and trusted links.
-                        </div>
-                    </div>
+                    <SectionHeader
+                        subheader="Featured"
+                        title="Handpicked for you"
+                        bodyText="Start here — a quick selection of our most popular reads, videos, and trusted links."
+                        alignment="center"
+                        decoration="whiskers"
+                        layout="single"
+                    />
 
-                    <div className="grid gap-6 lg:grid-cols-3 lg:auto-rows-[220px]">
+                    <div className="grid gap-6 lg:grid-cols-12 lg:auto-rows-[110px]">
                         {featured.map((item, idx) => {
                             const isVideo = item.type === 'video';
                             const isLink = item.type === 'link';
@@ -66,27 +55,26 @@ export default function ResourcesPage() {
                             const external = isLink;
 
                             const spans = [
-                                'lg:row-span-2',
-                                'lg:row-span-1',
-                                'lg:row-span-2',
-                                'lg:row-span-1',
-                                'lg:row-span-2',
-                                'lg:row-span-1',
+                                'lg:col-span-7 lg:row-span-4',
+                                'lg:col-span-5 lg:row-span-2',
+                                'lg:col-span-5 lg:row-span-2',
+                                'lg:col-span-4 lg:row-span-2',
+                                'lg:col-span-4 lg:row-span-2',
+                                'lg:col-span-4 lg:row-span-2',
                             ];
 
-                            const themes = [
-                                'bg-[var(--color-bg-card)]',
-                                'bg-[var(--color-text-body)]',
-                                'bg-[var(--color-primary)]/20',
-                                'bg-[var(--color-text-body)]',
-                                'bg-[var(--color-bg-card)]',
-                                'bg-[var(--color-bg-card)]',
+                            const positions = [
+                                'lg:col-start-1 lg:row-start-1',
+                                'lg:col-start-8 lg:row-start-1',
+                                'lg:col-start-8 lg:row-start-3',
+                                'lg:col-start-1 lg:row-start-5',
+                                'lg:col-start-5 lg:row-start-5',
+                                'lg:col-start-9 lg:row-start-5',
                             ];
 
-                            const theme = themes[idx] ?? 'bg-[var(--color-bg-card)]';
-                            const textColor = theme.includes('text-body') ? 'text-white' : 'text-[var(--color-text-body)]';
-                            const mutedText = theme.includes('text-body') ? 'text-white/70' : 'text-[var(--color-text-body)]/70';
-                            const chipBg = theme.includes('text-body') ? 'bg-white/15 text-white' : 'bg-[var(--color-bg-subtle)] text-[var(--color-primary)]';
+                            const textColor = 'text-white';
+                            const mutedText = 'text-white/75';
+                            const chipBg = 'bg-white/15 text-white';
 
                             return (
                                 <Link
@@ -94,16 +82,16 @@ export default function ResourcesPage() {
                                     href={href}
                                     target={external ? '_blank' : undefined}
                                     rel={external ? 'noopener noreferrer' : undefined}
-                                    className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${spans[idx] ?? ''} ${theme}`}
+                                    className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${spans[idx] ?? ''} ${positions[idx] ?? ''} bg-[var(--color-bg-card)]`}
                                 >
                                     <div className="absolute inset-0">
                                         <Image
                                             src={item.imageUrl}
                                             alt={item.title}
                                             fill
-                                            className={`object-cover transition-transform duration-700 ${theme.includes('bg-card') ? 'opacity-100' : 'opacity-40'} group-hover:scale-[1.03]`}
+                                            className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                                         />
-                                        <div className={`absolute inset-0 ${theme.includes('text-body') ? 'bg-gradient-to-t from-black/70 via-black/30 to-transparent' : 'bg-gradient-to-t from-white/80 via-white/10 to-transparent'}`} />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
                                     </div>
 
                                     <div className="relative z-10 h-full w-full p-6 flex flex-col justify-between">
@@ -132,7 +120,7 @@ export default function ResourcesPage() {
                                             <div className={`mt-3 text-sm md:text-base line-clamp-3 ${mutedText}`}>
                                                 {item.description}
                                             </div>
-                                            <div className={`mt-5 inline-flex items-center justify-center rounded-full px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] border transition-colors ${theme.includes('text-body') ? 'border-white/20 text-white/90 group-hover:bg-white/10' : 'border-[var(--color-border)] text-[var(--color-text-body)] group-hover:bg-[var(--color-primary)]/10'}`}>
+                                            <div className="mt-5 inline-flex items-center justify-center rounded-full px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] border transition-colors border-white/20 text-white/90 group-hover:bg-white/10">
                                                 {isVideo ? 'Watch Now' : isLink ? 'Visit Link' : 'Read More'}
                                             </div>
                                         </div>
@@ -144,7 +132,7 @@ export default function ResourcesPage() {
                 </div>
             </section>
 
-            <ContentGrid data={resources} />
+            <ContentGrid data={resources} backgroundColor="white" />
 
         </main>
     );

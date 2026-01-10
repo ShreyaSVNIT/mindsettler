@@ -154,36 +154,28 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
         <div id="youtube-player"></div>
       </div>
 
-      {/* Music Control Corner */}
-      <div className="fixed bottom-10 md:bottom-14 left-0 z-50 flex flex-col items-start">
+      {/* Music Control Corner - rounded icon anchored bottom-left (next to chat button) */}
+      <div className="fixed bottom-6 left-20 md:left-24 z-50">
         <button
           onClick={togglePlay}
           disabled={!isLoaded}
           className={`
-            group relative
+            group
             bg-[var(--color-primary)] text-white
-            h-10 md:h-14
-            w-28 md:w-36
-            pl-3 md:pl-5 pr-2 md:pr-4
-            rounded-tr-[1.25rem] md:rounded-tr-[1.75rem]
+            w-16 h-16 md:w-20 md:h-20
+            rounded-full
             shadow-2xl hover:shadow-[var(--color-primary)]/50
             transition-all hover:scale-105
-            origin-bottom-left
             disabled:opacity-50 disabled:cursor-not-allowed
-            flex items-center gap-2 md:gap-3
+            flex items-center justify-center
           `}
           aria-label={isPlaying ? 'Pause music' : 'Play music'}
         >
           {isPlaying ? (
-            <Pause className="w-4 h-4 md:w-6 md:h-6" fill="currentColor" />
+            <Pause className="w-6 h-6 md:w-8 md:h-8" fill="currentColor" />
           ) : (
-            <Play className="w-4 h-4 md:w-6 md:h-6 ml-0.5" fill="currentColor" />
+            <Play className="w-6 h-6 md:w-8 md:h-8" fill="currentColor" />
           )}
-          <div className="flex flex-col items-start">
-            <span className="font-title text-sm md:text-xl font-bold uppercase tracking-wider leading-none">
-              {isPlaying ? 'PAUSE' : 'PLAY'}
-            </span>
-          </div>
         </button>
       </div>
     </>

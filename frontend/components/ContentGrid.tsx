@@ -28,7 +28,13 @@ type GridItem = {
   external: boolean;
 };
 
-export default function ContentGrid({ data }: { data: Resource[] }) {
+export default function ContentGrid({
+  data,
+  backgroundColor = 'var(--color-bg-app)',
+}: {
+  data: Resource[];
+  backgroundColor?: string;
+}) {
   const [activeCategory, setActiveCategory] = useState('View All');
 
   const items: GridItem[] = data.map((r) => {
@@ -59,7 +65,7 @@ export default function ContentGrid({ data }: { data: Resource[] }) {
   return (
     <section
       className="py-16"
-      style={{ backgroundColor: 'var(--color-bg-app)' }}
+      style={{ backgroundColor }}
     >
       <div className="mx-auto max-w-7xl px-6">
 

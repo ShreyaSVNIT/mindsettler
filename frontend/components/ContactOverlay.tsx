@@ -32,15 +32,24 @@ export default function ContactOverlay() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 100 }}
             transition={{ delay: 1, duration: 0.5 }}
-            className="fixed bottom-0 right-0 z-[100] cursor-pointer group"
-            onClick={() => setIsOpen(true)}
+            className="fixed bottom-4 right-4 z-[100] cursor-pointer group"
+            onClick={() => {
+              // push a lightweight URL marker so opening the overlay is reflected in the URL
+              try {
+                if (typeof window !== 'undefined') {
+                  const next = window.location.pathname + (window.location.search ? window.location.search + '&' : '?') + 'contact=1';
+                  window.history.pushState({}, '', next);
+                }
+              } catch (e) {}
+              setIsOpen(true);
+            }}
           >
-            <div className="relative bg-[var(--color-primary)] text-white px-5 py-3 md:px-6 md:py-4 rounded-tl-[1.5rem] md:rounded-tl-[2.5rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all group-hover:scale-105 origin-bottom-right">
+            <div className="relative bg-[var(--color-primary)] text-white px-8 py-4 md:px-10 md:py-6 rounded-tl-[1.75rem] md:rounded-tl-[2.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all group-hover:scale-105 origin-bottom-right">
               <div className="flex flex-col items-start">
-                <span className="font-title text-lg md:text-xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
                   LET'S
                 </span>
-                <span className="font-title text-lg md:text-xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
                   TALK
                 </span>
               </div>
