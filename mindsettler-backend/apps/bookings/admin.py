@@ -1,6 +1,8 @@
 from django.urls import path
 from django.http import HttpResponse, JsonResponse
 from django.contrib import admin, messages
+from django.forms import SplitDateTimeWidget
+from django.db import models
 
 # ─────────────────────────
 # ADMIN PANEL BRANDING
@@ -639,3 +641,11 @@ class BookingAdmin(admin.ModelAdmin):
                     request,
                     f"{booking.acknowledgement_id}: {str(e)}"
                 )
+    formfield_overrides = {
+        models.DateTimeField: {
+            "widget": SplitDateTimeWidget(
+                date_attrs={"type": "date"},
+                time_attrs={"type": "time"}
+            )
+        }
+    }
