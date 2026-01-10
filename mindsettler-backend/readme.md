@@ -1,145 +1,201 @@
-Backend – Session Booking & Consultation System
 
-Overview
 
-This backend powers a session booking and consultation platform with email verification, booking constraints, and a scalable architecture designed to later support chatbot-driven bookings and a frontend-first development workflow.
+# MindSettler Backend
 
-The system is built with Django + Django REST Framework (DRF) and follows a clean, modular structure so multiple team members can work independently.
+A production-ready backend for the **MindSettler Session Booking & Consultation Platform**, built with Django and Django REST Framework.  
+This service handles booking workflows, email verification, admin management, and frontend integration via clean REST APIs.
 
-⸻
+> ⚠️ Note: This backend is **not Dockerized by design**. Docker is used only in the chatbot service. This backend runs as a standard Django service.
 
-What Is Implemented So Far ✅
+---
 
-1. Core Architecture
-	•	Django project initialized with REST-first design
-	•	Django REST Framework configured
-	•	Modular app-based structure (users, consultants, bookings – logical separation)
-	•	Centralized settings for scalability
+## Overview
 
-⸻
+The MindSettler backend powers the complete lifecycle of a consultation booking:
 
-2. Authentication & Security
-	•	Email-based login flow (planned-first, partially implemented)
-	•	Token-based authentication
-	•	CORS configured for frontend integration
-	•	CSRF not used (API-first architecture)
+- Draft booking creation
+- Email verification
+- Admin approval & slot assignment
+- Payment initiation & confirmation
+- Cancellation with verification
+- Public booking status tracking
+- Admin-side booking creation & calendar management
 
-Rationale: Since the frontend will consume APIs directly, CSRF protection is intentionally skipped and token-based auth is preferred.
+The architecture is API-first and frontend-driven, with strong validation and a strict booking state machine.
 
-⸻
+---
 
-3. User Model (In Progress)
-	•	Custom user model planned
-	•	Email will be the primary identifier
-	•	No mandatory registration initially
+## Tech Stack
 
-Design Decision:
-Users can:
-	•	Book a session using email verification only
-	•	Later register with the same email for dashboard features
+- **Backend Framework**: Django 6.x
+- **API Framework**: Django REST Framework (DRF)
+- **Database**: SQLite (development), PostgreSQL (production-ready)
+- **Authentication**: Token-based (API-first)
+- **Email**: Transactional email (verification, confirmations)
+- **Admin UI**: Django Admin + Jazzmin
+- **Deployment**: Non-Docker (standard Django service)
 
-⸻
+---
 
-4. Booking Logic (Design Finalized, Implementation Pending)
+## Core Features
 
-The booking system will enforce:
-	•	One active/pending request per user
-	•	Email verification before booking
-	•	Visibility of available dates during booking
-	•	Status tracking via acknowledgement ID
+### 1. Booking Lifecycle (Fully Implemented)
 
-Planned booking states:
-	•	PENDING
-	•	CONFIRMED
-	•	REJECTED
-	•	COMPLETED
+Bookings move through a **strict state machine**:
 
-⸻
+```
+DRAFT → PENDING → APPROVED → PAYMENT_PENDING → CONFIRMED → COMPLETED
+                         ↘
+                          CANCELLED / REJECTED
+```
 
-5. API Philosophy
-	•	Frontend-first development approach
-	•	APIs designed to be directly consumed by UI (minimal Postman usage)
-	•	Clear separation of concerns between:
-	•	Validation
-	•	Business logic
-	•	Response formatting
+Invalid state transitions are explicitly blocked at the backend level.
 
-⸻
+---
 
-What Is NOT Implemented Yet ❌
+### 2. Email Verification System
 
-1. Complete Booking Workflow
-	•	Slot availability logic
-	•	Conflict handling
-	•	Booking confirmation flow
-	•	Admin approval actions
+Email verification is mandatory for:
+- Booking confirmation
+- Payment initiation
+- Cancellation confirmation
+- Booking detail access
 
-⸻
+All verification actions are token-based and time-safe.
 
-2. Consultant Module
-	•	Consultant model
-	•	Availability calendar
-	•	Multiple consultants per slot (future scalability)
+---
 
-⸻
+### 3. Public APIs (Frontend-Focused)
 
-3. Chatbot Integration
-	•	Chatbot logic is not part of backend yet
-	•	Chatbot will later:
-	•	Guide users
-	•	Trigger booking APIs
-	•	Check booking status
+The backend exposes REST APIs designed for direct frontend consumption:
 
-Current Instruction for Chatbot Developer:
+- Create booking draft
+- Verify email
+- Check booking status (via acknowledgement ID or email)
+- Initiate & complete payment
+- Request & verify cancellation
 
-Focus on general conversation and website navigation for now. Booking APIs will be plugged in later.
+CSRF is intentionally disabled since this is a **pure API backend**.
 
-⸻
+---
 
-4. User Dashboard (Optional / Phase 2)
-	•	Session history
-	•	Follow-up sessions
-	•	Profile-based features
+### 4. Admin Capabilities
 
-⸻
+Admins can:
+- View bookings in **calendar and list views**
+- Approve / reject bookings
+- Assign time slots
+- Create bookings manually from admin
+- Track booking states visually
+- Filter bookings by status and date
 
-Tech Stack
-	•	Backend: Django, Django REST Framework
-	•	Database: SQLite (development), PostgreSQL (planned)
-	•	Auth: Token-based
-	•	API Style: REST
+Admin-created bookings:
+- Automatically generate acknowledgement IDs
+- Follow the same state machine as user bookings
+- Bypass email verification where appropriate
 
-⸻
+---
 
-CORS & Security Summary
-	•	CORS: Enabled for frontend
-	•	CSRF: Not used (API-only backend)
-	•	Authentication: Token-based
-	•	Email verification: Mandatory before booking
+### 5. Acknowledgement ID System
 
-⸻
+Every booking is assigned a unique, human-readable acknowledgement ID:
 
-Development Roadmap 🛣️
-	1.	Finalize User, Consultant, and Booking models
-	2.	Implement booking constraints & availability logic
-	3.	Status-check APIs (using acknowledgement ID)
-	4.	Admin controls for approvals
-	5.	Chatbot → Backend integration
-	6.	Optional user dashboard
+```
+MS-XXXXXX
+```
 
-⸻
+This ID is used for:
+- Public status tracking
+- Payment flows
+- Support references
+- Email communication
 
-Notes for Team Members
-	•	Backend APIs are being designed assuming a dynamic frontend
-	•	Avoid hardcoding flows in the chatbot
-	•	Expect changes in booking logic as frontend UX evolves
+---
 
-⸻
+### 6. Validation & Safety Guarantees
 
-Status
+The backend enforces:
+- One active booking per user (email-based)
+- Email verification before sensitive actions
+- Payment-before-confirmation
+- No silent failures (all invalid actions return explicit errors)
 
-🟡 Backend foundation ready
-🔴 Core booking features pending
-🟢 Architecture finalized
+All business rules are enforced server-side.
 
-⸻
+---
+
+> The chatbot is a **separate service** and integrates only via APIs.
+
+---
+
+## Project Structure (Simplified)
+
+```
+mindsettler-backend/
+├── apps/
+│   ├── bookings/
+│   ├── users/
+│   └── consultants/
+├── mindsettler/
+│   ├── settings/
+│   ├── urls.py
+│   └── wsgi.py
+├── manage.py
+└── requirements.txt
+```
+
+---
+
+## Security & CORS
+
+- **CORS**: Enabled for trusted frontend origins
+- **CSRF**: Disabled (API-only backend)
+- **Auth**: Token-based
+- **Emails**: Verified before all sensitive operations
+
+---
+
+## Environment Configuration
+
+Required environment variables (production):
+
+```
+SECRET_KEY
+DEBUG
+ALLOWED_HOSTS
+DATABASE_URL
+EMAIL_HOST
+EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD
+FRONTEND_URL
+```
+
+---
+
+## Development Status
+
+✅ Booking system fully functional  
+✅ Email verification flows stable  
+✅ Admin calendar & list views implemented  
+✅ Frontend integration tested  
+🟢 Production-ready backend  
+
+---
+
+## Notes for Developers
+
+- Do not hardcode frontend flows — rely on API responses
+- Treat booking status as the single source of truth
+- Avoid bypassing state transitions
+- Chatbot should only **consume APIs**, never replicate logic
+
+---
+
+## License
+
+Internal project — all rights reserved.
+
+---
+
+**MindSettler Backend**  
+Built for reliability, clarity, and long-term scalability.
