@@ -191,6 +191,7 @@ class Booking(models.Model):
     # ───────── Notifications ─────────
     approval_email_sent = models.BooleanField(default=False)
     rejection_email_sent = models.BooleanField(default=False)
+    confirmation_email_sent = models.BooleanField(default=False)
 
     # ───────── VALIDATION ─────────
     def clean(self):

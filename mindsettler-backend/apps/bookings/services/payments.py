@@ -2,6 +2,7 @@
 
 from uuid import uuid4
 from rest_framework.exceptions import ValidationError
+from apps.bookings.email import send_booking_confirmed_email
 
 from .guards import (
     ensure_email_verified,
@@ -63,20 +64,29 @@ def complete_payment(booking):
     Lifecycle:
         PAYMENT_PENDING → CONFIRMED
 
-    Rules:
-    - Can only be called once
-    - Only allowed from PAYMENT_PENDING
-    - CONFIRMED booking is calendar-eligible
+    Guarantees:
+    - Idempotent (safe to call multiple times)
+    - Sends confirmation email exactly once
     """
 
-    # 🔒 Enforce lifecycle transition
+    # Idempotency: already confirmed
+    if booking.status == "CONFIRMED":
+        return booking
+
+    # Only allowed from PAYMENT_PENDING
     if booking.status != "PAYMENT_PENDING":
         raise ValidationError(
             f"Payment cannot be completed in status: {booking.status}"
         )
 
-    # ✅ Confirm booking (single source of truth)
+    # Confirm booking (state transition)
     confirm_booking(booking)
+
+    # Send confirmation email once
+    if not getattr(booking, "confirmation_email_sent", False):
+        send_booking_confirmed_email(booking)
+        booking.confirmation_email_sent = True
+        booking.save(update_fields=["confirmation_email_sent"])
 
     return booking
 

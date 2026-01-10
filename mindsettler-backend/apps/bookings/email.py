@@ -303,6 +303,72 @@ def send_booking_approved_email(booking):
     booking.save(update_fields=["approval_email_sent"])
 
 
+def send_booking_confirmed_email(booking):
+    """
+    Sends confirmation email after successful payment.
+    Must be sent exactly once.
+    """
+    if getattr(booking, "confirmation_email_sent", False):
+        return
+
+    appointment_date = booking.approved_slot_start.strftime("%A, %d %B %Y")
+    appointment_time = (
+        f"{booking.approved_slot_start.strftime('%I:%M %p')} – "
+        f"{booking.approved_slot_end.strftime('%I:%M %p')}"
+    )
+
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=booking.user.email,
+        subject="Your MindSettler session is confirmed 🌿",
+        html_content=f"""
+        <div style="font-family:Arial,sans-serif;max-width:600px;margin:auto;color:#333;line-height:1.6;">
+            <h2 style="color:#453859;">Appointment Confirmed 🎉</h2>
+
+            <p>Hello,</p>
+
+            <p>
+                We’re happy to let you know that your MindSettler session has been
+                <strong>successfully confirmed</strong>.
+            </p>
+
+            <h3 style="margin-top:24px;">🗓 Appointment Details</h3>
+            <table style="border-collapse:collapse;">
+                <tr><td><strong>Booking ID</strong></td><td>{booking.acknowledgement_id}</td></tr>
+                <tr><td><strong>Date</strong></td><td>{appointment_date}</td></tr>
+                <tr><td><strong>Time</strong></td><td>{appointment_time}</td></tr>
+                <tr><td><strong>Mode</strong></td><td>{booking.mode}</td></tr>
+                <tr><td><strong>Amount Paid</strong></td><td>₹{booking.amount}</td></tr>
+            </table>
+
+            <h3 style="margin-top:28px;">❌ Cancellation Policy</h3>
+            <ul>
+                <li>Cancellations must be requested at least <strong>24 hours</strong> before the session.</li>
+                <li>Late cancellations may not be eligible for a refund.</li>
+                <li>All cancellations require email verification for security.</li>
+            </ul>
+
+            <p style="margin-top:28px;">
+                If you need to cancel or have any questions, please reach out to us at
+                <a href="mailto:support@mindsettler.in">support@mindsettler.in</a>.
+            </p>
+
+            <br />
+            <p>
+                Warm regards,<br />
+                <strong>MindSettler Team</strong><br />
+                <small>Your Sanctuary for Emotional Well-being</small>
+            </p>
+        </div>
+        """,
+    )
+
+    _send_email(message)
+
+    booking.confirmation_email_sent = True
+    booking.save(update_fields=["confirmation_email_sent"])
+
+
 def send_booking_rejected_email(booking):
     """
     Sends rejection notification email (idempotent).
