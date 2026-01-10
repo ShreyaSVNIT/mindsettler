@@ -432,7 +432,6 @@ class BookingAdmin(admin.ModelAdmin):
     # ─────────────────────────
     readonly_fields = (
         "acknowledgement_id",
-        "user",
         "email_verified",
         "email_verified_at",
         "consent_given",
@@ -499,6 +498,15 @@ class BookingAdmin(admin.ModelAdmin):
     @admin.display(description="Email")
     def user_email(self, obj):
         return obj.user.email if obj.user else "-"
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if "user" in form.base_fields:
+            form.base_fields["user"].required = True
+            form.base_fields["user"].help_text = (
+                "Select the user for whom this booking is being created"
+            )
+        return form
 
     # ─────────────────────────
     # SAVE VALIDATION
