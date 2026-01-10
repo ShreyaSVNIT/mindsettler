@@ -88,7 +88,7 @@ INTENTS = {
         "responses": [
             "You can book a session by visiting our booking page."
         ],
-        "link": "/booking",
+        "link": "/book",
     },
 
     "crisis": {

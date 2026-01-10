@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 import uuid
+import string
+import random
 
 from apps.users.models import AppUser
 from apps.psychologists.models import Psychologist
@@ -208,9 +210,17 @@ class Booking(models.Model):
 
     # ───────── DOMAIN HELPERS ─────────
     def generate_acknowledgement_id(self):
+        while True:
+            code = "MS-" + "".join(
+                random.choices(string.ascii_uppercase + string.digits, k=6)
+            )
+            if not Booking.objects.filter(acknowledgement_id=code).exists():
+                return code
+
+    def save(self, *args, **kwargs):
         if not self.acknowledgement_id:
-            self.acknowledgement_id = f"MS-{uuid.uuid4().hex[:8].upper()}"
-            self.save(update_fields=["acknowledgement_id"])
+            self.acknowledgement_id = self.generate_acknowledgement_id()
+        super().save(*args, **kwargs)
 
     def verify_email(self):
         self.email_verified = True

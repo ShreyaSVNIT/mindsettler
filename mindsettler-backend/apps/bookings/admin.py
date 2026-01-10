@@ -1,6 +1,15 @@
 from django.urls import path
 from django.http import HttpResponse, JsonResponse
 from django.contrib import admin, messages
+from django.forms import SplitDateTimeWidget
+from django.db import models
+
+# ─────────────────────────
+# ADMIN PANEL BRANDING
+# ─────────────────────────
+admin.site.site_header = "MindSettler Admin"
+admin.site.site_title = "MindSettler Admin"
+admin.site.index_title = "MindSettler Dashboard"
 
 from .models import Booking
 from apps.bookings.services import approve_booking, reject_booking
@@ -51,47 +60,6 @@ class BookingAdmin(admin.ModelAdmin):
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
             background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
             color: #0f172a;
-        }
-
-        .toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1300px;
-            margin: 0 auto 24px auto;
-            padding: 16px 24px;
-            background: #fff;
-            border-radius: 14px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 6px 28px rgba(30, 41, 59, 0.10), 0 1.5px 4px rgba(30,41,59,0.03);
-        }
-
-        .toolbar h1 {
-            margin: 0;
-            font-weight: 700;
-            font-size: 1.6rem;
-            letter-spacing: -0.02em;
-            color: #0f172a;
-        }
-
-        .toolbar button {
-            background: #fff;
-            border: 1.5px solid #2563eb;
-            border-radius: 10px;
-            color: #2563eb;
-            font-weight: 600;
-            padding: 8px 16px;
-            margin-left: 8px;
-            cursor: pointer;
-            box-shadow: 0 2px 6px rgba(37,99,235,0.06);
-            transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
-        }
-        .toolbar button:hover {
-            background: #2563eb;
-            color: #fff;
-            border-color: #2563eb;
-            transform: translateY(-1px) scale(1.03);
-            box-shadow: 0 6px 16px rgba(37,99,235,0.18);
         }
 
         #calendar {
@@ -159,15 +127,6 @@ class BookingAdmin(admin.ModelAdmin):
     </style>
 </head>
 <body>
-    <div class="toolbar">
-        <h1>Booking Calendar</h1>
-        <div>
-            <button type="button" id="prevBtn">‹</button>
-            <button type="button" id="todayBtn">Today</button>
-            <button type="button" id="nextBtn">›</button>
-        </div>
-    </div>
-
     <div id="calendar"></div>
 
     <script>
@@ -176,14 +135,20 @@ class BookingAdmin(admin.ModelAdmin):
 
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'timeGridWeek',
+                buttonText: {
+                    today: 'Today',
+                    month: 'Month',
+                    week: 'Week',
+                    day: 'Day'
+                },
                 slotMinTime: '08:00:00',
                 slotMaxTime: '22:00:00',
                 allDaySlot: false,
                 nowIndicator: true,
                 headerToolbar: {
-                    left: '',
+                    left: 'prev,next today',
                     center: 'title',
-                    right: ''
+                    right: 'timeGridDay,timeGridWeek,dayGridMonth'
                 },
                 events: '/admin/bookings/booking/calendar/data/',
                 eventDidMount: function(info) {
@@ -204,10 +169,6 @@ class BookingAdmin(admin.ModelAdmin):
             });
 
             calendar.render();
-
-            document.getElementById('prevBtn').onclick = () => calendar.prev();
-            document.getElementById('nextBtn').onclick = () => calendar.next();
-            document.getElementById('todayBtn').onclick = () => calendar.today();
         });
     </script>
 </body>
@@ -222,45 +183,88 @@ class BookingAdmin(admin.ModelAdmin):
 <head>
     <title>Booking List View</title>
     <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
-            background: #f5f7fa;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 28px;
+            color: #0f172a;
         }
+
         h1 {
             max-width: 1200px;
-            margin: 0 auto 20px auto;
-            font-weight: 600;
-            font-size: 1.75rem;
+            margin: 0 auto 24px auto;
+            font-weight: 700;
+            font-size: 1.9rem;
             color: #111827;
         }
+
         table {
             border-collapse: collapse;
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 12px 32px rgba(30,41,59,0.10);
             overflow: hidden;
         }
+
         thead {
             background: #2563eb;
-            color: white;
+            color: #ffffff;
         }
-        th, td {
+
+        th {
             text-align: left;
-            padding: 12px 16px;
+            padding: 14px 18px;
+            font-size: 13px;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 14px 18px;
             border-bottom: 1px solid #e5e7eb;
             font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
         }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+
         tbody tr:hover {
-            background-color: #f3f4f6;
+            background-color: #eef2ff;
             cursor: pointer;
         }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-APPROVED {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-CONFIRMED {
+            background: #dcfce7;
+            color: #166534;
+        }
+
         a {
             color: inherit;
             text-decoration: none;
@@ -268,37 +272,41 @@ class BookingAdmin(admin.ModelAdmin):
             width: 100%;
             height: 100%;
         }
+
         @media (max-width: 768px) {
             table, thead, tbody, th, td, tr {
                 display: block;
             }
-            thead tr {
+
+            thead {
                 display: none;
             }
+
             tbody tr {
-                margin-bottom: 15px;
-                border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                background: #fff;
-                padding: 12px 16px;
+                margin-bottom: 18px;
+                border-radius: 16px;
+                box-shadow: 0 6px 18px rgba(30,41,59,0.10);
+                background: #ffffff;
+                padding: 16px;
             }
+
             tbody td {
                 border: none;
-                padding: 8px 0;
+                padding: 10px 0;
                 font-size: 13px;
                 position: relative;
-                padding-left: 50%;
-                text-align: left;
+                padding-left: 48%;
             }
+
             tbody td::before {
                 position: absolute;
-                top: 8px;
+                top: 10px;
                 left: 16px;
                 width: 45%;
                 white-space: nowrap;
                 font-weight: 600;
                 content: attr(data-label);
-                color: #6b7280;
+                color: #64748b;
                 font-size: 12px;
             }
         }
@@ -426,7 +434,6 @@ class BookingAdmin(admin.ModelAdmin):
     # ─────────────────────────
     readonly_fields = (
         "acknowledgement_id",
-        "user",
         "email_verified",
         "email_verified_at",
         "consent_given",
@@ -493,6 +500,15 @@ class BookingAdmin(admin.ModelAdmin):
     @admin.display(description="Email")
     def user_email(self, obj):
         return obj.user.email if obj.user else "-"
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if "user" in form.base_fields:
+            form.base_fields["user"].required = True
+            form.base_fields["user"].help_text = (
+                "Select the user for whom this booking is being created"
+            )
+        return form
 
     # ─────────────────────────
     # SAVE VALIDATION
@@ -625,3 +641,11 @@ class BookingAdmin(admin.ModelAdmin):
                     request,
                     f"{booking.acknowledgement_id}: {str(e)}"
                 )
+    formfield_overrides = {
+        models.DateTimeField: {
+            "widget": SplitDateTimeWidget(
+                date_attrs={"type": "date"},
+                time_attrs={"type": "time"}
+            )
+        }
+    }
