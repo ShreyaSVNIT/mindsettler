@@ -1,3 +1,5 @@
+from django.urls import path
+from django.http import HttpResponse, JsonResponse
 from django.contrib import admin, messages
 
 from .models import Booking
@@ -10,6 +12,372 @@ from apps.bookings.email import (
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "calendar/",
+                self.admin_site.admin_view(self.calendar_view),
+                name="booking-calendar",
+            ),
+            path(
+                "calendar/data/",
+                self.admin_site.admin_view(self.calendar_data_view),
+                name="booking-calendar-data",
+            ),
+            path(
+                "calendar/list/",
+                self.admin_site.admin_view(self.calendar_list_view),
+                name="booking-calendar-list",
+            ),
+        ]
+        return custom_urls + urls
+
+    def calendar_view(self, request):
+        return HttpResponse("""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Calendar</title>
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            color: #0f172a;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto 24px auto;
+            padding: 16px 24px;
+            background: #fff;
+            border-radius: 14px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 6px 28px rgba(30, 41, 59, 0.10), 0 1.5px 4px rgba(30,41,59,0.03);
+        }
+
+        .toolbar h1 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 1.6rem;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .toolbar button {
+            background: #fff;
+            border: 1.5px solid #2563eb;
+            border-radius: 10px;
+            color: #2563eb;
+            font-weight: 600;
+            padding: 8px 16px;
+            margin-left: 8px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(37,99,235,0.06);
+            transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }
+        .toolbar button:hover {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+            transform: translateY(-1px) scale(1.03);
+            box-shadow: 0 6px 16px rgba(37,99,235,0.18);
+        }
+
+        #calendar {
+            max-width: 1300px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 12px 32px rgba(30,41,59,0.09), 0 2px 8px rgba(30,41,59,0.04);
+            padding: 20px;
+        }
+
+        .fc {
+            font-size: 14px;
+        }
+
+        .fc .fc-toolbar-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #1e293b;
+        }
+
+        .fc-theme-standard td,
+        .fc-theme-standard th {
+            border-color: #e5e7eb;
+        }
+
+        .fc-timegrid-slot {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .fc-timegrid-slot-label,
+        .fc-col-header-cell-cushion {
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .fc .fc-button {
+            background: #fff;
+            border: 1.5px solid #2563eb;
+            border-radius: 10px;
+            color: #2563eb;
+            font-weight: 600;
+            padding: 6px 14px;
+            transition: background 0.15s, color 0.15s, border-color 0.15s;
+            box-shadow: none;
+        }
+        .fc .fc-button:hover {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
+
+        .fc-event {
+            border-radius: 14px !important;
+            padding: 6px 8px !important;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(30,41,59,0.10);
+        }
+
+        .fc-event-title {
+            white-space: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <h1>Booking Calendar</h1>
+        <div>
+            <button type="button" id="prevBtn">‹</button>
+            <button type="button" id="todayBtn">Today</button>
+            <button type="button" id="nextBtn">›</button>
+        </div>
+    </div>
+
+    <div id="calendar"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                slotMinTime: '08:00:00',
+                slotMaxTime: '22:00:00',
+                allDaySlot: false,
+                nowIndicator: true,
+                headerToolbar: {
+                    left: '',
+                    center: 'title',
+                    right: ''
+                },
+                events: '/admin/bookings/booking/calendar/data/',
+                eventDidMount: function(info) {
+                    const status = info.event.extendedProps.status;
+                    // Soften the gradients for light theme readability
+                    if (status === 'CONFIRMED') {
+                        info.el.style.background = 'linear-gradient(135deg, #22c55e 70%, #bbf7d0 100%)';
+                        info.el.style.color = '#14532d';
+                    } else if (status === 'APPROVED') {
+                        info.el.style.background = 'linear-gradient(135deg, #3b82f6 70%, #dbeafe 100%)';
+                        info.el.style.color = '#1e3a8a';
+                    }
+                },
+                eventClick: function(info) {
+                    const bookingId = info.event.id;
+                    window.open(`/admin/bookings/booking/${bookingId}/change/`, '_blank');
+                }
+            });
+
+            calendar.render();
+
+            document.getElementById('prevBtn').onclick = () => calendar.prev();
+            document.getElementById('nextBtn').onclick = () => calendar.next();
+            document.getElementById('todayBtn').onclick = () => calendar.today();
+        });
+    </script>
+</body>
+</html>
+        """)
+
+    def calendar_list_view(self, request):
+        bookings = self.get_calendar_queryset()
+        html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking List View</title>
+    <meta charset="utf-8" />
+    <style>
+        body {
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont;
+            background: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            font-weight: 600;
+            font-size: 1.75rem;
+            color: #111827;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        thead {
+            background: #2563eb;
+            color: white;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+        tbody tr:hover {
+            background-color: #f3f4f6;
+            cursor: pointer;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+        @media (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                display: none;
+            }
+            tbody tr {
+                margin-bottom: 15px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                background: #fff;
+                padding: 12px 16px;
+            }
+            tbody td {
+                border: none;
+                padding: 8px 0;
+                font-size: 13px;
+                position: relative;
+                padding-left: 50%;
+                text-align: left;
+            }
+            tbody td::before {
+                position: absolute;
+                top: 8px;
+                left: 16px;
+                width: 45%;
+                white-space: nowrap;
+                font-weight: 600;
+                content: attr(data-label);
+                color: #6b7280;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Booking List View</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Acknowledgement ID</th>
+                <th>Name</th>
+                <th>Psychologist</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Status</th>
+                <th>Mode</th>
+            </tr>
+        </thead>
+        <tbody>
+"""
+        for b in bookings:
+            psychologist = str(b.psychologist) if b.psychologist else "-"
+            start = b.approved_slot_start.strftime("%Y-%m-%d %H:%M") if b.approved_slot_start else "-"
+            end = b.approved_slot_end.strftime("%Y-%m-%d %H:%M") if b.approved_slot_end else "-"
+            url = f"/admin/bookings/booking/{b.id}/change/"
+            html += f"""
+            <tr onclick="window.open('{url}', '_blank')">
+                <td data-label="Acknowledgement ID"><a href="{url}" target="_blank" rel="noopener">{b.acknowledgement_id}</a></td>
+                <td data-label="Name"><a href="{url}" target="_blank" rel="noopener">{b.full_name}</a></td>
+                <td data-label="Psychologist"><a href="{url}" target="_blank" rel="noopener">{psychologist}</a></td>
+                <td data-label="Start"><a href="{url}" target="_blank" rel="noopener">{start}</a></td>
+                <td data-label="End"><a href="{url}" target="_blank" rel="noopener">{end}</a></td>
+                <td data-label="Status"><a href="{url}" target="_blank" rel="noopener">{b.status}</a></td>
+                <td data-label="Mode"><a href="{url}" target="_blank" rel="noopener">{b.mode}</a></td>
+            </tr>
+"""
+        html += """
+        </tbody>
+    </table>
+</body>
+</html>
+"""
+        return HttpResponse(html)
+
+    def calendar_data_view(self, request):
+        return JsonResponse(self.get_calendar_events(), safe=False)
+
+    # ─────────────────────────
+    # CALENDAR DATA (STEP 2)
+    # ─────────────────────────
+    def get_calendar_queryset(self):
+        """
+        Fetch bookings that should appear on admin calendar
+        """
+        return Booking.objects.filter(
+            status__in=["APPROVED", "CONFIRMED"],
+            approved_slot_start__isnull=False,
+            approved_slot_end__isnull=False,
+        ).select_related("psychologist", "corporate")
+
+    def get_calendar_events(self):
+        """
+        Return bookings in calendar-friendly format
+        """
+        events = []
+        for booking in self.get_calendar_queryset():
+            events.append({
+                "id": booking.id,
+                "title": f"{booking.full_name} ({booking.mode})",
+                "start": booking.approved_slot_start,
+                "end": booking.approved_slot_end,
+                "status": booking.status,
+                "psychologist": (
+                    str(booking.psychologist)
+                    if booking.psychologist else None
+                ),
+            })
+        return events
 
     # ─────────────────────────
     # QUERYSET

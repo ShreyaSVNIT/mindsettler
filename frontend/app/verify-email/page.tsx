@@ -60,23 +60,22 @@ function VerifyEmailContent() {
     try {
       setState({ kind: "loading" });
 
-      await bookingAPI.requestCancellation({
+      const response = await bookingAPI.requestCancellation({
         acknowledgement_id: state.data.booking.acknowledgement_id,
       });
 
-      router.push(
-        `/status?id=${state.data.booking.acknowledgement_id}`
-      );
+      if (response?.message?.toLowerCase().includes("email")) {
+        alert("A cancellation verification email has been sent. Please check your inbox to complete the cancellation.");
+      } else {
+        alert("Your booking has been cancelled successfully.");
+      }
+      // Do not redirect to status page.
+      // The verify-email page already reflects the latest booking state.
+      // Let the user stay here and see the updated status.
     } catch (err: any) {
       const message =
         err?.message || "Failed to cancel booking. Please try again.";
       setState({ kind: "error", message });
-    }
-  };
-
-  const navigateToStatus = () => {
-    if (state.kind === "success" && state.data.booking.acknowledgement_id) {
-      router.push(`/status?id=${state.data.booking.acknowledgement_id}`);
     }
   };
 
@@ -178,6 +177,41 @@ function VerifyEmailContent() {
               </div>
             </div>
 
+            {["APPROVED", "PAYMENT_PENDING", "CONFIRMED"].includes(state.data.booking.status) && (
+              <div className="bg-white/60 rounded-2xl p-6 space-y-3 mb-6">
+                <h3 className="font-body font-semibold text-green-700 mb-2">
+                  Session Details
+                </h3>
+
+                {state.data.booking.approved_slot_start && (
+                  <div className="flex justify-between">
+                    <span className="font-body text-green-700">Start Time</span>
+                    <span className="font-body font-semibold text-green-800">
+                      {new Date(state.data.booking.approved_slot_start).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+
+                {state.data.booking.approved_slot_end && (
+                  <div className="flex justify-between">
+                    <span className="font-body text-green-700">End Time</span>
+                    <span className="font-body font-semibold text-green-800">
+                      {new Date(state.data.booking.approved_slot_end).toLocaleString()}
+                    </span>
+                  </div>
+                )}
+
+                {state.data.booking.amount && (
+                  <div className="flex justify-between">
+                    <span className="font-body text-green-700">Amount</span>
+                    <span className="font-body font-bold text-green-800">
+                      ₹{state.data.booking.amount}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="bg-gradient-to-r from-green-600/10 to-green-500/10 rounded-xl p-5 mb-6">
               <p className="font-body text-sm text-green-700 text-center">
                 {state.data.booking.status === "PENDING" && (
@@ -239,7 +273,9 @@ function VerifyEmailContent() {
               )}
               
               <button
-                onClick={() => router.push("/")}
+                onClick={() => {
+                  window.location.href = "https://mindsettler.vercel.app/";
+                }}
                 className="bg-white hover:bg-green-50 text-green-700 font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-green-200"
               >
                 Go to Home
