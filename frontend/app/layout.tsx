@@ -31,8 +31,8 @@ export const metadata: Metadata = {
   title: "MindSettler - Your Journey to Mental Wellness",
   description: "Book confidential counseling sessions with qualified psychologists. Online or offline mental health support when you need it.",
   icons: {
-    icon: "/MindSettlerLogo.png",
-    apple: "/MindSettlerLogo.png",
+    icon: "/sitelogo.png",
+    apple: "/sitelogo.png",
   },
 };
 
