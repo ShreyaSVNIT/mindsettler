@@ -81,7 +81,7 @@ const HeroSection = () => {
         >
         
         {/* TOP SUBTITLE */}
-        <p className="font-body font-bold uppercase tracking-[0.6em] text-white text-[clamp(0.7rem,1.2vw,0.9rem)] mb-8 ">
+        <p className="font-playfair font-bold uppercase tracking-[0.5em] text-white text-[clamp(0.7rem,1.2vw,0.9rem)] mb-8 ">
           Your Journey Inward Begins Here
         </p>
 

@@ -145,10 +145,10 @@ export default function ChatWidget() {
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 left-6 bg-[var(--color-primary)] w-16 h-16 md:w-18 md:h-18 rounded-full flex items-center justify-center shadow-xl hover:bg-[var(--color-primary-hover)] transition-colors z-[220] p-0"
+          className="fixed bottom-6 left-6 bg-[var(--color-primary)] w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-xl transition-all z-[220] p-0"
           aria-label="Open Chatbot"
         >
-          <img src="/chatlogo.png" alt="Chatbot" className="w-9 h-9 md:w-11 md:h-11" />
+          <img src="/chatlogo.png" alt="Chatbot" className="w-6 h-6 md:w-8 md:h-8" />
         </motion.button>
       )}
     </div>
