@@ -442,6 +442,8 @@ class BookingAdmin(admin.ModelAdmin):
         "updated_at",
         "cancelled_at",
         "cancelled_by",
+        "preferred_date",
+        "preferred_date_formatted",
     )
 
     # ─────────────────────────
@@ -464,7 +466,7 @@ class BookingAdmin(admin.ModelAdmin):
         }),
         ("User Preferences", {
             "fields": (
-                "preferred_date",
+                "preferred_date_formatted",
                 "preferred_period",
                 "preferred_time_start",
                 "preferred_time_end",
@@ -500,6 +502,12 @@ class BookingAdmin(admin.ModelAdmin):
     @admin.display(description="Email")
     def user_email(self, obj):
         return obj.user.email if obj.user else "-"
+
+    @admin.display(description="Preferred Date")
+    def preferred_date_formatted(self, obj):
+        if not obj.preferred_date:
+            return "-"
+        return obj.preferred_date.strftime("%d/%m/%Y")
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

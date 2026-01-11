@@ -282,12 +282,22 @@ function VerifyEmailContent() {
               )}
               
               {state.data.booking.status === "CONFIRMED" && (
-                <button
-                  onClick={handleCancelBooking}
-                  className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-                >
-                  Cancel Booking
-                </button>
+                <>
+                  <a
+                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=MindSettler%20Session&dates=${new Date(state.data.booking.approved_slot_start).toISOString().replace(/[-:]/g, "").split(".")[0]}Z/${new Date(state.data.booking.approved_slot_end).toISOString().replace(/[-:]/g, "").split(".")[0]}Z&details=Your%20MindSettler%20session%20has%20been%20confirmed.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
+                  >
+                    Add to Google Calendar
+                  </a>
+                  <button
+                    onClick={handleCancelBooking}
+                    className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                  >
+                    Cancel Booking
+                  </button>
+                </>
               )}
               
               <button

@@ -1,6 +1,7 @@
 import uuid
 from django.conf import settings
 from django.utils import timezone
+from datetime import timezone as dt_timezone
 from rest_framework.exceptions import ValidationError
 
 from sendgrid import SendGridAPIClient
@@ -244,8 +245,8 @@ def send_booking_confirmed_email(booking):
         f"{booking.approved_slot_end.strftime('%I:%M %p')}"
     )
 
-    start = booking.approved_slot_start.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    end = booking.approved_slot_end.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    start = booking.approved_slot_start.astimezone(dt_timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    end = booking.approved_slot_end.astimezone(dt_timezone.utc).strftime("%Y%m%dT%H%M%SZ")
 
     calendar_url = (
         "https://www.google.com/calendar/render?action=TEMPLATE"
