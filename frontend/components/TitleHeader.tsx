@@ -27,7 +27,7 @@ export default function TitleHeader({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="mb-8"
+        className="mb-12 md:mb-8"
       >
         <span className="text-[var(--color-primary)] text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
           {subheader}
@@ -36,7 +36,7 @@ export default function TitleHeader({
 
       {/* Title */}
       <motion.h1
-        className="font-title text-6xl md:text-8xl text-[var(--color-text-body)] mb-8 leading-[0.95]"
+        className="font-title text-7xl md:text-9xl text-[var(--color-text-body)] mb-8 leading-[0.95]"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -48,7 +48,9 @@ export default function TitleHeader({
       {/* Description */}
       {description && (
         <motion.p
-          className="font-body text-xl md:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed body-text whitespace-pre-line"
+          className={`font-body text-base md:text-xl lg:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed whitespace-pre-line ${
+            alignment === 'center' ? 'max-w-2xl mx-auto' : 'max-w-prose'
+          }`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

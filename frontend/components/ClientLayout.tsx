@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import SplashScreen from './SplashScreen';
 import { initFirebase } from '@/lib/firebase';
+import { pingBackends } from '@/lib/api';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -33,6 +34,12 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       // Silently fail - analytics should never break the app
       if (process.env.NODE_ENV === 'development') {
         console.warn('Firebase initialization warning:', err);
+      }
+    });
+    // Fire-and-forget pings to keep backends warm
+    pingBackends().catch((err) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Backend ping warning:', err);
       }
     });
   }, [pathname]);

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -57,6 +57,14 @@ const STEPS = [
 export default function ParallaxCards() {
   const [activeId, setActiveId] = useState(2);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -69,7 +77,9 @@ export default function ParallaxCards() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden z-10"
+      className={`relative w-full flex items-center justify-center overflow-hidden z-10 ${
+        isMobile ? "py-10" : "min-h-screen"
+      }`}
       style={{ backgroundColor: "var(--color-bg-app)" }}
     >
       {/* ---------- BACKGROUND IMAGE ---------- */}
@@ -100,7 +110,9 @@ export default function ParallaxCards() {
       </div>
 
       {/* ---------- CARDS ---------- */}
-      <div className="relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl px-6">
+      <div className={`relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl px-6 ${
+        isMobile ? "py-6" : ""
+      }`}>
         {STEPS.map((step) => {
           const isActive = activeId === step.id;
 
@@ -111,8 +123,8 @@ export default function ParallaxCards() {
               layout
               initial={false}
               animate={{
-                width: isActive ? 480 : 320,
-                height: isActive ? 420 : 280,
+                width: isMobile ? "100%" : isActive ? 480 : 320,
+                height: isMobile ? "auto" : isActive ? 420 : 280,
               }}
               transition={{
                 type: "spring",
@@ -121,14 +133,14 @@ export default function ParallaxCards() {
                 mass: 1.5,
               }}
               className="relative rounded-2xl overflow-hidden cursor-pointer flex flex-col shadow-2xl w-full md:w-auto"
-              style={{
-                backgroundColor: isActive
-                  ? "var(--color-bg-card)"
-                  : "rgba(255,255,255,0.45)",
-                border: "1px solid var(--color-border)",
-                backdropFilter: isActive ? "none" : "blur(24px)",
-                padding: "40px", // Even padding on all sides
-              }}
+                style={{
+                  backgroundColor: isActive
+                    ? "var(--color-bg-card)"
+                    : "rgba(255,255,255,0.45)",
+                  border: "1px solid var(--color-border)",
+                  backdropFilter: isActive ? "none" : "blur(24px)",
+                  padding: isMobile ? "20px" : "40px",
+                }}
             >
               <motion.div layout className="flex flex-col h-full justify-between">
                 <div>

@@ -18,11 +18,11 @@ export default function HowItWorks() {
         description="A simple, compassionate process designed to support 
         your mental wellness journey every step of the way"
         alignment="center"
-        layout="sticky"
+        layout="static"
       />
 
-      {/* Spacer to allow scrolling before cards appear */}
-      <div className="h-[50vh]" />
+      {/* Spacer to allow scrolling before cards appear (smaller on mobile) */}
+      <div className="h-[20vh] md:h-[50vh]" />
 
       <Parallaxcards />
       <HowItWorksFAQs />

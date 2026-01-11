@@ -34,15 +34,15 @@ export default function ContactOverlay() {
             transition={{ delay: 1, duration: 0.5 }}
             className="fixed bottom-4 right-4 z-[100] cursor-pointer group"
             onClick={() => {
-              // push a lightweight URL marker so opening the overlay is reflected in the URL
-              try {
-                if (typeof window !== 'undefined') {
-                  const next = window.location.pathname + (window.location.search ? window.location.search + '&' : '?') + 'contact=1';
-                  window.history.pushState({}, '', next);
-                }
-              } catch (e) {}
-              setIsOpen(true);
-            }}
+                // push a lightweight URL marker so opening the overlay is reflected in the URL
+                try {
+                  if (typeof window !== 'undefined') {
+                    const next = window.location.pathname + (window.location.search ? window.location.search + '&' : '?') + 'contact=1';
+                    window.history.pushState({}, '', next);
+                  }
+                } catch (e) {}
+                setIsOpen(true);
+              }}
           >
             <div className="relative bg-[var(--color-primary)] text-white px-8 py-4 md:px-10 md:py-6 rounded-tl-[1.75rem] md:rounded-tl-[2.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all group-hover:scale-105 origin-bottom-right">
               <div className="flex flex-col items-start">

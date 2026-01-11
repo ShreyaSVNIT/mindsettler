@@ -64,12 +64,12 @@ export default function CorporatePage() {
     {
       color: '#ffffff',
       title: 'Corporate Workshops',
-        description: (
-          <>
-            <span className="corporate-desc-text">Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team's specific challenges and goals.</span>
-            <img src="/img1.jpeg" alt="Corporate Workshops" className="corporate-desc-img" />
-          </>
-        ),
+      description: (
+        <>
+          <span className="corporate-desc-text">Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team's specific challenges and goals.</span>
+          <img src="/img1.jpeg" alt="Corporate Workshops" className="corporate-desc-img" />
+        </>
+      ),
       label: '',
       tags: ['', '', ''] as [string, string, string],
     },
@@ -78,8 +78,8 @@ export default function CorporatePage() {
       title: 'Group Therapy Sessions',
       description: (
         <>
-          <img src="/img2.jpeg" alt="Group Therapy" className="w-full h-36 object-cover rounded-2xl mb-4" />
-          <>Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing. These sessions create a safe space for employees to share experiences, develop coping strategies, and build meaningful connections with their colleagues. Professional guidance ensures productive and transformative outcomes.</>
+          <span className="corporate-desc-text">Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing. These sessions create a safe space for employees to share experiences, develop coping strategies, and build meaningful connections with their colleagues. Professional guidance ensures productive and transformative outcomes.</span>
+          <img src="/img2.jpeg" alt="Group Therapy" className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -90,8 +90,8 @@ export default function CorporatePage() {
       title: 'Organizational Consultations',
       description: (
         <>
-          <img src="/img3.jpeg" alt="Consultations" className="w-full h-36 object-cover rounded-2xl mb-4" />
-          <>Strategic mental health planning and consultation services to create a culture of well-being within your organization. We work closely with leadership to develop comprehensive mental health policies, implement effective support systems, and create sustainable wellness initiatives that prioritize employee mental health at every level.</>
+          <span className="corporate-desc-text">Strategic mental health planning and consultation services to create a culture of well-being within your organization. We work closely with leadership to develop comprehensive mental health policies, implement effective support systems, and create sustainable wellness initiatives that prioritize employee mental health at every level.</span>
+          <img src="/img3.jpeg" alt="Consultations" className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -102,8 +102,56 @@ export default function CorporatePage() {
       title: 'Custom Programs',
       description: (
         <>
-          <img src="/img4.jpeg" alt="Custom Programs" className="w-full h-36 object-cover rounded-2xl mb-4" />
-          <>Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry. Whether you need stress management training, burnout prevention, or leadership development, we craft solutions that align with your company culture and deliver measurable results for long-term success.</>
+          <span className="corporate-desc-text">Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry. Whether you need stress management training, burnout prevention, or leadership development, we craft solutions that align with your company culture and deliver measurable results for long-term success.</span>
+          <img src="/img4.jpeg" alt="Custom Programs" className="corporate-desc-img" />
+        </>
+      ),
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
+    },
+    {
+      color: '#ffffff',
+      title: 'Leadership Wellness Programs',
+      description: (
+        <>
+          <span className="corporate-desc-text">Develop leadership resilience and emotional intelligence through targeted programs that support managers and executives. Our leadership wellness tracks focus on stress reduction, effective communication, and mindful decision-making, empowering your leaders to foster a mentally healthy workplace from the top down.</span>
+          <img src="/img5.jpeg" alt="Leadership Wellness Programs" className="corporate-desc-img" />
+        </>
+      ),
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
+    },
+    {
+      color: '#ffffff',
+      title: 'Peer Support Circles',
+      description: (
+        <>
+          <span className="corporate-desc-text">Facilitated peer groups where employees can connect, share experiences, and support each other’s mental health journeys. These circles nurture trust and empathy, reduce stigma, and create a sense of belonging, making mental wellness a shared responsibility across your organization.</span>
+          <img src="/img6.jpeg" alt="Peer Support Circles" className="corporate-desc-img" />
+        </>
+      ),
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
+    },
+    {
+      color: '#ffffff',
+      title: 'HR Mental Health Audits',
+      description: (
+        <>
+          <span className="corporate-desc-text">Comprehensive assessments of existing HR policies, benefits, and workplace practices to identify mental health gaps and opportunities. Our audits provide actionable recommendations to create a supportive environment and ensure compliance with best practices in employee mental wellness.</span>
+          <img src="/img7.jpeg" alt="HR Mental Health Audits" className="corporate-desc-img" />
+        </>
+      ),
+      label: '',
+      tags: ['', '', ''] as [string, string, string],
+    },
+    {
+      color: '#ffffff',
+      title: 'Industry-Specific Wellness Tracks',
+      description: (
+        <>
+          <span className="corporate-desc-text">Tailored wellness programs designed for the unique demands and stressors of your industry. Whether in tech, healthcare, education, or manufacturing, our industry tracks address sector-specific challenges, boost engagement, and deliver measurable improvements in well-being and performance.</span>
+          <img src="/img8.jpeg" alt="Industry-Specific Wellness Tracks" className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -114,8 +162,12 @@ export default function CorporatePage() {
   const tabs = ['Corporates', 'Group', 'One-on-one', 'Custom'];
   const [activeTab, setActiveTab] = useState(0);
 
-  // reorder services so the active one is first (MagicBento maps first child to the prominent area)
-  const orderedServices = [services[activeTab], ...services.filter((_, i) => i !== activeTab)];
+  const servicesByTab: Record<number, typeof services> = {
+    0: services.slice(0, 2),
+    1: services.slice(2, 4),
+    2: services.slice(4, 6),
+    3: services.slice(6, 8),
+  };
 
   return (
     <main className="relative bg-white">
@@ -185,31 +237,183 @@ workshops, group sessions, and strategic collaborations`}
             {/* Pass only the four service cards (images embedded in their descriptions) */}
             <div className="corporate-bento-override">
               <style>{`
-                /* Force two-column grid for corporate section on large screens so first card can span two cols */
-                @media (min-width: 1024px) {
-                  .corporate-bento-override .card-grid { grid-template-columns: repeat(2, 1fr) !important; }
-                      .corporate-bento-override .card-grid > .magic-bento-card:first-child { grid-column: 1 / -1 !important; padding: 3.5rem 4rem !important; min-height: 380px !important; border-radius: 28px !important; }
-                }
+/* --- PART 1: Normalize structure & spacing for ALL cards --- */
+.corporate-bento-override
+  .magic-bento-card__description {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  width: 100%;
+  max-width: none !important;
+}
 
-                    .corporate-bento-override .magic-bento-card__description { display: flex; gap: 2.5rem; align-items: center; justify-content: space-between; }
-                    .corporate-bento-override .magic-bento-card__description .corporate-desc-text { flex: 1; padding-right: 1rem; }
-                    .corporate-bento-override .magic-bento-card__description .corporate-desc-img { width: 40%; height: 320px; object-fit: cover; border-radius: 18px; order: 2; }
-                    .corporate-bento-override .magic-bento-card__description .corporate-desc-text { order: 1; }
+.corporate-bento-override
+  .corporate-desc-text {
+  display: block;
+  width: 100%;
+  max-width: none;
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
 
-                @media (max-width: 1023px) {
-                  .corporate-bento-override .card-grid > .magic-bento-card:first-child { grid-column: auto !important; padding: 2rem !important; min-height: auto !important; }
-                  .corporate-bento-override .magic-bento-card__description { display: block; }
-                  .corporate-bento-override .magic-bento-card__description .corporate-desc-img { width: 100%; height: 220px; margin-top: 1rem; }
-                }
+.corporate-bento-override
+  .corporate-desc-img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 22px;
+}
+
+.corporate-bento-override
+  .magic-bento-card {
+  padding: 2.5rem 3rem !important;
+}
+
+/* --- PART 3: Increase TITLE font size (ALL devices) --- */
+.corporate-bento-override
+  .magic-bento-card__title {
+  font-size: clamp(1.6rem, 2.2vw, 2rem);
+  line-height: 1.25;
+}
+@media (min-width: 1024px) {
+  .corporate-bento-override .card-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .corporate-bento-override
+    .card-grid
+    > .magic-bento-card:first-child {
+    grid-column: 1 / -1 !important;
+    padding: 2.5rem 3rem !important;
+    min-height: 400px !important;
+    border-radius: 28px !important;
+  }
+
+  /* Reduce padding for ALL NON-HERO cards (desktop only) */
+  .corporate-bento-override
+    .magic-bento-card:not(:first-child) {
+    padding: 2rem 2.5rem !important;
+    min-height: auto !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  .corporate-bento-override
+    .magic-bento-card:first-child
+    .magic-bento-card__description {
+    display: block;
+  }
+
+  .corporate-bento-override
+    .magic-bento-card:first-child
+    .corporate-desc-img {
+    width: 100%;
+    height: 220px;
+    margin-top: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .corporate-bento-override
+    .magic-bento-card:not(:first-child)
+    .magic-bento-card__description {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 3rem;
+    align-items: center;
+    width: 100%;
+    max-width: none !important;
+  }
+
+  /* Reduce image height for NON-HERO cards */
+  .corporate-bento-override
+    .magic-bento-card:not(:first-child)
+    .corporate-desc-img {
+    height: 240px;
+    border-radius: 18px;
+  }
+
+  .corporate-bento-override
+    .magic-bento-card:nth-child(even)
+    .corporate-desc-img { order: 1; }
+
+  .corporate-bento-override
+    .magic-bento-card:nth-child(even)
+    .corporate-desc-text { order: 2; }
+
+  .corporate-bento-override
+    .magic-bento-card:nth-child(odd)
+    .corporate-desc-img { order: 2; }
+
+  .corporate-bento-override
+    .magic-bento-card:nth-child(odd)
+    .corporate-desc-text { order: 1; }
+}
+
+@media (min-width: 1024px) {
+  .corporate-bento-override
+    .magic-bento-card:first-child
+    .magic-bento-card__description {
+    display: grid !important;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    width: 100%;
+    max-width: none !important;
+  }
+
+  .corporate-bento-override
+    .magic-bento-card:first-child
+    .corporate-desc-text {
+    width: 100%;
+    max-width: none;
+    font-size: 1.125rem;
+    line-height: 1.8;
+  }
+
+  .corporate-bento-override
+    .magic-bento-card:first-child
+    .corporate-desc-img {
+    width: 100%;
+    height: 340px;
+    object-fit: cover;
+    border-radius: 22px;
+  }
+}
+
+/* 🔥 CRITICAL FIX: remove MagicBento inner width constraint */
+@media (min-width: 1024px) {
+  .corporate-bento-override
+    .magic-bento-card:not(:first-child)
+    .magic-bento-card__content,
+  .corporate-bento-override
+    .magic-bento-card:not(:first-child)
+    .magic-bento-card__inner,
+  .corporate-bento-override
+    .magic-bento-card:not(:first-child)
+    .magic-bento-card__body {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+/* ✅ FORCE ALL CARDS TO SPAN FULL WIDTH (STACKED LAYOUT) */
+@media (min-width: 1024px) {
+  .corporate-bento-override
+    .card-grid
+    > .magic-bento-card {
+    grid-column: 1 / -1 !important;
+  }
+}
               `}</style>
 
               <MagicBento
-                cards={[services[activeTab]]}
-              enableStars={false}
-              enableMagnetism={true}
-              enableTilt={true}
-              enableSpotlight={true}
-              enableBorderGlow={true}
+                cards={servicesByTab[activeTab]}
+                enableStars={false}
+                enableMagnetism={true}
+                enableTilt={true}
+                enableSpotlight={true}
+                enableBorderGlow={true}
               />
             </div>
           </motion.div>

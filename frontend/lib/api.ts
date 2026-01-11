@@ -176,3 +176,36 @@ export const statusHelpers = {
   needsEmailVerification: (status: string) => status === "DRAFT",
   awaitingAdmin: (status: string) => status === "PENDING",
 };
+
+/**
+ * Fire-and-forget pings to wake backend services so they don't idle-sleep.
+ * Tries a few common paths and falls back to `no-cors` if needed. Errors are ignored.
+ */
+export async function pingBackends(): Promise<void> {
+  const CHATBOT_BACKEND = process.env.NEXT_PUBLIC_CHATBOT_BACKEND_URL ?? "http://127.0.0.1:8000";
+
+  const normalize = (s: string) => s.replace(/\/$/, "");
+  const targets = [normalize(BACKEND_URL), normalize(CHATBOT_BACKEND)];
+
+  const candidatePaths = ["/", "/api/", "/api/health/", "/api/ping/"];
+
+  for (const base of targets) {
+    for (const p of candidatePaths) {
+      const url = `${base}${p}`;
+      try {
+        // Try normal CORS request first so failures are visible in dev.
+        await fetch(url, { method: "GET", cache: "no-cache" });
+        break;
+      } catch (e) {
+        try {
+          // Fallback to an opaque request which still wakes many hosts.
+          // Note: response will be opaque and unreadable, which is fine for a ping.
+          await fetch(url, { method: "GET", cache: "no-cache", mode: "no-cors" });
+          break;
+        } catch (_) {
+          // swallow and try next candidate
+        }
+      }
+    }
+  }
+}

@@ -20,6 +20,7 @@ export default function IntegratedHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const [isAtTop, setIsAtTop] = useState(true);
+  const [showHeader, setShowHeader] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
@@ -34,10 +35,43 @@ export default function IntegratedHeader() {
   };
 
   useEffect(() => {
-    const onScroll = () => setIsAtTop(window.scrollY === 0);
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    const onScroll = () => {
+      const currentY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setIsAtTop(currentY === 0);
+
+          // If menu is open, keep header visible
+          if (menuOpen) {
+            setShowHeader(true);
+            lastY = currentY;
+            ticking = false;
+            return;
+          }
+
+          const delta = currentY - lastY;
+          const threshold = 10; // small buffer to avoid jitter
+          if (delta > threshold && currentY > 50) {
+            // scrolling down
+            setShowHeader(false);
+          } else if (delta < -threshold) {
+            // scrolling up
+            setShowHeader(true);
+          }
+
+          lastY = currentY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [menuOpen]);
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -66,8 +100,9 @@ export default function IntegratedHeader() {
     <>
       {/* --- MAIN HEADER --- */}
       <header
-        className={`fixed top-0 left-0 w-full z-[130] transition-all duration-500 h-20 group ${isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'
-          }`}
+        className={`fixed top-0 left-0 w-full z-[130] h-20 group transform transition-transform duration-300 ${
+          showHeader || menuOpen ? 'translate-y-0' : '-translate-y-full'
+        } ${isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'}`}
       >
         <div className="h-full w-full flex items-stretch">
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>

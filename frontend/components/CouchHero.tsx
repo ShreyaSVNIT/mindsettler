@@ -25,8 +25,9 @@ export default function CouchHero({
 }: CouchHeroProps) {
   const sectionClasses =
     layout === "sticky"
-      ? `sticky top-0 h-screen flex items-center justify-center px-6 z-0 overflow-hidden`
-      : `relative min-h-[80vh] flex items-center justify-center px-6 pt-[calc(var(--header-h)+12rem)] pb-20 overflow-hidden`;
+      ? `sticky top-0 h-[75vh] md:h-screen flex items-center justify-center px-6 z-20`
+      : // static layout: occupy exactly the viewport height and center content vertically
+        `relative h-screen max-h-screen w-full flex items-center justify-center px-6 overflow-hidden z-20`;
 
   return (
     <section className={sectionClasses} style={{ backgroundColor }}>
@@ -46,7 +47,7 @@ export default function CouchHero({
         />
       </div>
 
-      <div className="max-w-6xl mx-auto text-center relative z-10 -translate-y-6 md:-translate-y-10">
+      <div className="max-w-6xl mx-auto text-center relative z-10 w-full h-full flex flex-col justify-center items-center mt-0 md:mt-0 transform translate-y-0 md:-translate-y-6">
         <TitleHeader
           subheader={subheader}
           title={title}
@@ -59,7 +60,7 @@ export default function CouchHero({
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
-          className="w-24 h-1 bg-[var(--color-primary)] mx-auto mt-12 rounded-full"
+          className="w-24 h-1 bg-[var(--color-primary)] mx-auto mt-4 mb-8 md:mt-12 md:mb-12 rounded-full"
         />
 
         {cta && <div className="mt-12 flex justify-center">{cta}</div>}
