@@ -64,12 +64,12 @@ export default function CorporatePage() {
     {
       color: '#ffffff',
       title: 'Corporate Workshops',
-      description: (
-        <>
-          <img src="/img1.jpeg" alt="Corporate Workshops" className="w-full h-36 object-cover rounded-2xl mb-4" />
-          <>Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team's specific challenges and goals.</>
-        </>
-      ),
+        description: (
+          <>
+            <span className="corporate-desc-text">Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team's specific challenges and goals.</span>
+            <img src="/img1.jpeg" alt="Corporate Workshops" className="corporate-desc-img" />
+          </>
+        ),
       label: '',
       tags: ['', '', ''] as [string, string, string],
     },
@@ -110,6 +110,12 @@ export default function CorporatePage() {
       tags: ['', '', ''] as [string, string, string],
     },
   ];
+
+  const tabs = ['Corporates', 'Group', 'One-on-one', 'Custom'];
+  const [activeTab, setActiveTab] = useState(0);
+
+  // reorder services so the active one is first (MagicBento maps first child to the prominent area)
+  const orderedServices = [services[activeTab], ...services.filter((_, i) => i !== activeTab)];
 
   return (
     <main className="relative bg-white">
@@ -162,11 +168,12 @@ workshops, group sessions, and strategic collaborations`}
           >
             {/* Small top nav for service topics */}
             <div className="flex justify-center mb-8">
-              <nav className="inline-flex rounded-3xl bg-white/30 p-1">
-                {['Corporates', 'Group', 'One-on-one', 'Custom'].map((tab) => (
+              <nav className="inline-flex rounded-2xl bg-white/30 p-1">
+                {tabs.map((tab, idx) => (
                   <button
                     key={tab}
-                    className="px-4 py-2 text-sm rounded-2xl text-text-body hover:bg-white/40 focus:outline-none"
+                    onClick={() => setActiveTab(idx)}
+                    className={`px-4 py-2 text-sm rounded-2xl text-text-body focus:outline-none transition-colors ${idx === activeTab ? 'bg-white/80' : 'hover:bg-white/40'}`}
                     type="button"
                   >
                     {tab}
@@ -176,14 +183,35 @@ workshops, group sessions, and strategic collaborations`}
             </div>
 
             {/* Pass only the four service cards (images embedded in their descriptions) */}
-            <MagicBento
-              cards={services}
+            <div className="corporate-bento-override">
+              <style>{`
+                /* Force two-column grid for corporate section on large screens so first card can span two cols */
+                @media (min-width: 1024px) {
+                  .corporate-bento-override .card-grid { grid-template-columns: repeat(2, 1fr) !important; }
+                      .corporate-bento-override .card-grid > .magic-bento-card:first-child { grid-column: 1 / -1 !important; padding: 3.5rem 4rem !important; min-height: 380px !important; border-radius: 28px !important; }
+                }
+
+                    .corporate-bento-override .magic-bento-card__description { display: flex; gap: 2.5rem; align-items: center; justify-content: space-between; }
+                    .corporate-bento-override .magic-bento-card__description .corporate-desc-text { flex: 1; padding-right: 1rem; }
+                    .corporate-bento-override .magic-bento-card__description .corporate-desc-img { width: 40%; height: 320px; object-fit: cover; border-radius: 18px; order: 2; }
+                    .corporate-bento-override .magic-bento-card__description .corporate-desc-text { order: 1; }
+
+                @media (max-width: 1023px) {
+                  .corporate-bento-override .card-grid > .magic-bento-card:first-child { grid-column: auto !important; padding: 2rem !important; min-height: auto !important; }
+                  .corporate-bento-override .magic-bento-card__description { display: block; }
+                  .corporate-bento-override .magic-bento-card__description .corporate-desc-img { width: 100%; height: 220px; margin-top: 1rem; }
+                }
+              `}</style>
+
+              <MagicBento
+                cards={[services[activeTab]]}
               enableStars={false}
               enableMagnetism={true}
               enableTilt={true}
               enableSpotlight={true}
               enableBorderGlow={true}
-            />
+              />
+            </div>
           </motion.div>
         </div>
       </section>
