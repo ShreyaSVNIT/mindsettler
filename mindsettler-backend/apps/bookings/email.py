@@ -244,6 +244,16 @@ def send_booking_confirmed_email(booking):
         f"{booking.approved_slot_end.strftime('%I:%M %p')}"
     )
 
+    start = booking.approved_slot_start.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    end = booking.approved_slot_end.astimezone(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+
+    calendar_url = (
+        "https://www.google.com/calendar/render?action=TEMPLATE"
+        f"&text=MindSettler+Session+({booking.acknowledgement_id})"
+        f"&dates={start}/{end}"
+        f"&details=MindSettler+session+({booking.mode})"
+    )
+
     message = Mail(
         from_email="MindSettler Support <{}>".format(settings.DEFAULT_FROM_EMAIL),
         to_emails=booking.user.email,
@@ -267,6 +277,19 @@ def send_booking_confirmed_email(booking):
                 <tr><td><strong>Mode</strong></td><td>{booking.mode}</td></tr>
                 <tr><td><strong>Amount Paid</strong></td><td>₹{booking.amount}</td></tr>
             </table>
+
+            <div style="margin:24px 0; text-align:center;">
+              <a href="{calendar_url}"
+                 style="display:inline-block;
+                        padding:12px 24px;
+                        background:#453859;
+                        color:#ffffff;
+                        text-decoration:none;
+                        border-radius:4px;
+                        font-size:14px;">
+                ➕ Add to Google Calendar
+              </a>
+            </div>
 
             <h3 style="margin-top:28px;">❌ Cancellation Policy</h3>
             <ul>
