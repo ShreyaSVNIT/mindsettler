@@ -10,6 +10,7 @@ import {
   useInView
 } from "framer-motion";
 import MagneticButton from "./Button";
+import Link from 'next/link';
 import SectionHeader from "./SectionHeader";
 
 /* ---------------------------------- */
@@ -47,7 +48,7 @@ const TimelineSection: React.FC<SectionProps> = ({
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="w-full md:w-1/2 relative group"
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)] to-purple-600 opacity-20 blur-2xl rounded-3xl -z-10 group-hover:opacity-30 transition-opacity duration-500" />
+        {/* decorative glow removed per request */}
         <div className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl aspect-[4/3] md:aspect-[16/10]">
           <img
             src={image}
@@ -56,37 +57,41 @@ const TimelineSection: React.FC<SectionProps> = ({
           />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
         </div>
+
+        
       </motion.div>
 
       {/* CONTENT SIDE */}
       <motion.div
         initial={{ opacity: 0, x: reverse ? -50 : 50 }}
         animate={inView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.8, delay: 0.2 }}
+        transition={{ duration: 0.8, delay: 0.22 }}
         className="w-full md:w-1/2"
       >
-        <div className="md:px-8">
-          <p className="text-xs font-bold tracking-[0.3em] text-[var(--color-primary)] mb-4 uppercase">
-            {step}
-          </p>
+        <div className="md:px-8 flex flex-col justify-center h-full max-w-2xl">
+          {/* Badge + Heading */}
+          {(() => {
+            const parsed = parseInt((step || "").replace(/\D/g, ""), 10);
+            const displayNum = !isNaN(parsed) ? String(parsed) : "";
+            return (
+              <div className="flex items-center mb-3">
+                {displayNum ? (
+                  <div className="w-12 h-12 rounded-3xl bg-[var(--color-primary)] text-white font-title flex items-center justify-center mr-6 text-lg">
+                    {displayNum}
+                  </div>
+                ) : null}
+                <h3 className="font-title uppercase text-2xl sm:text-3xl md:text-4xl lg:text-5xl tracking-wide text-[var(--color-text-body)] leading-tight">
+                  {title}
+                </h3>
+              </div>
+            );
+          })()}
 
-          <h3 className="font-title text-4xl md:text-5xl text-[var(--color-text-body)] mb-6 leading-tight">
-            {title}
-          </h3>
-
-          <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 mb-8 hover:bg-white/10 transition-colors duration-300">
-            <p className="font-body text-lg text-[var(--color-text-body)] opacity-80 leading-relaxed">
+          <div className="p-4 pl-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 mb-6 transition-colors duration-300 border-l-2 border-[var(--color-primary)]">
+            <p className="font-body text-sm sm:text-base md:text-lg lg:text-xl text-[var(--color-text-body)] opacity-95 leading-relaxed">
               {description}
             </p>
           </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.5 }}
-          >
-            <MagneticButton text="Learn More" />
-          </motion.div>
         </div>
       </motion.div>
     </div>
@@ -220,28 +225,60 @@ export default function MindSettlerJourney() {
         </motion.div>
 
         {/* SECTIONS */}
-        <div className="space-y-12">
-          <TimelineSection
-            step="STEP 01"
-            title="Self-Discovery"
-            description="Begin by understanding your emotional patterns. Through guided reflection and expert-led sessions, identify the triggers that shape your daily experience."
-            image="https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2670&auto=format&fit=crop"
-          />
+        <div className="space-y-10">
+          {(() => {
+            // pick 3 random images from available public assets
+            const imgs = [
+              "/img1.jpeg",
+              "/img2.jpeg",
+              "/img3.jpeg",
+              "/img4.jpeg",
+              "/img5.jpeg"
+            ];
 
-          <TimelineSection
-            reverse
-            step="STEP 02"
-            title="Inner Resilience"
-            description="Develop robust coping mechanisms. Learn scientifically-backed techniques to regulate stress, process difficult emotions, and restore your inner strength."
-            image="https://images.unsplash.com/photo-1515023115689-589c33041697?q=80&w=2670&auto=format&fit=crop"
-          />
+            // simple Fisher-Yates shuffle
+            for (let i = imgs.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              const tmp = imgs[i];
+              imgs[i] = imgs[j];
+              imgs[j] = tmp;
+            }
 
-          <TimelineSection
-            step="STEP 03"
-            title="Sustainable Wellness"
-            description="Transform insights into lasting habits. Create a personalized lifestyle that naturally supports mental clarity, purpose, and emotional balance every single day."
-            image="https://images.unsplash.com/photo-1528319725582-ddc096101511?q=80&w=2669&auto=format&fit=crop"
-          />
+            const [a, b, c] = imgs;
+
+            return (
+              <>
+                <TimelineSection
+                  step="STEP 01"
+                  title="Self-Discovery"
+                  description="Begin by understanding your emotional patterns. Through guided reflection and expert-led sessions, identify the triggers that shape your daily experience."
+                  image={a}
+                />
+
+                <TimelineSection
+                  reverse
+                  step="STEP 02"
+                  title="Inner Resilience"
+                  description="Develop robust coping mechanisms. Learn scientifically-backed techniques to regulate stress, process difficult emotions, and restore your inner strength."
+                  image={b}
+                />
+
+                <TimelineSection
+                  step="STEP 03"
+                  title="Sustainable Wellness"
+                  description="Transform insights into lasting habits. Create a personalized lifestyle that naturally supports mental clarity, purpose, and emotional balance every single day."
+                  image={c}
+                />
+              </>
+            );
+          })()}
+        </div>
+
+        {/* Single CTA for the whole journey */}
+        <div className="mt-12 flex justify-center">
+          <Link href="/resources" aria-label="Learn more resources">
+            <MagneticButton text="Learn More" />
+          </Link>
         </div>
       </div>
     </div>

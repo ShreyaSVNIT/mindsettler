@@ -155,7 +155,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       </div>
 
       {/* Music Control Corner - rounded icon anchored bottom-left (next to chat button) */}
-      <div className="fixed bottom-6 left-20 md:left-24 z-50">
+      <div className="fixed bottom-6 left-24 md:left-28 z-50">
         <button
           onClick={togglePlay}
           disabled={!isLoaded}

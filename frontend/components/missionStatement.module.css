@@ -50,53 +50,8 @@
   align-self: center;
 }
 
-.headerLabel {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
 
-.glowingDot {
-  width: 8px;
-  height: 8px;
-  background-color: #fff;
-  border-radius: 50%;
-  box-shadow: 0 0 12px #fff, 0 0 20px rgba(255, 255, 255, 0.6);
-}
-
-.label {
-  font-family: 'Playfair Display', serif;
-  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
-  letter-spacing: 0.6em;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 1);
-  text-transform: uppercase;
-}
-
-/* --- MIXED TYPOGRAPHY HEADING --- */
-.heading {
-  font-family: imbue, serif;
-  font-weight: 500;
-  font-style: normal;
-  font-size: clamp(2.8rem, 5vw, 4.2rem);
-  line-height: 1.15;
-  color: #ffffff;
-  letter-spacing: -0.01em;
-}
-
-.heading span {
-  font-style: italic;
-  font-weight: 300;
-}
-
-.descriptionText {
-  font-family: var(--font-ivy), serif;
-  font-size: 1.15rem;
-  line-height: 1.8;
-  color: rgba(255, 255, 255, 0.9);
-  max-width: 560px;
-  letter-spacing: 0.01em;
-}
+/* Unused classes removed (headerLabel, glowingDot, label, heading, descriptionText) */
 
 .buttonWrapper {
   margin-top: 1rem;
@@ -143,9 +98,9 @@
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
-.step h3 { 
-  font-size: 1.75rem; 
-  margin: 0 0 0.5rem 0; 
+.step h3 {
+  font-size: 1.75rem;
+  margin: 0 0 0.5rem 0;
   font-family: var(--font-title), serif;
   font-weight: 400;
   color: #ffffff;
@@ -153,13 +108,135 @@
   text-transform: uppercase;
 }
 
-.step p { 
-  font-size: 1.25rem; 
+.step p {
+  font-size: 1.25rem;
   font-family: var(--font-ivy), serif;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.85);
   line-height: 1.85;
   letter-spacing: 0.02em;
-  margin: 0; 
+  margin: 0;
   max-width: 280px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .overlay {
+    grid-template-columns: 1fr;
+    padding: 8vw 6vw;
+    gap: 2rem;
+    align-content: center;
+  }
+
+  .textSide {
+    max-width: none;
+    padding-bottom: 1rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .timelineSide {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 0;
+    width: 100%;
+  }
+
+  .timeline {
+    flex-direction: column;
+    /* Vertical stack on tablet/mobile */
+    gap: 2rem;
+    padding: 0;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .verticalLine {
+    left: 7px;
+    top: 10px;
+    bottom: 10px;
+    display: block;
+    /* Keep line for vertical feel */
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .step {
+    padding-left: 35px;
+    min-width: 0;
+  }
+
+  .dot {
+    width: 14px;
+    height: 14px;
+    left: 0;
+    top: 5px;
+  }
+
+  .step h3 {
+    font-size: 1.5rem;
+  }
+
+  .step p {
+    font-size: 1.1rem;
+    max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .outerContainer {
+    height: 200vh;
+    /* Reduced scroll distance for mobile */
+  }
+
+  .overlay {
+    padding: 24vw 5vw 10vw 5vw;
+    /* More top padding to clear header if needed */
+    gap: 2.5rem;
+    overflow-y: auto;
+    /* Allow scrolling content if it overflows viewport */
+  }
+
+  .textSide {
+    gap: 1rem;
+  }
+
+  .heading {
+    font-size: 2.5rem;
+    /* Fixed readable size */
+    line-height: 1.2;
+  }
+
+  .descriptionText {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .timeline {
+    gap: 1.5rem;
+    margin-top: 0;
+  }
+
+  .verticalLine {
+    left: 6px;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    top: 6px;
+  }
+
+  .step {
+    padding-left: 30px;
+  }
+
+  .step h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .step p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
 }

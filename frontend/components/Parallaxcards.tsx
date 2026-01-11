@@ -82,7 +82,7 @@ export default function ParallaxCards() {
             initial={{ opacity: 0, scale: 1 }}
             animate={{ opacity: 1, scale: 1.05 }}
             exit={{ opacity: 0, scale: 1 }}
-            transition={{ 
+            transition={{
               opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
               scale: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
             }}
@@ -188,7 +188,7 @@ export default function ParallaxCards() {
                         className="h-[1px] w-full mb-4"
                         style={{ backgroundColor: "var(--color-text-body)", opacity: 0.2 }}
                       />
-                      
+
                       {/* CTA LINK */}
                       <Link
                         href={step.link}
@@ -201,12 +201,12 @@ export default function ParallaxCards() {
                         <span>{step.cta}</span>
                         <div className="relative h-5 w-5 overflow-hidden">
                           {/* Original Arrow: Slides out to the RIGHT */}
-                          <ArrowRight 
-                            className="absolute inset-0 transition-all duration-500 ease-in-out group-hover/link:translate-x-full group-hover/link:opacity-0 w-5 h-5" 
+                          <ArrowRight
+                            className="absolute inset-0 transition-all duration-500 ease-in-out group-hover/link:translate-x-full group-hover/link:opacity-0 w-5 h-5"
                           />
                           {/* New Arrow: Slides in from the LEFT */}
-                          <ArrowRight 
-                            className="absolute inset-0 -translate-x-full opacity-0 transition-all duration-500 ease-in-out group-hover/link:translate-x-0 group-hover/link:opacity-100 w-5 h-5" 
+                          <ArrowRight
+                            className="absolute inset-0 -translate-x-full opacity-0 transition-all duration-500 ease-in-out group-hover/link:translate-x-0 group-hover/link:opacity-100 w-5 h-5"
                           />
                         </div>
                       </Link>

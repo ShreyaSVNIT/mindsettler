@@ -64,32 +64,58 @@ export default function CorporatePage() {
     {
       color: '#ffffff',
       title: 'Corporate Workshops',
-      description: 'Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team\'s specific challenges and goals.',
+        description: (
+          <>
+            <span className="corporate-desc-text">Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team's specific challenges and goals.</span>
+            <img src="/img1.jpeg" alt="Corporate Workshops" className="corporate-desc-img" />
+          </>
+        ),
       label: '',
       tags: ['', '', ''] as [string, string, string],
     },
     {
       color: '#ffffff',
       title: 'Group Therapy Sessions',
-      description: 'Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing. These sessions create a safe space for employees to share experiences, develop coping strategies, and build meaningful connections with their colleagues. Professional guidance ensures productive and transformative outcomes.',
+      description: (
+        <>
+          <img src="/img2.jpeg" alt="Group Therapy" className="w-full h-36 object-cover rounded-2xl mb-4" />
+          <>Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing. These sessions create a safe space for employees to share experiences, develop coping strategies, and build meaningful connections with their colleagues. Professional guidance ensures productive and transformative outcomes.</>
+        </>
+      ),
       label: '',
       tags: ['', '', ''] as [string, string, string],
     },
     {
       color: '#ffffff',
       title: 'Organizational Consultations',
-      description: 'Strategic mental health planning and consultation services to create a culture of well-being within your organization. We work closely with leadership to develop comprehensive mental health policies, implement effective support systems, and create sustainable wellness initiatives that prioritize employee mental health at every level.',
+      description: (
+        <>
+          <img src="/img3.jpeg" alt="Consultations" className="w-full h-36 object-cover rounded-2xl mb-4" />
+          <>Strategic mental health planning and consultation services to create a culture of well-being within your organization. We work closely with leadership to develop comprehensive mental health policies, implement effective support systems, and create sustainable wellness initiatives that prioritize employee mental health at every level.</>
+        </>
+      ),
       label: '',
       tags: ['', '', ''] as [string, string, string],
     },
     {
       color: '#ffffff',
       title: 'Custom Programs',
-      description: 'Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry. Whether you need stress management training, burnout prevention, or leadership development, we craft solutions that align with your company culture and deliver measurable results for long-term success.',
+      description: (
+        <>
+          <img src="/img4.jpeg" alt="Custom Programs" className="w-full h-36 object-cover rounded-2xl mb-4" />
+          <>Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry. Whether you need stress management training, burnout prevention, or leadership development, we craft solutions that align with your company culture and deliver measurable results for long-term success.</>
+        </>
+      ),
       label: '',
       tags: ['', '', ''] as [string, string, string],
     },
   ];
+
+  const tabs = ['Corporates', 'Group', 'One-on-one', 'Custom'];
+  const [activeTab, setActiveTab] = useState(0);
+
+  // reorder services so the active one is first (MagicBento maps first child to the prominent area)
+  const orderedServices = [services[activeTab], ...services.filter((_, i) => i !== activeTab)];
 
   return (
     <main className="relative bg-white">
@@ -140,14 +166,52 @@ workshops, group sessions, and strategic collaborations`}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <MagicBento
-              cards={services}
+            {/* Small top nav for service topics */}
+            <div className="flex justify-center mb-8">
+              <nav className="inline-flex rounded-2xl bg-white/30 p-1">
+                {tabs.map((tab, idx) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(idx)}
+                    className={`px-4 py-2 text-sm rounded-2xl text-text-body focus:outline-none transition-colors ${idx === activeTab ? 'bg-white/80' : 'hover:bg-white/40'}`}
+                    type="button"
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Pass only the four service cards (images embedded in their descriptions) */}
+            <div className="corporate-bento-override">
+              <style>{`
+                /* Force two-column grid for corporate section on large screens so first card can span two cols */
+                @media (min-width: 1024px) {
+                  .corporate-bento-override .card-grid { grid-template-columns: repeat(2, 1fr) !important; }
+                      .corporate-bento-override .card-grid > .magic-bento-card:first-child { grid-column: 1 / -1 !important; padding: 3.5rem 4rem !important; min-height: 380px !important; border-radius: 28px !important; }
+                }
+
+                    .corporate-bento-override .magic-bento-card__description { display: flex; gap: 2.5rem; align-items: center; justify-content: space-between; }
+                    .corporate-bento-override .magic-bento-card__description .corporate-desc-text { flex: 1; padding-right: 1rem; }
+                    .corporate-bento-override .magic-bento-card__description .corporate-desc-img { width: 40%; height: 320px; object-fit: cover; border-radius: 18px; order: 2; }
+                    .corporate-bento-override .magic-bento-card__description .corporate-desc-text { order: 1; }
+
+                @media (max-width: 1023px) {
+                  .corporate-bento-override .card-grid > .magic-bento-card:first-child { grid-column: auto !important; padding: 2rem !important; min-height: auto !important; }
+                  .corporate-bento-override .magic-bento-card__description { display: block; }
+                  .corporate-bento-override .magic-bento-card__description .corporate-desc-img { width: 100%; height: 220px; margin-top: 1rem; }
+                }
+              `}</style>
+
+              <MagicBento
+                cards={[services[activeTab]]}
               enableStars={false}
               enableMagnetism={true}
               enableTilt={true}
               enableSpotlight={true}
               enableBorderGlow={true}
-            />
+              />
+            </div>
           </motion.div>
         </div>
       </section>
