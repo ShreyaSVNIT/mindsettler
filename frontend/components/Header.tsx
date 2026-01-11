@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Calendar, MapPin, Phone, Menu, X, Instagram, Linkedin } from 'lucide-react';
+import { Calendar, Phone, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 
@@ -61,7 +61,6 @@ export default function IntegratedHeader() {
   // Home page at top: white, else: primary
   const isHome = pathname === '/' || pathname === '/home';
   const isHomeAtTop = isHome && isAtTop;
-  const isOtherPageAtTop = !isHome && isAtTop;
 
   return (
     <>

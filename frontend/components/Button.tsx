@@ -50,11 +50,23 @@ const MagneticButton = ({
     ? "group-hover:text-[var(--color-bg-lavender)]"
     : "group-hover:text-[var(--color-bg-app)]";
 
-  // Size variations
-  const textSize = size === 'small' ? "text-lg" : "text-3xl";
-  const arrowContainerSize = size === 'small' ? "h-10 w-10" : "h-14 w-14";
-  const arrowIconSize = size === 'small' ? 18 : 24;
-  const buttonPadding = size === 'small' ? "py-2 pl-6 pr-2 gap-3" : "py-2 pl-8 pr-2 gap-4";
+  // Size variations - Responsive by default
+  const textSize = size === 'small'
+    ? "text-base md:text-lg"
+    : "text-xl md:text-3xl";
+
+  const arrowContainerSize = size === 'small'
+    ? "h-8 w-8 md:h-10 md:w-10"
+    : "h-10 w-10 md:h-14 md:w-14";
+
+  // Use Tailwind classes for icon sizing instead of fixed prop
+  const arrowIconClass = size === 'small'
+    ? "w-4 h-4"
+    : "w-4 h-4 md:w-6 md:h-6";
+
+  const buttonPadding = size === 'small'
+    ? "py-1.5 pl-4 pr-1.5 gap-2 md:py-2 md:pl-6 md:pr-2 md:gap-3"
+    : "py-2 pl-5 pr-2 gap-3 md:pl-8 md:gap-4";
 
   return (
     <button
@@ -121,14 +133,14 @@ const MagneticButton = ({
         ${arrowBgHover}
       `}>
         {/* ARROW REPLACEMENT ANIMATION (Horizontal) */}
-        <div className={`relative overflow-hidden ${size === 'small' ? 'h-4 w-4' : 'h-6 w-6'}`}>
+        <div className={`relative overflow-hidden ${arrowIconClass}`}>
           {/* Original Arrow: Slides out to the RIGHT */}
           <ArrowRight
-            size={arrowIconSize}
             strokeWidth={1.5}
             className={`
               absolute 
               inset-0 
+              w-full h-full
               transition-all 
               duration-500 
               ease-in-out 
@@ -139,11 +151,11 @@ const MagneticButton = ({
           />
           {/* New Arrow: Slides in from the LEFT */}
           <ArrowRight
-            size={arrowIconSize}
             strokeWidth={1.5}
             className={`
               absolute 
               inset-0 
+              w-full h-full
               -translate-x-full 
               opacity-0
               transition-all 
