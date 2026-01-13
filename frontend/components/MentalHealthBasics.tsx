@@ -49,23 +49,23 @@ const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => (
       >
         {/* FRONT */}
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center p-3"
+          className="absolute inset-0 flex flex-col items-center justify-center p-2 sm:p-3"
           style={{
             backgroundColor: 'var(--color-bg-app)',
             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
             backfaceVisibility: 'hidden'
           }}
         >
-          <div className="font-title text-4xl md:text-5xl mb-1 text-[var(--color-primary)]">
+          <div className="font-title text-3xl sm:text-4xl md:text-5xl mb-1 text-[var(--color-primary)]">
             {data.letter}
           </div>
-          <div className="font-body text-base md:text-lg font-medium">{data.term}</div>
-          <div className="font-body text-sm opacity-60">({data.hindi})</div>
+          <div className="font-body text-xs sm:text-sm md:text-base lg:text-lg font-medium line-clamp-1">{data.term}</div>
+          <div className="font-body text-xs opacity-60 line-clamp-1">({data.hindi})</div>
         </div>
 
         {/* BACK */}
         <div
-          className="absolute inset-0 flex items-center justify-center p-4"
+          className="absolute inset-0 flex items-center justify-center p-2 sm:p-3"
           style={{
             backgroundColor: 'var(--color-bg-lavender)',
             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
@@ -73,7 +73,7 @@ const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => (
             transform: 'rotateY(180deg)'
           }}
         >
-          <p className="font-body text-sm md:text-base text-center leading-snug text-[var(--color-text-secondary)]">
+          <p className="font-body text-xs sm:text-sm md:text-base text-center leading-tight sm:leading-snug text-[var(--color-text-secondary)]">
             {data.explanation}
           </p>
         </div>
@@ -134,7 +134,7 @@ export default function MentalHealthBasics() {
   };
 
   return (
-    <section className="relative py-24 px-0 overflow-hidden bg-[var(--color-bg-card)]">
+    <section className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 md:px-8 overflow-hidden bg-[var(--color-bg-card)]">
       <div className="relative w-full flex flex-col items-center">
         {/* TITLE - Centered for symmetry */}
         <motion.div
@@ -142,7 +142,7 @@ export default function MentalHealthBasics() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-3xl mb-20 text-center"
+          className="max-w-3xl mb-12 sm:mb-16 md:mb-20 text-center px-2"
         >
           <SectionHeader
             subheader="Emotional Alphabet"
@@ -156,7 +156,7 @@ export default function MentalHealthBasics() {
 
         {/* GRID - Centered with equal side spacing */}
         <motion.div
-          className="flex flex-col items-center gap-4 w-full md:snap-none snap-y snap-mandatory overflow-y-auto md:overflow-visible"
+          className="flex flex-col items-center gap-2 sm:gap-3 md:gap-4 w-full md:snap-none snap-y snap-mandatory overflow-y-auto md:overflow-visible"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -165,14 +165,14 @@ export default function MentalHealthBasics() {
           {rows.map((row, r) => (
             <div
               key={r}
-              className="flex flex-wrap justify-center gap-3 md:gap-4 w-full snap-start"
+              className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 w-full snap-start"
             >
               {row.map((term, c) => (
                 <motion.div
                   key={term.letter}
                   custom={{ r, c, rowLen: row.length }}
                   variants={cardVariants}
-                  className="w-32 h-32 sm:w-36 sm:h-36 md:w-40 md:h-40"
+                  className="w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40"
                   viewport={{ once: true, amount: 0.3 }}
                   initial="hidden"
                   whileInView="visible"
