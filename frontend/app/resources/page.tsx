@@ -36,18 +36,18 @@ export default function ResourcesPage() {
                 layout="static"
             />
 
-            <section className="px-6 pb-12 bg-white">
+            <section className="py-24 px-6 bg-white">
                 <div className="mx-auto max-w-7xl">
                     <SectionHeader
                         subheader="Featured"
-                        title="Handpicked for you"
+                        title={<>Handpicked for <span className="italic">you</span></>}
                         bodyText="Start here — a quick selection of our most popular reads, videos, and trusted links."
                         alignment="center"
                         decoration="whiskers"
                         layout="single"
                     />
 
-                    <div className="grid gap-6 lg:grid-cols-12 lg:auto-rows-[110px]">
+                    <div className="flex gap-4 overflow-x-auto lg:grid lg:gap-6 lg:grid-cols-12 lg:auto-rows-[110px] lg:overflow-visible py-2 -mx-6 px-6 lg:px-0 snap-x snap-mandatory">
                         {featured.map((item, idx) => {
                             const isVideo = item.type === 'video';
                             const isLink = item.type === 'link';
@@ -82,7 +82,7 @@ export default function ResourcesPage() {
                                     href={href}
                                     target={external ? '_blank' : undefined}
                                     rel={external ? 'noopener noreferrer' : undefined}
-                                    className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${spans[idx] ?? ''} ${positions[idx] ?? ''} bg-[var(--color-bg-card)]`}
+                                    className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md ${spans[idx] ?? ''} ${positions[idx] ?? ''} bg-[var(--color-bg-card)] min-w-[260px] sm:min-w-0 flex-shrink-0 h-[380px] sm:h-auto snap-start`}
                                 >
                                     <div className="absolute inset-0">
                                         <Image

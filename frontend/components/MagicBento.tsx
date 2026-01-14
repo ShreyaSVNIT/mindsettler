@@ -12,7 +12,7 @@ const MOBILE_BREAKPOINT = 768;
 interface CardData {
   color: string;
   title: string;
-  description: string;
+  description: React.ReactNode;
   label: string;
   tags: [string, string, string];
 }
@@ -549,7 +549,11 @@ const MagicBento = ({
                 </div>
                 <div className="magic-bento-card__content">
                   <h2 className="magic-bento-card__title">{card.title}</h2>
-                  <p className="magic-bento-card__description">{card.description}</p>
+                    {typeof card.description === 'string' ? (
+                      <p className="magic-bento-card__description">{card.description}</p>
+                    ) : (
+                      <div className="magic-bento-card__description">{card.description}</div>
+                    )}
                   {card.tags.some(tag => tag.trim() !== '') && (
                     <div className="magic-bento-card__tags" aria-label="Tags">
                       {card.tags.filter(tag => tag.trim() !== '').map(tag => (
@@ -571,7 +575,11 @@ const MagicBento = ({
               </div>
               <div className="magic-bento-card__content">
                 <h2 className="magic-bento-card__title">{card.title}</h2>
-                <p className="magic-bento-card__description">{card.description}</p>
+                {typeof card.description === 'string' ? (
+                  <p className="magic-bento-card__description">{card.description}</p>
+                ) : (
+                  <div className="magic-bento-card__description">{card.description}</div>
+                )}
                 {card.tags.some(tag => tag.trim() !== '') && (
                   <div className="magic-bento-card__tags" aria-label="Tags">
                     {card.tags.filter(tag => tag.trim() !== '').map(tag => (

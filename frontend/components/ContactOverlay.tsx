@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Phone, Instagram, Linkedin, Twitter } from 'lucide-react';
 import MagneticButton from './Button';
 
-export default function ContactOverlay() {
-  const [isOpen, setIsOpen] = useState(false);
+export default function ContactOverlay({ initialOpen = false }: { initialOpen?: boolean }) {
+  const [isOpen, setIsOpen] = useState(initialOpen);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',

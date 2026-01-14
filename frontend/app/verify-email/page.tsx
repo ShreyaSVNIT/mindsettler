@@ -68,6 +68,18 @@ function VerifyEmailContent() {
     }
   };
 
+  // Safe calendar link generation (only when both start and end exist)
+  let calendarHref: string | null = null;
+  if (state.kind === 'success') {
+    const startRaw = state.data.booking.approved_slot_start;
+    const endRaw = state.data.booking.approved_slot_end;
+    if (startRaw && endRaw) {
+      const s = new Date(startRaw).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      const e = new Date(endRaw).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+      calendarHref = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=MindSettler%20Session&dates=${s}/${e}&details=Your%20MindSettler%20session%20has%20been%20confirmed.`;
+    }
+  }
+
   const handleCancelBooking = async () => {
     if (state.kind !== "success") return;
 
@@ -283,14 +295,16 @@ function VerifyEmailContent() {
               
               {state.data.booking.status === "CONFIRMED" && (
                 <>
-                  <a
-                    href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=MindSettler%20Session&dates=${new Date(state.data.booking.approved_slot_start).toISOString().replace(/[-:]/g, "").split(".")[0]}Z/${new Date(state.data.booking.approved_slot_end).toISOString().replace(/[-:]/g, "").split(".")[0]}Z&details=Your%20MindSettler%20session%20has%20been%20confirmed.`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
-                  >
-                    Add to Google Calendar
-                  </a>
+                  {calendarHref ? (
+                    <a
+                      href={calendarHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
+                    >
+                      Add to Google Calendar
+                    </a>
+                  ) : null}
                   <button
                     onClick={handleCancelBooking}
                     className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
