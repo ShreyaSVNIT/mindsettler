@@ -14,10 +14,10 @@ def approve_booking(
 ):
     """
     PENDING → APPROVED
+    If OFFLINE + OFFLINE payment → CONFIRMED directly
     """
     assert_transition(booking.status, "APPROVED")
 
-    booking.status = "APPROVED"
     booking.approved_slot_start = approved_start
     booking.approved_slot_end = approved_end
     booking.amount = amount
@@ -25,16 +25,34 @@ def approve_booking(
     booking.corporate = corporate
     booking.approved_at = timezone.now()
 
-    booking.save(update_fields=[
-        "status",
-        "approved_slot_start",
-        "approved_slot_end",
-        "amount",
-        "psychologist",
-        "corporate",
-        "approved_at",
-    ])
+    # Offline session + offline payment → skip payment flow
+    if booking.mode == "OFFLINE" and booking.payment_mode == "OFFLINE":
+        assert_transition("APPROVED", "CONFIRMED")
+        booking.status = "CONFIRMED"
+        booking.confirmed_at = timezone.now()
+        update_fields = [
+            "status",
+            "approved_slot_start",
+            "approved_slot_end",
+            "amount",
+            "psychologist",
+            "corporate",
+            "approved_at",
+            "confirmed_at",
+        ]
+    else:
+        booking.status = "APPROVED"
+        update_fields = [
+            "status",
+            "approved_slot_start",
+            "approved_slot_end",
+            "amount",
+            "psychologist",
+            "corporate",
+            "approved_at",
+        ]
 
+    booking.save(update_fields=update_fields)
     return booking
 
 

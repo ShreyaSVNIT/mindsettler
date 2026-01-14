@@ -14,6 +14,18 @@ from .lifecycle import (
 )
 
 
+def is_payment_required(booking):
+    """
+    Returns False if payment can be bypassed.
+    Rule:
+    - OFFLINE mode + OFFLINE payment → no payment required
+    """
+    return not (
+        booking.mode == "OFFLINE"
+        and booking.payment_mode == "OFFLINE"
+    )
+
+
 # ─────────────────────────
 # PAYMENT INITIATION
 # ─────────────────────────
@@ -37,6 +49,12 @@ def initiate_payment(booking):
     if booking.status != "APPROVED":
         raise ValidationError(
             f"Cannot initiate payment in status: {booking.status}"
+        )
+
+    # Payment bypass for offline sessions
+    if not is_payment_required(booking):
+        raise ValidationError(
+            "Payment is not required for offline bookings"
         )
 
     if booking.amount is None:
@@ -69,8 +87,19 @@ def complete_payment(booking):
     - Sends confirmation email exactly once
     """
 
-    # Idempotency: already confirmed
+    # Idempotency
     if booking.status == "CONFIRMED":
+        return booking
+
+    # Allow direct confirmation when payment is not required
+    if booking.status == "APPROVED" and not is_payment_required(booking):
+        confirm_booking(booking)
+
+        if not getattr(booking, "confirmation_email_sent", False):
+            send_booking_confirmed_email(booking)
+            booking.confirmation_email_sent = True
+            booking.save(update_fields=["confirmation_email_sent"])
+
         return booking
 
     # Only allowed from PAYMENT_PENDING
