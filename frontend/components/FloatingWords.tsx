@@ -19,7 +19,7 @@ const words = [
 
 export default function FloatingWords() {
     return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none select-none hidden lg:block">
             {words.map((word, i) => (
                 <motion.div
                     key={i}
@@ -27,7 +27,7 @@ export default function FloatingWords() {
                     whileInView={{ opacity: 0.3 }}
                     viewport={{ once: true }}
                     transition={{ duration: 2, delay: word.delay }}
-                    className="absolute font-title text-4xl md:text-6xl text-[var(--color-text-body)] blur-[3px]"
+                    className="absolute font-title text-2xl md:text-4xl text-[var(--color-text-body)]/30 blur-[2px]"
                     style={{ top: word.top, left: word.left }}
                 >
                     {word.text}

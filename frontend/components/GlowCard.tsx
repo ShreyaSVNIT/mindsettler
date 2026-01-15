@@ -208,9 +208,11 @@ export default function GlowCard({
         animateParticles();
       }
       gsap.to(card, {
-        boxShadow: `0 20px 50px rgba(${glowColor}, 0.25)`,
         duration: 0.3,
-        ease: 'power2.out'
+        ease: 'power2.out',
+        onStart: () => {
+          card.style.setProperty('--brand-shadow', `0 20px 50px rgba(${glowColor}, 0.25)`);
+        }
       });
     };
 
@@ -226,15 +228,19 @@ export default function GlowCard({
           rotateY: 0,
           x: 0,
           y: 0,
-          boxShadow: `0 12px 40px rgba(${glowColor}, 0.1)`,
           duration: 0.3,
-          ease: 'power2.out'
+          ease: 'power2.out',
+          onStart: () => {
+            card.style.setProperty('--brand-shadow', `0 12px 40px rgba(${glowColor}, 0.1)`);
+          }
         });
       } else {
         gsap.to(card, {
-          boxShadow: `0 12px 40px rgba(${glowColor}, 0.1)`,
           duration: 0.3,
-          ease: 'power2.out'
+          ease: 'power2.out',
+          onStart: () => {
+            card.style.setProperty('--brand-shadow', `0 12px 40px rgba(${glowColor}, 0.1)`);
+          }
         });
       }
 
@@ -262,6 +268,8 @@ export default function GlowCard({
       className={`glow-card ${className}`}
       style={{
         '--glow-color': glowColor,
+        '--brand-pink': glowColor,
+        '--brand-shadow': `0 12px 40px rgba(${glowColor}, 0.1)`,
         '--glow-radius': `${glowRadius}px`,
         '--glow-x': '50%',
         '--glow-y': '50%',

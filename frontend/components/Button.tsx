@@ -9,6 +9,7 @@ interface MagneticButtonProps {
   className?: string;
   variant?: 'default' | 'lavender';
   size?: 'default' | 'small';
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const MagneticButton = ({
@@ -17,6 +18,7 @@ const MagneticButton = ({
   className = "",
   variant = 'default',
   size = 'default'
+  , type = 'button'
 }: MagneticButtonProps) => {
   const baseStyles = variant === 'lavender'
     ? "bg-[var(--color-text-body)] border border-[var(--color-text-body)]"
@@ -70,6 +72,7 @@ const MagneticButton = ({
 
   return (
     <button
+      type={type}
       onClick={onClick}
       className={`
         group

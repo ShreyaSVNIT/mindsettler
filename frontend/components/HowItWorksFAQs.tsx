@@ -81,7 +81,7 @@ const FAQItem = ({ question, answer, index }: { question: string; answer: string
     >
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full text-left flex justify-between items-center gap-6"
+        className="w-full text-left flex justify-between items-center gap-6 px-4 py-3 min-h-[44px] rounded-md focus:outline-none focus-visible:ring focus-visible:ring-[var(--color-primary)]/30"
         whileHover={{ x: 8 }}
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
