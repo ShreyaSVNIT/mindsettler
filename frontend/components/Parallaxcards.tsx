@@ -70,8 +70,12 @@ export default function ParallaxCards() {
     target: containerRef,
     offset: ["start end", "end start"],
   });
-
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
+  // reduce parallax magnitude to avoid jank; disable on mobile
+  const backgroundY = useTransform(
+    scrollYProgress,
+    [0, 1],
+    isMobile ? ["0%", "0%"] : ["-2%", "2%"]
+  );
   const activeStep = STEPS.find((s) => s.id === activeId)!;
 
   return (
@@ -88,14 +92,11 @@ export default function ParallaxCards() {
           <motion.div
             key={activeId}
             className="absolute inset-0"
-            style={{ y: backgroundY }}
-            initial={{ opacity: 0, scale: 1 }}
-            animate={{ opacity: 1, scale: 1.05 }}
-            exit={{ opacity: 0, scale: 1 }}
-            transition={{
-              opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
-              scale: { duration: 0.6, ease: [0.4, 0, 0.2, 1] }
-            }}
+            style={{ y: backgroundY, willChange: 'transform, opacity' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ opacity: { duration: 0.35, ease: [0.4, 0, 0.2, 1] } }}
           >
             <Image
               src={activeStep.image}
@@ -110,8 +111,8 @@ export default function ParallaxCards() {
       </div>
 
       {/* ---------- CARDS ---------- */}
-      <div className={`relative z-10 flex flex-col md:flex-row items-center justify-center gap-8 w-full max-w-7xl px-6 ${
-        isMobile ? "py-6" : ""
+      <div className={`relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-6 ${
+        isMobile ? "py-6" : "py-12"
       }`}>
         {STEPS.map((step) => {
           const isActive = activeId === step.id;
@@ -123,14 +124,14 @@ export default function ParallaxCards() {
               layout
               initial={false}
               animate={{
-                width: isMobile ? "100%" : isActive ? 480 : 320,
-                height: isMobile ? "auto" : isActive ? 420 : 280,
+                // use subtle scale animations instead of hard width/height
+                scale: isActive ? 1.02 : 1,
               }}
               transition={{
                 type: "spring",
-                stiffness: 100,
-                damping: 30,
-                mass: 1.5,
+                stiffness: 60,
+                damping: 18,
+                mass: 1,
               }}
               className="relative rounded-2xl overflow-hidden cursor-pointer flex flex-col shadow-2xl w-full md:w-auto"
                 style={{
@@ -138,16 +139,17 @@ export default function ParallaxCards() {
                     ? "var(--color-bg-card)"
                     : "rgba(255,255,255,0.45)",
                   border: "1px solid var(--color-border)",
-                  backdropFilter: isActive ? "none" : "blur(24px)",
-                  padding: isMobile ? "20px" : "40px",
+                  backdropFilter: isActive ? "none" : "blur(18px)",
+                  padding: isMobile ? "18px" : "32px",
                 }}
             >
+              <div style={{ willChange: 'transform, opacity' }}>
               <motion.div layout className="flex flex-col h-full justify-between">
                 <div>
                   {/* STEP NUMBER CIRCLE */}
                   <motion.div
                     layout="position"
-                    className="w-14 h-14 rounded-full flex items-center justify-center mb-6 font-title text-2xl font-bold"
+                    className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center mb-6 md:mb-6 font-title text-lg md:text-2xl font-bold tracking-tight"
                     style={{
                       backgroundColor: "var(--color-primary)",
                       color: "var(--color-bg-card)",
@@ -159,7 +161,7 @@ export default function ParallaxCards() {
                   {/* TITLE */}
                   <motion.h3
                     layout="position"
-                    className="font-title text-3xl font-extrabold mb-4"
+                    className="font-title text-2xl md:text-3xl font-extrabold mb-3 md:mb-4 leading-tight tracking-tight"
                     style={{ color: "var(--color-primary)" }}
                   >
                     {step.title}
@@ -173,10 +175,10 @@ export default function ParallaxCards() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-                        className="font-body text-lg leading-relaxed"
+                        className="font-body text-lg md:text-lg leading-relaxed tracking-normal"
                         style={{
                           color: "var(--color-text-body)",
-                          opacity: 0.9,
+                          opacity: 0.95,
                         }}
                       >
                         {step.description}
@@ -226,6 +228,7 @@ export default function ParallaxCards() {
                   )}
                 </AnimatePresence>
               </motion.div>
+              </div>
             </motion.div>
           );
         })}
