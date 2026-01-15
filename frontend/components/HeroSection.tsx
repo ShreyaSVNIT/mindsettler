@@ -57,7 +57,7 @@ const HeroSection: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black text-center py-12 md:py-24">
+    <section className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] lg:min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black text-center py-12 md:py-24">
       <div className="absolute inset-0 z-0">
         <video
           loop
