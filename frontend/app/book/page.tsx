@@ -46,6 +46,9 @@ const bookingSchema = z.object({
   mode: z.enum(["ONLINE", "OFFLINE"], {
     errorMap: () => ({ message: "Please select a session mode" }),
   }),
+  payment_mode: z.enum(["ONLINE", "OFFLINE"], {
+    errorMap: () => ({ message: "Please select a payment mode" }),
+  }),
   user_message: z.string().optional(),
 }).refine(
   (data) => {
@@ -92,6 +95,7 @@ export default function BookPage() {
     defaultValues: {
       preferred_period: "MORNING",
       mode: "ONLINE",
+      payment_mode: "ONLINE",
       country: "India",
       consent_given: false,
       privacy_policy: false,
@@ -129,6 +133,7 @@ export default function BookPage() {
         preferred_date: data.preferred_date,
         preferred_period: data.preferred_period,
         mode: data.mode,
+        payment_mode: data.payment_mode,
       };
 
       // Add optional fields only if they exist
@@ -657,6 +662,39 @@ export default function BookPage() {
                 </div>
                 {errors.mode && (
                   <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.mode.message}</p>
+                )}
+              </div>
+
+              {/* Payment Mode */}
+              <div>
+                <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
+                  Payment Mode <span className="text-[var(--color-primary)]">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  {(["ONLINE", "OFFLINE"] as const).map((mode) => (
+                    <label
+                      key={mode}
+                      className={`flex items-center justify-center px-4 py-3 rounded-xl border-2 cursor-pointer transition-all font-body text-sm font-semibold ${
+                        watch("payment_mode") === mode
+                          ? "border-[var(--color-primary)] bg-[var(--color-primary)]/10 text-[var(--color-primary)]"
+                          : "border-[var(--color-primary)]/20 hover:border-[var(--color-primary)]/40 bg-white"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        {...register("payment_mode")}
+                        value={mode}
+                        className="sr-only"
+                        disabled={bookingStatus === "submitting"}
+                      />
+                      {mode}
+                    </label>
+                  ))}
+                </div>
+                {errors.payment_mode && (
+                  <p className="text-[var(--color-primary)] text-sm mt-1 font-body">
+                    {errors.payment_mode.message}
+                  </p>
                 )}
               </div>
 

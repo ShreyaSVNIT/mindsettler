@@ -98,7 +98,7 @@ function VerifyEmailContent() {
         alert("Your booking has been cancelled successfully.");
       }
 
-      await refetchVerification();
+      router.replace(`/verify-email?token=${token}`);
     } catch (err: any) {
       setState({
         kind: "error",
@@ -229,16 +229,6 @@ function VerifyEmailContent() {
                   </div>
                 )}
 
-                {state.kind === "success" &&
-                  typeof (state.data as any).amount === "number" && (
-                    <div className="flex justify-between">
-                      <span className="font-body text-green-700">Amount</span>
-                      <span className="font-body font-bold text-green-800">
-                        ₹{(state.data as any).amount}
-                      </span>
-                    </div>
-                  )
-                }
               </div>
             )}
 
@@ -278,12 +268,27 @@ function VerifyEmailContent() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               {state.data.booking.status === "APPROVED" && (
                 <>
-                  <button
-                    onClick={() => router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)}
-                    className="bg-green-600 hover:bg-green-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-                  >
-                    Proceed to Payment
-                  </button>
+                  {state.data.booking.mode === "OFFLINE" &&
+                  state.data.booking.payment_mode === "OFFLINE" ? (
+                    <div className="bg-white/70 rounded-xl p-5 text-center border border-green-200 mb-3">
+                      <p className="font-body text-green-700">
+                        💼 This is an <strong>offline session</strong> with
+                        <strong> offline payment</strong>.
+                        <br />
+                        No online payment is required. Please pay directly at the session.
+                      </p>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() =>
+                        router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)
+                      }
+                      className="bg-green-600 hover:bg-green-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                    >
+                      Proceed to Payment
+                    </button>
+                  )}
+
                   <button
                     onClick={handleCancelBooking}
                     className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"

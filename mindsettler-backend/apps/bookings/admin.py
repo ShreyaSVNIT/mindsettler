@@ -466,7 +466,7 @@ class BookingAdmin(admin.ModelAdmin):
         }),
         ("User Preferences", {
             "fields": (
-                "preferred_date_formatted",
+                "preferred_date",
                 "preferred_period",
                 "preferred_time_start",
                 "preferred_time_end",

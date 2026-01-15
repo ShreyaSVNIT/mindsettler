@@ -7,7 +7,7 @@ from rest_framework.exceptions import ValidationError
 ALLOWED_TRANSITIONS = {
     "DRAFT": {"PENDING", "REJECTED"},
     "PENDING": {"APPROVED", "REJECTED"},
-    "APPROVED": {"PAYMENT_PENDING", "CANCELLED"},
+    "APPROVED": {"PAYMENT_PENDING", "CONFIRMED", "CANCELLED"},
     "PAYMENT_PENDING": {
         "CONFIRMED",
         "PAYMENT_FAILED",
@@ -56,3 +56,13 @@ def ensure_amount_set(booking):
 def ensure_payment_reference(booking):
     if not booking.payment_reference:
         raise ValidationError("Payment reference missing")
+
+
+def ensure_payment_not_required(booking):
+    """
+    Used to bypass payment flow for offline sessions
+    with offline payment mode.
+    """
+    if booking.mode == "OFFLINE" and booking.payment_mode == "OFFLINE":
+        return
+    raise ValidationError("Payment is required for this booking")
