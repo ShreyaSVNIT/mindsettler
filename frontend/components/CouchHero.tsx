@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import Image from 'next/image';
 import TitleHeader from "./TitleHeader";
 
 interface CouchHeroProps {
@@ -33,16 +34,20 @@ export default function CouchHero({
     <section className={sectionClasses} style={{ backgroundColor }}>
       {/* Decorative couches to keep the original look */}
       <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[70vh] w-auto hidden xl:block z-0 pointer-events-none">
-        <img
+        <Image
           src="/pinkcouch1.png"
           alt="Relaxing couch"
+          width={720}
+          height={1200}
           className="h-full w-auto object-cover rounded-r-[3rem] shadow-2xl opacity-90"
         />
       </div>
       <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[70vh] w-auto hidden xl:block z-0 pointer-events-none">
-        <img
+        <Image
           src="/pinkcouch2.png"
           alt="Comfortable setting"
+          width={720}
+          height={1200}
           className="h-full w-auto object-cover rounded-l-[3rem] shadow-2xl opacity-90"
         />
       </div>

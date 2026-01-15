@@ -32,7 +32,7 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 100 }}
             transition={{ delay: 1, duration: 0.5 }}
-            className="fixed bottom-4 right-4 z-[100] cursor-pointer group"
+            className="fixed bottom-4 right-4 z-[100] cursor-pointer"
             onClick={() => {
                 // push a lightweight URL marker so opening the overlay is reflected in the URL
                 try {
@@ -44,10 +44,10 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
                 setIsOpen(true);
               }}
           >
-            <div className="relative bg-[var(--color-primary)] text-white px-8 py-4 md:px-10 md:py-6 rounded-tl-[1.75rem] md:rounded-tl-[2.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all group-hover:scale-105 origin-bottom-right">
+            <div className="relative bg-[var(--color-primary)] text-white px-8 py-4 md:px-10 md:py-6 rounded-tl-[1.75rem] md:rounded-tl-[2.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all">
               <div className="flex flex-col items-start">
                 <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
-                  LET'S
+                  LET&apos;S
                 </span>
                 <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
                   TALK
@@ -104,13 +104,13 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
                       </motion.div>
 
                       <h1 className="font-title text-6xl md:text-7xl lg:text-8xl font-bold text-[var(--color-text-body)] mb-6 leading-none">
-                        LET'S WORK<br />
+                        LET&apos;S WORK<br />
                         <span className="text-[var(--color-primary)] italic">TOGETHER</span>
                         <span className="inline-block ml-4 text-6xl">😊</span>
                       </h1>
 
                       <p className="font-body text-lg text-[var(--color-text-body)]/70 max-w-lg">
-                        Ready to start your healing journey? Reach out and let's create a personalized plan for your mental wellness.
+                        Ready to start your healing journey? Reach out and let&apos;s create a personalized plan for your mental wellness.
                       </p>
                     </div>
 

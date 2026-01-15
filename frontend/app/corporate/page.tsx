@@ -1,13 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import MagneticButton from '@/components/Button';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
 import HealingJourneySection from '@/components/HealingJourneySection';
 import SectionHeader from '@/components/SectionHeader';
 import CouchHero from '@/components/CouchHero';
-import MagicBento from '@/components/MagicBento';
+import dynamic from 'next/dynamic';
+
+const MagicBento = dynamic(() => import('@/components/MagicBento'), { ssr: false, loading: () => null });
 
 export default function CorporatePage() {
   const [formData, setFormData] = useState({
@@ -67,7 +70,7 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team's specific challenges and goals.</span>
-          <img src="/img1.jpeg" alt="Corporate Workshops" className="corporate-desc-img" />
+          <Image src="/img1.jpeg" alt="Corporate Workshops" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -79,7 +82,7 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing. These sessions create a safe space for employees to share experiences, develop coping strategies, and build meaningful connections with their colleagues. Professional guidance ensures productive and transformative outcomes.</span>
-          <img src="/img2.jpeg" alt="Group Therapy" className="corporate-desc-img" />
+          <Image src="/img2.jpeg" alt="Group Therapy" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -91,7 +94,7 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Strategic mental health planning and consultation services to create a culture of well-being within your organization. We work closely with leadership to develop comprehensive mental health policies, implement effective support systems, and create sustainable wellness initiatives that prioritize employee mental health at every level.</span>
-          <img src="/img3.jpeg" alt="Consultations" className="corporate-desc-img" />
+          <Image src="/img3.jpeg" alt="Consultations" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -103,7 +106,7 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry. Whether you need stress management training, burnout prevention, or leadership development, we craft solutions that align with your company culture and deliver measurable results for long-term success.</span>
-          <img src="/img4.jpeg" alt="Custom Programs" className="corporate-desc-img" />
+          <Image src="/img4.jpeg" alt="Custom Programs" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -115,7 +118,7 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Develop leadership resilience and emotional intelligence through targeted programs that support managers and executives. Our leadership wellness tracks focus on stress reduction, effective communication, and mindful decision-making, empowering your leaders to foster a mentally healthy workplace from the top down.</span>
-          <img src="/img5.jpeg" alt="Leadership Wellness Programs" className="corporate-desc-img" />
+          <Image src="/img5.jpeg" alt="Leadership Wellness Programs" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -126,8 +129,8 @@ export default function CorporatePage() {
       title: 'Peer Support Circles',
       description: (
         <>
-          <span className="corporate-desc-text">Facilitated peer groups where employees can connect, share experiences, and support each other’s mental health journeys. These circles nurture trust and empathy, reduce stigma, and create a sense of belonging, making mental wellness a shared responsibility across your organization.</span>
-          <img src="/img6.jpeg" alt="Peer Support Circles" className="corporate-desc-img" />
+          <span className="corporate-desc-text">Facilitated peer groups where employees can connect, share experiences, and support each other&apos;s mental health journeys. These circles nurture trust and empathy, reduce stigma, and create a sense of belonging, making mental wellness a shared responsibility across your organization.</span>
+          <Image src="/img6.jpeg" alt="Peer Support Circles" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -139,7 +142,7 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Comprehensive assessments of existing HR policies, benefits, and workplace practices to identify mental health gaps and opportunities. Our audits provide actionable recommendations to create a supportive environment and ensure compliance with best practices in employee mental wellness.</span>
-          <img src="/img7.jpeg" alt="HR Mental Health Audits" className="corporate-desc-img" />
+          <Image src="/img7.jpeg" alt="HR Mental Health Audits" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',
@@ -151,7 +154,7 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Tailored wellness programs designed for the unique demands and stressors of your industry. Whether in tech, healthcare, education, or manufacturing, our industry tracks address sector-specific challenges, boost engagement, and deliver measurable improvements in well-being and performance.</span>
-          <img src="/img8.jpeg" alt="Industry-Specific Wellness Tracks" className="corporate-desc-img" />
+          <Image src="/img8.jpeg" alt="Industry-Specific Wellness Tracks" width={600} height={340} className="corporate-desc-img" />
         </>
       ),
       label: '',

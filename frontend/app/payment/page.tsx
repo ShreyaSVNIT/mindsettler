@@ -27,7 +27,7 @@ function PaymentPageContent() {
     if (!acknowledgementId) return;
     if (state.kind !== "idle") return;
 
-    setState({ kind: "initiating" });
+    Promise.resolve().then(() => setState({ kind: "initiating" }));
 
     bookingAPI
       .initiatePayment({ acknowledgement_id: acknowledgementId })

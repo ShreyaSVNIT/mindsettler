@@ -5,7 +5,9 @@ import Image from 'next/image';
 import { motion, useScroll, useTransform, useInView, useMotionValue, useSpring } from 'framer-motion';
 import MagneticButton from '@/components/Button';
 import WaveDividerSolid from '@/components/WaveDividerSolid';
-import MagicBento from '@/components/MagicBento';
+import dynamic from 'next/dynamic';
+
+const MagicBento = dynamic(() => import('@/components/MagicBento'), { ssr: false, loading: () => null });
 import SectionHeader from '@/components/SectionHeader';
 import HealingJourneySection from '@/components/HealingJourneySection';
 import FounderIntroduction from '@/components/FounderIntroduction';

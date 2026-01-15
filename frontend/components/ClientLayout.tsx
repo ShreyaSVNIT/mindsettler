@@ -5,21 +5,21 @@ import { usePathname } from 'next/navigation';
 import SplashScreen from './SplashScreen';
 import { initFirebase } from '@/lib/firebase';
 import { pingBackends } from '@/lib/api';
+import ChatWidget from '@/app/ChatBot/ChatWidget';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [showSplash, setShowSplash] = useState(true);
-  const [shouldCheckSplash, setShouldCheckSplash] = useState(true);
 
   useEffect(() => {
     const hasShownSplash = sessionStorage.getItem('splashShown');
     const isHomePage = pathname === '/';
 
     if (isHomePage && !hasShownSplash) {
-      setShowSplash(true);
+      Promise.resolve().then(() => setShowSplash(true));
       sessionStorage.setItem('splashShown', 'true');
     } else {
-      setShowSplash(false);
+      Promise.resolve().then(() => setShowSplash(false));
       // Make downstream components behave the same as if the splash just finished.
       (window as any).__msSplashDone = true;
       setTimeout(() => {
@@ -27,7 +27,6 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       }, 0);
     }
     
-    setShouldCheckSplash(false);
 
     // Initialize Firebase Analytics (client-side only, Spark plan)
     initFirebase().catch((err) => {
@@ -52,6 +51,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     <>
       {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
       {children}
+      {!showSplash && <ChatWidget />}
     </>
   );
 }

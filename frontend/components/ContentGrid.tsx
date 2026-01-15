@@ -69,8 +69,30 @@ export default function ContentGrid({
     >
       <div className="mx-auto max-w-7xl px-6">
 
-        <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
-          <div className="lg:w-64 lg:flex-shrink-0">
+        <div className="flex flex-col gap-6 lg:flex-row lg:gap-12">
+          {/* Mobile: horizontal category nav */}
+          <div className="w-full lg:hidden">
+            <nav className="flex gap-3 overflow-x-auto pb-2 px-1">
+              {categories.map((cat) => {
+                const active = activeCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      active
+                        ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]'
+                        : 'text-[var(--color-text-body)]/70 bg-transparent'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+
+          <div className="lg:w-64 lg:flex-shrink-0 hidden lg:block">
             <div className="lg:sticky lg:top-32 space-y-2">
               {categories.map((cat) => {
                 const active = activeCategory === cat;
@@ -93,22 +115,24 @@ export default function ContentGrid({
           </div>
 
           <div className="flex-1">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Mobile: horizontally scrollable cards with snap */}
+            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-2 sm:px-0 lg:hidden">
               {filtered.map((post, i) => (
                 <Link
                   key={post.id}
                   href={post.href}
                   target={post.external ? '_blank' : undefined}
                   rel={post.external ? 'noopener noreferrer' : undefined}
-                  className="group overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md animate-in fade-in slide-in-from-bottom-4"
+                  className="group overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md animate-in fade-in snap-start"
                   style={{
                     backgroundColor: 'var(--color-bg-card)',
                     borderColor: 'var(--color-border)',
+                    minWidth: '260px',
                     animationDelay: `${i * 80}ms`,
                   }}
                 >
                   <div
-                    className="relative h-48 w-full overflow-hidden"
+                    className="relative h-44 w-[260px] overflow-hidden"
                     style={{ backgroundColor: 'var(--color-bg-subtle)' }}
                   >
                     <Image
@@ -119,7 +143,7 @@ export default function ContentGrid({
                     />
                   </div>
 
-                  <div className="p-6 transition-colors duration-300">
+                  <div className="p-4 transition-colors duration-300" style={{ width: '260px' }}>
                     <span
                       className="mb-3 inline-block rounded-full px-3 py-1 text-xs font-semibold"
                       style={{
@@ -146,6 +170,64 @@ export default function ContentGrid({
                   </div>
                 </Link>
               ))}
+            </div>
+
+            {/* Desktop/Tablet: grid layout */}
+            <div className="hidden lg:block">
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {filtered.map((post, i) => (
+                  <Link
+                    key={post.id}
+                    href={post.href}
+                    target={post.external ? '_blank' : undefined}
+                    rel={post.external ? 'noopener noreferrer' : undefined}
+                    className="group overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md animate-in fade-in slide-in-from-bottom-4"
+                    style={{
+                      backgroundColor: 'var(--color-bg-card)',
+                      borderColor: 'var(--color-border)',
+                      animationDelay: `${i * 80}ms`,
+                    }}
+                  >
+                    <div
+                      className="relative h-48 w-full overflow-hidden"
+                      style={{ backgroundColor: 'var(--color-bg-subtle)' }}
+                    >
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                      />
+                    </div>
+
+                    <div className="p-6 transition-colors duration-300">
+                      <span
+                        className="mb-3 inline-block rounded-full px-3 py-1 text-xs font-semibold"
+                        style={{
+                          backgroundColor: 'var(--color-bg-subtle)',
+                          color: 'var(--color-primary)',
+                        }}
+                      >
+                        {post.type}
+                      </span>
+
+                      <h3
+                        className="mb-3 text-lg font-semibold leading-snug font-title transition-colors duration-300"
+                        style={{ color: 'var(--color-primary)' }}
+                      >
+                        {post.title}
+                      </h3>
+
+                      <p
+                        className="text-sm line-clamp-3 body-text transition-opacity duration-300 group-hover:opacity-90"
+                        style={{ color: 'var(--color-text-body)' }}
+                      >
+                        {post.description}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
         </div>

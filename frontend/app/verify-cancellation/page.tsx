@@ -23,7 +23,7 @@ function VerifyCancellationContent() {
   useEffect(() => {
     if (!token) return;
 
-    setState({ kind: "loading" });
+    Promise.resolve().then(() => setState({ kind: "loading" }));
 
     bookingAPI
       .verifyCancellation(token)

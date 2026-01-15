@@ -3,7 +3,6 @@ import MentalHealthBasics from "@/components/MentalHealthBasics";
 import JourneyRoadmap from "@/components/JourneyRoadmap";
 import MusicPlayer from "@/components/MusicPlayer";
 import MissionStatement from "@/components/MissionStatement";
-import ChatWidget from "../ChatBot/ChatWidget";
 
 export default function HomePage() {
   return (
@@ -13,7 +12,6 @@ export default function HomePage() {
       <MissionStatement />
       <JourneyRoadmap />
       <MusicPlayer />
-      <ChatWidget />
     </main>
   );
 }

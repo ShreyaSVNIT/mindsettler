@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 // Type-safe Message structure
 interface Message {
@@ -61,23 +62,23 @@ export default function ChatWidget() {
             className="fixed bottom-28 left-6 w-80 sm:w-96 h-[550px] bg-[var(--color-bg-card)] rounded-[2rem] shadow-[0_20px_50px_rgba(229,93,128,0.15)] flex flex-col overflow-hidden border border-[var(--color-border)] mb-4"
           >
             {/* Header: Reassuring & Human  */}
-            <div className="bg-[var(--color-primary)] p-6 text-[var(--color-bg-app)]">
+            <div className="bg-[var(--color-primary)] p-6 text-white">
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="font-title font-semibold text-xl tracking-tight">MindSettler Guide</h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="w-4 h-2 bg-[var(--color-bg-app)]/80 rounded-full animate-pulse"></span>
-                    <p className="text-xs text-[var(--color-bg-app)]/90 font-light">Online & Confidential</p>
+                    <span className="w-4 h-2 bg-white/80 rounded-full animate-pulse"></span>
+                    <p className="text-xs text-white/90 font-light">Online & Confidential</p>
                   </div>
                 </div>
-                <button onClick={() => setIsOpen(false)} className="bg-[var(--color-bg-app)]/20 hover:bg-[var(--color-bg-app)]/30 p-2 rounded-full transition-all text-[var(--color-bg-app)]">
+                <button onClick={() => setIsOpen(false)} className="bg-white/20 hover:bg-white/30 p-2 rounded-full transition-all text-white">
                   ✕
                 </button>
               </div>
             </div>
 
             {/* Chat Flow [cite: 69] */}
-            <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gradient-to-b from-[var(--color-bg-app)]/20 to-[var(--color-bg-card)]">
+            <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-gradient-to-b from-white/20 to-[var(--color-bg-card)]">
               {messages.map((m, i) => (
                 <motion.div
                   initial={{ opacity: 0, x: m.sender === 'user' ? 10 : -10 }}
@@ -86,8 +87,8 @@ export default function ChatWidget() {
                   className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div className={`max-w-[85%] p-4 rounded-2xl text-[14px] leading-relaxed shadow-sm ${m.sender === 'user'
-                    ? 'bg-[var(--color-primary)] text-[var(--color-bg-app)] rounded-tr-none'
-                    : 'bg-[var(--color-bg-card)] text-[var(--color-text-body)] border border-[var(--color-border)] rounded-tl-none'
+                    ? 'bg-[var(--color-primary)] text-white rounded-tr-none'
+                    : 'bg-[var(--color-bg-card)] text-white border border-[var(--color-border)] rounded-tl-none'
                     }`}>
                     {m.text}
 
@@ -105,7 +106,7 @@ export default function ChatWidget() {
                           <button
                             key={idx}
                             onClick={() => window.location.href = opt.link}
-                            className="bg-[var(--color-bg-app)] text-[var(--color-primary)] border border-[var(--color-primary)]/20 px-4 py-2 rounded-xl text-xs font-medium hover:bg-[var(--color-primary)] hover:text-[var(--color-bg-app)] transition-all shadow-sm"
+                            className="bg-white text-[var(--color-primary)] border border-[var(--color-primary)]/20 px-4 py-2 rounded-xl text-xs font-medium hover:bg-[var(--color-primary)] hover:text-white transition-all shadow-sm"
                           >
                             {opt.label}
                           </button>
@@ -129,7 +130,7 @@ export default function ChatWidget() {
               />
               <button
                 onClick={handleSend}
-                className="bg-[var(--color-primary)] text-[var(--color-bg-app)] w-12 h-12 rounded-2xl flex items-center justify-center hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 hover:bg-[var(--color-primary-hover)]"
+                className="bg-[var(--color-primary)] text-white w-12 h-12 rounded-2xl flex items-center justify-center hover:shadow-lg hover:-translate-y-0.5 transition-all active:scale-95 hover:bg-[var(--color-primary-hover)]"
               >
                 ➤
               </button>
@@ -145,10 +146,10 @@ export default function ChatWidget() {
           whileTap={{ scale: 0.98 }}
           type="button"
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 left-6 bg-[var(--color-primary)] w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center shadow-xl transition-all z-[220] p-0"
+          className="fixed bottom-6 left-6 bg-[var(--color-primary)] w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl transition-all z-[220] p-0"
           aria-label="Open Chatbot"
         >
-          <img src="/chatlogo.png" alt="Chatbot" className="w-6 h-6 md:w-8 md:h-8" />
+            <Image src="/chatlogo.png" alt="Chatbot" width={32} height={32} className="w-6 h-6 md:w-8 md:h-8" />
         </motion.button>
       )}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import {
   motion,
   useScroll,
@@ -12,6 +12,7 @@ import {
 import MagneticButton from "./Button";
 import Link from 'next/link';
 import SectionHeader from "./SectionHeader";
+import Image from 'next/image';
 
 /* ---------------------------------- */
 /* Timeline Section */
@@ -49,12 +50,13 @@ const TimelineSection: React.FC<SectionProps> = ({
         className="w-full md:w-1/2 relative group"
       >
         {/* decorative glow removed per request */}
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl aspect-[4/3] md:aspect-[16/10]">
-          <img
-            src={image}
-            alt={title}
-            className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700"
-          />
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 shadow-2xl aspect-[4/3] md:aspect-[16/10]">
+              <Image
+                src={image}
+                alt={title}
+                fill
+                className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700"
+              />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
         </div>
 
@@ -150,6 +152,20 @@ export default function MindSettlerJourney() {
     L 500 3400
   `;
 
+  // Pick shuffled images once per render lifecycle
+  const [a, b, c] = useMemo(() => {
+    const imgs = [
+      "/img1.jpeg",
+      "/img2.jpeg",
+      "/img3.jpeg",
+      "/img4.jpeg",
+      "/img5.jpeg",
+    ];
+
+    // Use a stable deterministic selection to avoid impure functions during render
+    return [imgs[0], imgs[1], imgs[2]];
+  }, []);
+
   return (
     <div
       ref={containerRef}
@@ -226,52 +242,29 @@ export default function MindSettlerJourney() {
 
         {/* SECTIONS */}
         <div className="space-y-10">
-          {(() => {
-            // pick 3 random images from available public assets
-            const imgs = [
-              "/img1.jpeg",
-              "/img2.jpeg",
-              "/img3.jpeg",
-              "/img4.jpeg",
-              "/img5.jpeg"
-            ];
+          <>
+            <TimelineSection
+              step="STEP 01"
+              title="Self-Discovery"
+              description="Begin by understanding your emotional patterns. Through guided reflection and expert-led sessions, identify the triggers that shape your daily experience."
+              image={a}
+            />
 
-            // simple Fisher-Yates shuffle
-            for (let i = imgs.length - 1; i > 0; i--) {
-              const j = Math.floor(Math.random() * (i + 1));
-              const tmp = imgs[i];
-              imgs[i] = imgs[j];
-              imgs[j] = tmp;
-            }
+            <TimelineSection
+              reverse
+              step="STEP 02"
+              title="Inner Resilience"
+              description="Develop robust coping mechanisms. Learn scientifically-backed techniques to regulate stress, process difficult emotions, and restore your inner strength."
+              image={b}
+            />
 
-            const [a, b, c] = imgs;
-
-            return (
-              <>
-                <TimelineSection
-                  step="STEP 01"
-                  title="Self-Discovery"
-                  description="Begin by understanding your emotional patterns. Through guided reflection and expert-led sessions, identify the triggers that shape your daily experience."
-                  image={a}
-                />
-
-                <TimelineSection
-                  reverse
-                  step="STEP 02"
-                  title="Inner Resilience"
-                  description="Develop robust coping mechanisms. Learn scientifically-backed techniques to regulate stress, process difficult emotions, and restore your inner strength."
-                  image={b}
-                />
-
-                <TimelineSection
-                  step="STEP 03"
-                  title="Sustainable Wellness"
-                  description="Transform insights into lasting habits. Create a personalized lifestyle that naturally supports mental clarity, purpose, and emotional balance every single day."
-                  image={c}
-                />
-              </>
-            );
-          })()}
+            <TimelineSection
+              step="STEP 03"
+              title="Sustainable Wellness"
+              description="Transform insights into lasting habits. Create a personalized lifestyle that naturally supports mental clarity, purpose, and emotional balance every single day."
+              image={c}
+            />
+          </>
         </div>
 
         {/* Single CTA for the whole journey */}

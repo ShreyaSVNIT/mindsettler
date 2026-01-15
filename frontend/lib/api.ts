@@ -185,7 +185,22 @@ export async function pingBackends(): Promise<void> {
   const CHATBOT_BACKEND = process.env.NEXT_PUBLIC_CHATBOT_BACKEND_URL ?? "http://127.0.0.1:8000";
 
   const normalize = (s: string) => s.replace(/\/$/, "");
-  const targets = [normalize(BACKEND_URL), normalize(CHATBOT_BACKEND)];
+  const rawTargets = [normalize(BACKEND_URL), normalize(CHATBOT_BACKEND)];
+
+  // Only ping non-localhost hosts while developing. In production, ping all configured backends.
+  const isProd = process.env.NODE_ENV === 'production';
+  const targets = rawTargets.filter((t) => {
+    if (isProd) return true;
+    try {
+      const u = new URL(t);
+      const hostname = u.hostname.toLowerCase();
+      if (hostname === '127.0.0.1' || hostname === 'localhost') return false;
+      return true;
+    } catch (e) {
+      // If parsing fails, be conservative and skip
+      return false;
+    }
+  });
 
   const candidatePaths = ["/", "/api/", "/api/health/", "/api/ping/"];
 

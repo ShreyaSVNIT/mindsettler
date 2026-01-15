@@ -16,10 +16,10 @@ export default function ResourceDetailPage({ params }: { params: Promise<{ id: s
 
     // Find resource
     useEffect(() => {
-        window.scrollTo(0, 0);
-        const found = resources.find(r => r.id === id);
-        setResource(found || null);
-        setLoading(false);
+            window.scrollTo(0, 0);
+            const found = resources.find(r => r.id === id);
+            Promise.resolve().then(() => setResource(found || null));
+            Promise.resolve().then(() => setLoading(false));
     }, [id]);
 
     if (loading) return null;

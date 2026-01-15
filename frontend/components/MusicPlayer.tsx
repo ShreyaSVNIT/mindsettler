@@ -7,12 +7,36 @@ interface MusicPlayerProps {
   youtubeUrl?: string;
 }
 
+// Lightweight YT typings for the methods we use (avoid `any`)
+declare namespace YT {
+  interface Player {
+    playVideo(): void;
+    pauseVideo(): void;
+    destroy(): void;
+  }
+  interface PlayerState {
+    PLAYING: number;
+    PAUSED: number;
+  }
+}
+
+declare global {
+  interface Window {
+    YT?: {
+      Player?: { new (elementId: string | HTMLElement, options: Record<string, unknown>): YT.Player };
+      PlayerState?: { PLAYING: number; PAUSED: number };
+    };
+    onYouTubeIframeAPIReady?: () => void;
+    __msSplashDone?: boolean;
+  }
+}
+
 const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU&t=4s' }: MusicPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const playerRef = useRef<any>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<YT.Player | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const hasAutoPlayedRef = useRef(false);
 
   // Extract video ID from YouTube URL
@@ -25,15 +49,15 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
 
   useEffect(() => {
     if (!videoId) {
-      setError('Invalid YouTube URL');
+      Promise.resolve().then(() => setError('Invalid YouTube URL'));
       return;
     }
 
     // Initialize player when API is ready
     const initializePlayer = () => {
       try {
-        if (!playerRef.current) {
-          playerRef.current = new (window as any).YT.Player('youtube-player', {
+        if (!playerRef.current && window.YT && window.YT.Player) {
+          playerRef.current = new window.YT.Player('youtube-player', {
             videoId: videoId,
             playerVars: {
               autoplay: 0,
@@ -45,19 +69,21 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
               origin: window.location.origin,
             },
             events: {
-              onReady: (event: any) => {
-                console.log('YouTube player ready');
+              onReady: (event: { target?: YT.Player }) => {
+                // Player ready
                 setIsLoaded(true);
                 setError(null);
               },
-              onStateChange: (event: any) => {
-                if (event.data === (window as any).YT.PlayerState.PLAYING) {
-                  setIsPlaying(true);
-                } else if (event.data === (window as any).YT.PlayerState.PAUSED) {
-                  setIsPlaying(false);
+              onStateChange: (event: { data?: number }) => {
+                if (window.YT && window.YT.PlayerState) {
+                  if (event.data === window.YT.PlayerState.PLAYING) {
+                    setIsPlaying(true);
+                  } else if (event.data === window.YT.PlayerState.PAUSED) {
+                    setIsPlaying(false);
+                  }
                 }
               },
-              onError: (event: any) => {
+              onError: (event: { data?: number }) => {
                 console.error('YouTube player error:', event.data);
                 setError('Failed to load video');
                 setIsLoaded(false);
@@ -65,14 +91,14 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
             },
           });
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.error('Error initializing player:', err);
         setError('Failed to initialize player');
       }
     };
 
     // Check if API is already loaded
-    if ((window as any).YT && (window as any).YT.Player) {
+    if (window.YT && window.YT.Player) {
       initializePlayer();
       return;
     }
@@ -91,8 +117,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     }
 
     // Set up the callback for when API loads
-    (window as any).onYouTubeIframeAPIReady = () => {
-      console.log('YouTube API ready');
+    window.onYouTubeIframeAPIReady = () => {
       initializePlayer();
     };
 
@@ -101,7 +126,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
         try {
           playerRef.current.destroy();
           playerRef.current = null;
-        } catch (err) {
+        } catch (err: unknown) {
           console.error('Error destroying player:', err);
         }
       }
@@ -114,9 +139,9 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       if (!hasAutoPlayedRef.current && playerRef.current && isLoaded) {
         setTimeout(() => {
           try {
-            playerRef.current.playVideo();
+            playerRef.current?.playVideo();
             hasAutoPlayedRef.current = true;
-          } catch (err) {
+          } catch (err: unknown) {
             console.error('Error auto-playing music:', err);
           }
         }, 500); // Small delay to ensure smooth transition
@@ -124,7 +149,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     };
 
     // Check if splash already completed
-    if ((window as any).__msSplashDone && !hasAutoPlayedRef.current && isLoaded) {
+    if (window.__msSplashDone && !hasAutoPlayedRef.current && isLoaded) {
       handleSplashDone();
     }
 
@@ -142,7 +167,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       } else {
         playerRef.current.playVideo();
       }
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error toggling play:', err);
     }
   };
@@ -155,14 +180,14 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
       </div>
 
       {/* Music Control Corner - rounded icon anchored bottom-left (next to chat button) */}
-      <div className="fixed bottom-6 left-24 md:left-28 z-50">
+      <div className="fixed bottom-6 left-20 z-50">
         <button
           onClick={togglePlay}
           disabled={!isLoaded}
           className={`
             group
             bg-[var(--color-primary)] text-white
-            w-16 h-16 md:w-20 md:h-20
+            w-12 h-12 md:w-14 md:h-14
             rounded-full
             shadow-2xl hover:shadow-[var(--color-primary)]/50
             transition-all hover:scale-105
