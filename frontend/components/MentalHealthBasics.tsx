@@ -83,66 +83,21 @@ const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => (
 );
 
 export default function MentalHealthBasics() {
-  // Balanced rows for a centered look
-  const rows = [
-    mentalHealthBasics.slice(0, 7),
-    mentalHealthBasics.slice(7, 13),
-    mentalHealthBasics.slice(13, 20),
-    mentalHealthBasics.slice(20, 26)
-  ];
-
-  // Logic to calculate start position (center explosion)
-  // We approximate visual center of the grid to be around row index 1.5
-  // and col index approx 3.
-  const cardVariants = {
-    hidden: (custom: { r: number; c: number; rowLen: number }) => {
-      // Calculate distance from center
-      const centerR = 1.5;
-      const centerC = (custom.rowLen - 1) / 2;
-
-      const dy = (custom.r - centerR) * 100; // Vertical distance
-      const dx = (custom.c - centerC) * 100; // Horizontal distance
-
-      return {
-        opacity: 0,
-        scale: 0.5, // Start slightly visible/larger for subtler effect
-        x: -dx * 0.4, // Drastically reduced travel distance (was 1.5)
-        y: -dy * 0.4,
-      };
-    },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      x: 0,
-      y: 0,
-      transition: {
-        type: "spring",
-        damping: 25,
-        stiffness: 100 // Slightly softer spring
-      }
-    }
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.04
-      }
-    }
+  // Replace row-sliced layout with a responsive CSS grid to keep heights consistent
+  const itemVariants = {
+    hidden: { opacity: 0, y: 12, scale: 0.96 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', damping: 22, stiffness: 120 } }
   };
 
   return (
-    <section className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 md:px-8 overflow-hidden bg-[var(--color-bg-card)]">
-      <div className="relative w-full flex flex-col items-center">
-        {/* TITLE - Centered for symmetry */}
+    <section className="relative py-24 px-4 sm:px-6 md:px-8 overflow-hidden bg-[var(--color-bg-card)]">
+      <div className="max-w-6xl w-full mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-3xl mb-12 sm:mb-16 md:mb-20 text-center px-2"
+          className="max-w-3xl mb-12 sm:mb-16 md:mb-20 text-center px-2 mx-auto"
         >
           <SectionHeader
             subheader="Emotional Alphabet"
@@ -154,33 +109,18 @@ export default function MentalHealthBasics() {
           />
         </motion.div>
 
-        {/* GRID - Centered with equal side spacing */}
         <motion.div
-          className="flex flex-col items-center gap-2 sm:gap-3 md:gap-4 w-full md:snap-none snap-y snap-mandatory overflow-y-auto md:overflow-visible"
-          variants={containerVariants}
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px", amount: 0.2 }}
+          viewport={{ once: true, amount: 0.2 }}
         >
-          {rows.map((row, r) => (
-            <div
-              key={r}
-              className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 w-full snap-start"
-            >
-              {row.map((term, c) => (
-                <motion.div
-                  key={term.letter}
-                  custom={{ r, c, rowLen: row.length }}
-                  variants={cardVariants}
-                  className="w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40"
-                  viewport={{ once: true, amount: 0.3 }}
-                  initial="hidden"
-                  whileInView="visible"
-                >
-                  <HexagonCard data={term} />
-                </motion.div>
-              ))}
-            </div>
+          {mentalHealthBasics.map((term, i) => (
+            <motion.div key={term.letter} variants={itemVariants} className="w-full">
+              <div className="aspect-square w-full">
+                <HexagonCard data={term} />
+              </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>
