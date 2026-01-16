@@ -1,4 +1,4 @@
-import 'use client';
+"use client";
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -43,6 +43,7 @@ export default function ResourcesPage() {
                 description="Curated content to support your mental wellness journey. Explore articles, videos, and tools designed to help you thrive."
                 alignment="center"
                 layout="static"
+                className="h-screen"
                 backgroundColor="white"
             />
 

@@ -35,21 +35,21 @@ export default function CouchHero({
   return (
     <section className={sectionClasses} style={{ backgroundColor }}>
       {/* Decorative couches to keep the original look */}
-      <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[48vh] w-auto hidden xl:block z-0 pointer-events-none">
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 h-[70vh] w-auto hidden xl:block z-0 pointer-events-none">
         <Image
           src="/pinkcouch1.png"
           alt="Relaxing couch"
-          width={720}
-          height={1200}
+          width={900}
+          height={1500}
           className="h-full w-auto object-cover rounded-r-[3rem] shadow-lg opacity-90"
         />
       </div>
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[52vh] w-auto hidden xl:block z-0 pointer-events-none">
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 h-[70vh] w-auto hidden xl:block z-0 pointer-events-none">
         <Image
           src="/pinkcouch2.png"
           alt="Comfortable setting"
-          width={720}
-          height={1200}
+          width={920}
+          height={1550}
           className="h-full w-auto object-cover rounded-l-[3rem] shadow-lg opacity-90"
         />
       </div>

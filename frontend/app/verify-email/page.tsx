@@ -249,7 +249,7 @@ function VerifyEmailContent() {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               {state.data.booking.status === "APPROVED" && (
                 <>
-                  {state.data.booking.mode === "OFFLINE" && state.data.booking.payment_mode === "OFFLINE" ? (
+                  {state.data.booking.mode === "OFFLINE" && (state.data.booking as any).payment_mode === "OFFLINE" ? (
                     <div className="bg-white/70 rounded-xl p-5 text-center border border-[var(--color-primary)]/20 mb-3">
                       <p className="font-body text-[var(--color-text-body)]">
                         This is an <strong>offline session</strong> with <strong>offline payment</strong>.

@@ -7,25 +7,10 @@ interface MusicPlayerProps {
   youtubeUrl?: string;
 }
 
-// Lightweight YT typings for the methods we use (avoid `any`)
-declare namespace YT {
-  interface Player {
-    playVideo(): void;
-    pauseVideo(): void;
-    destroy(): void;
-  }
-  interface PlayerState {
-    PLAYING: number;
-    PAUSED: number;
-  }
-}
-
+// Use a loose `any` for the global YouTube API to avoid duplicate declaration conflicts
 declare global {
   interface Window {
-    YT?: {
-      Player?: { new (elementId: string | HTMLElement, options: Record<string, unknown>): YT.Player };
-      PlayerState?: { PLAYING: number; PAUSED: number };
-    };
+    YT?: any;
     onYouTubeIframeAPIReady?: () => void;
     __msSplashDone?: boolean;
   }
@@ -37,7 +22,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
   const [error, setError] = useState<string | null>(null);
   const [playerExpanded, setPlayerExpanded] = useState(false);
   const [footerVisible, setFooterVisible] = useState(false);
-  const playerRef = useRef<YT.Player | null>(null);
+  const playerRef = useRef<any | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const hasAutoPlayedRef = useRef(false);
 
