@@ -20,7 +20,7 @@ export const resources: Resource[] = [
         type: 'blog',
         title: 'The Art of Mindful Living',
         description: 'Discover how daily mindfulness practices can transform your mental clarity and emotional resilience. A deep dive into ancient techniques for modern life.',
-        imageUrl: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=600',
+        imageUrl: '/img8.jpg',
         date: 'October 12, 2023',
         author: 'Dr. Sarah Jenkins',
         content: `
@@ -43,7 +43,7 @@ export const resources: Resource[] = [
         type: 'blog',
         title: 'Understanding Anxiety Triggers',
         description: 'A comprehensive guide to identifying and managing the hidden triggers that spark anxiety in your daily life.',
-        imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=600',
+        imageUrl: '/img9.jpg',
         date: 'November 05, 2023',
         author: 'Mark Thompson, LMFT',
         content: `
@@ -59,7 +59,7 @@ export const resources: Resource[] = [
         type: 'blog',
         title: 'The Power of Sleep on Mental Health',
         description: 'Why sleep is the foundation of emotional stability and how to fix your sleep hygiene starting tonight.',
-        imageUrl: 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?q=80&w=600',
+        imageUrl: '/img10.jpg',
         date: 'December 20, 2023',
         author: 'Dr. Emily Chen',
         content: `
@@ -73,7 +73,7 @@ export const resources: Resource[] = [
         type: 'blog',
         title: 'Navigating Grief and Loss',
         description: 'Processing loss is never linear. This article explores the stages of grief and healthy coping mechanisms.',
-        imageUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=600',
+        imageUrl: '/img11.jpg',
         date: 'January 15, 2024',
         author: 'Rebecca Solnit',
         content: `
@@ -87,7 +87,7 @@ export const resources: Resource[] = [
         type: 'article',
         title: '5 Quick Stress Busters',
         description: 'Instant techniques to lower your cortisol levels in under 5 minutes.',
-        imageUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600',
+        imageUrl: '/img8.jpg',
         date: 'Feb 10, 2024',
         author: 'MindSettler Team',
         content: '<p>1. Deep Breathing. 2. Progressive Muscle Relaxation. 3. Visualization. 4. Sensory Grounding. 5. Stretching.</p>'
@@ -97,7 +97,7 @@ export const resources: Resource[] = [
         type: 'article',
         title: 'Foods that Boost Mood',
         description: 'Nutritional psychiatry explains how your diet affects your emotions.',
-        imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600',
+        imageUrl: '/img9.jpg',
         date: 'Feb 12, 2024',
         author: 'Nutritionist Jane',
         content: '<p>Include more Omega-3s, fermented foods, and colorful vegetables in your diet to support gut health and mood.</p>'
@@ -107,7 +107,7 @@ export const resources: Resource[] = [
         type: 'article',
         title: 'Digital Detox Benefits',
         description: 'What happens to your brain when you unplug for a weekend.',
-        imageUrl: 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?q=80&w=600',
+        imageUrl: '/img10.jpg',
         date: 'March 01, 2024',
         author: 'Tech Wellness',
         content: '<p>Reduced anxiety, better sleep, and improved focus are just a few benefits of stepping away from screens.</p>'
@@ -117,7 +117,7 @@ export const resources: Resource[] = [
         type: 'article',
         title: 'The Psychology of Color',
         description: 'How your surroundings influence your mental state.',
-        imageUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=600',
+        imageUrl: '/img11.jpg',
         date: 'March 05, 2024',
         author: 'Design Psych',
         content: '<p>Blue calms, red excites, green balances. Choose your environment wisely.</p>'
@@ -129,7 +129,7 @@ export const resources: Resource[] = [
         type: 'video',
         title: '10 Minute Guided Meditation',
         description: 'A simple guided session for beginners to find calm.',
-        imageUrl: 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?q=80&w=600',
+        imageUrl: '/img8.jpg',
         videoUrl: 'https://www.youtube.com/embed/inpok4MKVLM', // Example embed
         date: '2023',
         author: 'Mindfulness Coach'
@@ -139,7 +139,7 @@ export const resources: Resource[] = [
         type: 'video',
         title: 'Understanding CBT',
         description: 'What is Cognitive Behavioral Therapy and how does it work?',
-        imageUrl: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=600',
+        imageUrl: '/img9.jpg',
         videoUrl: 'https://www.youtube.com/embed/9c_Bv_FBE-c',
         date: '2023',
         author: 'Dr. Ali Mattu'
@@ -149,7 +149,7 @@ export const resources: Resource[] = [
         type: 'video',
         title: 'Yoga for Anxiety',
         description: 'Gentle movements to release physical tension caused by stress.',
-        imageUrl: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600',
+        imageUrl: '/img10.jpg',
         videoUrl: 'https://www.youtube.com/embed/hJbRpHZr_d0',
         date: '2023',
         author: 'Yoga with Adriene'
@@ -159,7 +159,7 @@ export const resources: Resource[] = [
         type: 'video',
         title: 'The Science of Happiness',
         description: 'An experiment in gratitude.',
-        imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600',
+        imageUrl: '/img11.jpg',
         videoUrl: 'https://www.youtube.com/embed/oHv6vTKD6lg',
         date: '2013',
         author: 'SoulPancake'
@@ -171,7 +171,7 @@ export const resources: Resource[] = [
         type: 'link',
         title: 'NIMH - Mental Health Info',
         description: 'Official National Institute of Mental Health resources.',
-        imageUrl: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?q=80&w=600',
+        imageUrl: '/img8.jpg',
         externalUrl: 'https://www.nimh.nih.gov/',
         date: 'Updated Daily',
         author: 'NIMH'
@@ -181,7 +181,7 @@ export const resources: Resource[] = [
         type: 'link',
         title: 'Psychology Today',
         description: 'Find a therapist and read the latest psychology news.',
-        imageUrl: 'https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=600',
+        imageUrl: '/img9.jpg',
         externalUrl: 'https://www.psychologytoday.com/',
         date: 'Live',
         author: 'Psychology Today'
@@ -191,7 +191,7 @@ export const resources: Resource[] = [
         type: 'link',
         title: 'Headspace',
         description: 'Meditation and sleep made simple.',
-        imageUrl: 'https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=600',
+        imageUrl: '/img10.jpg',
         externalUrl: 'https://www.headspace.com/',
         date: 'App',
         author: 'Headspace'
@@ -201,7 +201,7 @@ export const resources: Resource[] = [
         type: 'link',
         title: 'Crisis Text Line',
         description: 'Text HOME to 741741 to connect with a Crisis Counselor.',
-        imageUrl: 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?q=80&w=600',
+        imageUrl: '/img11.jpg',
         externalUrl: 'https://www.crisistextline.org/',
         date: '24/7',
         author: 'Crisis Text Line'

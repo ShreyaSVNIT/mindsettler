@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+// no local state needed for featured grid
 import { motion } from 'framer-motion';
 import CouchHero from '@/components/CouchHero';
 import SectionHeader from '@/components/SectionHeader';
@@ -11,8 +11,6 @@ import Link from 'next/link';
 import { ExternalLink, Play } from 'lucide-react';
 
 export default function ResourcesPage() {
-    const [view, setView] = useState<'grid' | 'list'>('grid');
-
     const blogs = resources.filter((r) => r.type === 'blog');
     const articles = resources.filter((r) => r.type === 'article');
     const videos = resources.filter((r) => r.type === 'video');
@@ -20,14 +18,15 @@ export default function ResourcesPage() {
 
     const featured = [blogs[0], articles[0], videos[0], blogs[1], links[0], articles[1]].filter(Boolean);
 
-    const spans = [
-        'lg:col-span-7',
-        'lg:col-span-5',
-        'lg:col-span-5',
-        'lg:col-span-4',
-        'lg:col-span-4',
-        'lg:col-span-4',
-    ];
+    // featured will render in a responsive, asymmetric grid on large screens
+    // limit randomized images to the designated small set
+    const imagesPool = ['/img8.jpg', '/img9.jpg', '/img10.jpg', '/img11.jpg'];
+
+    // shuffle and pick unique images for featured slots
+    const shuffled = [...imagesPool].sort(() => Math.random() - 0.5);
+    const chosenImages = shuffled.slice(0, Math.min(featured.length, shuffled.length));
+
+    // (no explicit spans/positions needed for simple 3x3 grid)
 
     return (
         <main className="min-h-screen bg-white">
@@ -62,87 +61,41 @@ export default function ResourcesPage() {
                         layout="single"
                     />
 
-                    {/* View toggle */}
-                    <div className="flex items-center justify-end mb-6 px-6 lg:px-0">
-                        <div className="inline-flex rounded-full bg-[var(--color-bg-subtle)] p-1">
-                            <button
-                                type="button"
-                                aria-pressed={view === 'grid'}
-                                onClick={() => setView('grid')}
-                                className={`px-3 py-1 text-sm font-medium ${
-                                    view === 'grid' ? 'bg-[var(--color-primary)] text-white rounded-lg' : 'text-[var(--color-primary)]'
-                                }`}
-                            >
-                                Grid
-                            </button>
-                            <button
-                                type="button"
-                                aria-pressed={view === 'list'}
-                                onClick={() => setView('list')}
-                                className={`px-3 py-1 text-sm font-medium ${
-                                    view === 'list' ? 'bg-[var(--color-primary)] text-white rounded-lg' : 'text-[var(--color-primary)]'
-                                }`}
-                            >
-                                List
-                            </button>
-                        </div>
-                    </div>
+                    {/* Featured grid: responsive 3x3 grid with white overlaid titles; matches outer padding of content grid */}
+                    <div className="py-2 px-6">
+                            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                                {featured.map((item: any, idx: number) => {
+                                    const isLink = item.type === 'link';
+                                    const href = isLink && item.externalUrl ? item.externalUrl : `/resources/${item.id}`;
+                                    const external = isLink;
+                                    const imgSrc = chosenImages[idx % chosenImages.length] ?? item.imageUrl;
 
-                    {/* Featured list */}
-                    <div className={`py-2 px-6 lg:px-0 ${view === 'list' ? 'grid grid-cols-1 gap-6' : 'grid gap-8 lg:grid-cols-12 lg:auto-rows-[minmax(120px,auto)]'}`}>
-                        {featured.map((item: any, idx: number) => {
-                            const isVideo = item.type === 'video';
-                            const isLink = item.type === 'link';
-                            const href = isLink && item.externalUrl ? item.externalUrl : `/resources/${item.id}`;
-                            const external = isLink;
+                                    return (
+                                        <motion.div
+                                            key={item.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true, amount: 0.2 }}
+                                            transition={{ duration: 0.6, delay: idx * 0.08 }}
+                                        >
+                                            <Link
+                                                href={href}
+                                                target={external ? '_blank' : undefined}
+                                                rel={external ? 'noopener noreferrer' : undefined}
+                                                className="group block relative overflow-hidden rounded-2xl shadow-sm transition-transform duration-300 hover:shadow-md"
+                                            >
+                                                <div className="relative w-full overflow-hidden aspect-[16/9] lg:max-h-[240px]">
+                                                    <Image src={imgSrc} alt={item.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                                                </div>
 
-                            const textColor = 'text-white';
-                            const mutedText = 'text-white/75';
-                            const chipBg = 'bg-[var(--color-bg-subtle)] text-[var(--color-primary)]';
-
-                            return (
-                                <Link
-                                    key={item.id}
-                                    href={href}
-                                    target={external ? '_blank' : undefined}
-                                    rel={external ? 'noopener noreferrer' : undefined}
-                                    className={`group relative overflow-hidden rounded-2xl border border-[var(--color-border)] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md bg-[var(--color-bg-card)] ${
-                                        view === 'list' ? 'col-span-1' : spans[idx] ?? ''
-                                    }`}
-                                >
-                                    <div className="relative w-full h-64 lg:h-auto">
-                                        <Image src={item.imageUrl} alt={item.title} fill className="object-cover" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent" />
-                                    </div>
-
-                                    <div className="relative z-10 p-6 flex flex-col gap-4">
-                                        <div className="flex items-start justify-between">
-                                            <div className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${chipBg}`}>{item.type.toUpperCase()}</div>
-                                            <div className="flex items-center gap-2">
-                                                {isVideo && (
-                                                    <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center border border-white/10">
-                                                        <Play className="w-4 h-4 text-white" />
-                                                    </div>
-                                                )}
-                                                {isLink && (
-                                                    <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center border border-white/10">
-                                                        <ExternalLink className="w-4 h-4 text-white" />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <div className={`font-title text-2xl md:text-3xl leading-tight ${textColor}`}>{item.title}</div>
-                                            <div className={`mt-3 text-sm md:text-base line-clamp-3 ${mutedText}`}>{item.description}</div>
-                                            <div className="mt-5 inline-flex items-center justify-center rounded-full px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] border transition-colors border-white/20 text-white/90 group-hover:bg-white/10">
-                                                {isVideo ? 'Watch Now' : isLink ? 'Visit Link' : 'Read More'}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            );
-                        })}
+                                                <div className="absolute left-4 bottom-4 right-4">
+                                                    <h3 className="mt-3 text-lg md:text-2xl lg:text-3xl font-title font-semibold text-white drop-shadow-md">{item.title}</h3>
+                                                </div>
+                                            </Link>
+                                        </motion.div>
+                                    );
+                                })}
+                            </div>
                     </div>
                 </div>
             </section>

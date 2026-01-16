@@ -123,7 +123,7 @@ export default function ContentGrid({
                   href={post.href}
                   target={post.external ? '_blank' : undefined}
                   rel={post.external ? 'noopener noreferrer' : undefined}
-                  className="group overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md animate-in fade-in snap-start"
+                  className="group overflow-hidden rounded-xl border shadow-sm transition-transform duration-400 ease-[cubic-bezier(.22,1,.36,1)] animate-in fade-in snap-start will-change-transform transform-gpu hover:ring hover:ring-[var(--color-bg-app)] hover:ring-opacity-10 hover:[transform:perspective(800px)_rotateY(-4deg)] md:hover:[transform:perspective(1000px)_rotateY(-6deg)]"
                   style={{
                     backgroundColor: 'var(--color-bg-card)',
                     borderColor: 'var(--color-border)',
@@ -155,7 +155,7 @@ export default function ContentGrid({
                     </span>
 
                     <h3
-                      className="mb-3 text-lg font-semibold leading-snug font-title transition-colors duration-300"
+                      className="mb-3 text-xl md:text-2xl font-semibold leading-snug font-title transition-colors duration-300"
                       style={{ color: 'var(--color-primary)' }}
                     >
                       {post.title}
@@ -181,7 +181,7 @@ export default function ContentGrid({
                     href={post.href}
                     target={post.external ? '_blank' : undefined}
                     rel={post.external ? 'noopener noreferrer' : undefined}
-                    className="group overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md animate-in fade-in slide-in-from-bottom-4"
+                    className="group overflow-hidden rounded-xl border shadow-sm transition-transform duration-400 ease-[cubic-bezier(.22,1,.36,1)] animate-in fade-in slide-in-from-bottom-4 will-change-transform transform-gpu hover:ring hover:ring-[var(--color-bg-app)] hover:ring-opacity-10 hover:[transform:perspective(800px)_rotateY(-4deg)] md:hover:[transform:perspective(1000px)_rotateY(-6deg)]"
                     style={{
                       backgroundColor: 'var(--color-bg-card)',
                       borderColor: 'var(--color-border)',
@@ -212,7 +212,7 @@ export default function ContentGrid({
                       </span>
 
                       <h3
-                        className="mb-3 text-lg font-semibold leading-snug font-title transition-colors duration-300"
+                        className="mb-3 text-xl md:text-2xl font-semibold leading-snug font-title transition-colors duration-300"
                         style={{ color: 'var(--color-primary)' }}
                       >
                         {post.title}
