@@ -3,7 +3,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { Calendar, Phone, Menu, X } from 'lucide-react';
+import type { MouseEvent } from 'react';
+import { Calendar, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 
@@ -25,7 +26,7 @@ export default function IntegratedHeader() {
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
-  const handleLinkClick = (e: React.MouseEvent, href: string) => {
+  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setMenuOpen(false);
     // Navigate after animation completes
@@ -145,6 +146,7 @@ export default function IntegratedHeader() {
                   className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors group/link
                     ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
                   >
+                    <span>{item}</span>
                   </Link>
             ))}
           </nav>
@@ -187,11 +189,16 @@ export default function IntegratedHeader() {
                 <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/book:w-full"></span>
               </span>
             </Link>
-            <div className="flex items-center gap-3 px-2">
-              <Link href="/admin" className={`flex items-center justify-center px-5 py-2 rounded-full transition-all hover:bg-[var(--color-primary)]/5 min-h-[44px] min-w-[44px] ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>
-                <span className={`text-[14px] font-black ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>ADMIN</span>
-              </Link>
-            </div>
+            <Link
+              href="/admin"
+              className={`relative flex items-center justify-center px-6 md:px-8 transition-all group/link
+                ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
+            >
+              <span className="relative text-[15px] uppercase tracking-[0.25em] font-bold">
+                Admin
+                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
+              </span>
+            </Link>
           </div>
         </div>
       </header>
@@ -246,20 +253,14 @@ export default function IntegratedHeader() {
                           animate={hoveredLink === link ? { y: '-50%' } : { y: '0%' }}
                           transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
                         >
-                          <div className="text-6xl lg:text-8xl font-title font-bold text-white leading-tight uppercase tracking-tighter">{link}</div>
-                          <div className="text-6xl lg:text-8xl font-title font-bold text-white leading-tight uppercase tracking-tighter italic">{link}</div>
+                          <div className="text-4xl md:text-5xl lg:text-6xl font-title font-bold text-white leading-tight uppercase tracking-tight">{link}</div>
+                          <div className="text-4xl md:text-5xl lg:text-6xl font-title font-bold text-white leading-tight uppercase tracking-tight italic">{link}</div>
                         </motion.div>
                       </div>
                     </Link>
                   </motion.div>
                 ))}
               </div>
-              <div className="mt-6 lg:mt-0">
-                <div className="space-y-2 text-white/90">
-                  <Link href="/admin" className="text-xl font-medium hover:underline">ADMIN</Link>
-                  <p className="text-xl font-medium break-words">mindsettler.dev@gmail.com</p>
-                  <p className="text-xl font-medium">+91 98765 43210</p>
-                </div>
               </div>
             </div>
 
