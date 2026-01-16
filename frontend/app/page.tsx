@@ -2,7 +2,7 @@ import HeroSection from "@/components/HeroSection";
 // import WaveDivider from "@/components/WaveDivider";
 import MentalHealthBasics from "@/components/MentalHealthBasics";
 import JourneyRoadmap from "@/components/JourneyRoadmap";
-import MusicPlayer from "@/components/MusicPlayer";
+import ClientMusicPlayer from '@/components/ClientMusicPlayer';
 import MissionStatement from "@/components/MissionStatement";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
       <MentalHealthBasics />
       <MissionStatement />
       <JourneyRoadmap />
-      <MusicPlayer />
+      <ClientMusicPlayer />
     </main>
   );
 }

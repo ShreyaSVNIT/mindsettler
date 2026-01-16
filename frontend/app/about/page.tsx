@@ -57,6 +57,21 @@ export default function AboutPage() {
   const scale = useTransform(heroScrollProgress, [0, 0.5], [1, 1.05]);
   const imageOpacity = useTransform(heroScrollProgress, [0, 0.8, 1], [1, 0.8, 0]);
 
+  // Disable heavy parallax transforms on small screens to avoid jank
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 767.98px)');
+    setIsMobile(mq.matches);
+    const onChange = () => setIsMobile(mq.matches);
+    if (mq.addEventListener) mq.addEventListener('change', onChange);
+    else mq.addListener(onChange);
+    return () => {
+      if (mq.removeEventListener) mq.removeEventListener('change', onChange);
+      else mq.removeListener(onChange);
+    };
+  }, []);
+
   // Contact form state
   const [formData, setFormData] = useState({
     name: '',
@@ -106,7 +121,7 @@ export default function AboutPage() {
       {/* Hero Section - Elegant Parallax */}
       <section ref={heroRef} className="relative py-40 px-4 overflow-hidden min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Text Content with subtle parallax */}
             <motion.div
               style={{ y: textY }}
@@ -145,7 +160,7 @@ export default function AboutPage() {
 
             {/* Image with elegant reveal and parallax */}
             <motion.div
-              style={{ y: imageY, scale, opacity: imageOpacity }}
+              style={isMobile ? {} : { y: imageY, scale, opacity: imageOpacity }}
               className="relative"
             >
               <div className="relative">
@@ -164,11 +179,11 @@ export default function AboutPage() {
                 />
 
                 {/* Primary color shadow box */}
-                <div className="absolute top-6 left-6 md:top-10 md:left-10 w-full h-[300px] sm:h-[400px] md:h-[500px] bg-[var(--color-primary)] rounded-[2rem] md:rounded-[3rem] opacity-100" />
+                <div className="absolute top-6 left-6 md:top-10 md:left-10 w-full h-[40vh] sm:h-[48vh] md:h-[60vh] lg:h-[500px] max-h-[600px] bg-[var(--color-primary)]/20 rounded-[2rem] md:rounded-[3rem]" />
 
                 {/* Main image container with mask reveal and hover zoom */}
                 <motion.div
-                  className="relative h-[300px] sm:h-[400px] md:h-[500px] rounded-[2rem] md:rounded-[3rem] overflow-hidden group"
+                  className="relative h-[40vh] sm:h-[48vh] md:h-[60vh] lg:h-[500px] max-h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden group"
                   initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
                   animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                   transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
@@ -198,7 +213,7 @@ export default function AboutPage() {
 
                 {/* Floating accent elements with rotation on hover */}
                 <motion.div
-                  className="absolute -top-4 -right-4 md:-top-6 md:-right-6 w-16 h-16 md:w-24 md:h-24 rounded-full border border-[var(--color-primary)]/20"
+                  className="hidden lg:block absolute -top-4 -right-4 md:-top-6 md:-right-6 w-16 h-16 md:w-24 md:h-24 rounded-full border border-[var(--color-primary)]/20"
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
                   whileHover={{ rotate: 180 }}
@@ -209,7 +224,7 @@ export default function AboutPage() {
                 />
 
                 <motion.div
-                  className="absolute -bottom-6 -left-6 md:-bottom-8 md:-left-8 w-20 h-20 md:w-32 md:h-32 rounded-2xl border border-[var(--color-primary)]/10"
+                  className="hidden lg:block absolute -bottom-6 -left-6 md:-bottom-8 md:-left-8 w-20 h-20 md:w-32 md:h-32 rounded-2xl border border-[var(--color-primary)]/10"
                   initial={{ scale: 0, opacity: 0, rotate: 12 }}
                   animate={{ scale: 1, opacity: 1, rotate: 12 }}
                   whileHover={{ rotate: 192 }}

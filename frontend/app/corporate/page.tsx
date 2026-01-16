@@ -8,6 +8,7 @@ import WaveDividerSolid from '@/components/WaveDividerSolid';
 import HealingJourneySection from '@/components/HealingJourneySection';
 import SectionHeader from '@/components/SectionHeader';
 import CouchHero from '@/components/CouchHero';
+import AnimatedCounter from '@/components/AnimatedCounter';
 import dynamic from 'next/dynamic';
 
 const MagicBento = dynamic(() => import('@/components/MagicBento'), { ssr: false, loading: () => null });
@@ -70,7 +71,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Interactive sessions designed to enhance team well-being, stress management, and emotional intelligence in the workplace. Our workshops foster open dialogue, build resilience, and create lasting positive change in your organizational culture. Each session is tailored to address your team's specific challenges and goals.</span>
-          <Image src="/img1.jpeg" alt="Corporate Workshops" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img1.jpeg" alt="Corporate Workshops" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -82,7 +87,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Confidential group support programs tailored for organizational teams to foster connection, resilience, and collective healing. These sessions create a safe space for employees to share experiences, develop coping strategies, and build meaningful connections with their colleagues. Professional guidance ensures productive and transformative outcomes.</span>
-          <Image src="/img2.jpeg" alt="Group Therapy" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img2.jpeg" alt="Group Therapy" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -94,7 +103,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Strategic mental health planning and consultation services to create a culture of well-being within your organization. We work closely with leadership to develop comprehensive mental health policies, implement effective support systems, and create sustainable wellness initiatives that prioritize employee mental health at every level.</span>
-          <Image src="/img3.jpeg" alt="Consultations" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img3.jpeg" alt="Consultations" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -106,7 +119,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Bespoke mental wellness programs designed to meet the unique needs and goals of your organization and industry. Whether you need stress management training, burnout prevention, or leadership development, we craft solutions that align with your company culture and deliver measurable results for long-term success.</span>
-          <Image src="/img4.jpeg" alt="Custom Programs" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img4.jpeg" alt="Custom Programs" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -118,7 +135,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Develop leadership resilience and emotional intelligence through targeted programs that support managers and executives. Our leadership wellness tracks focus on stress reduction, effective communication, and mindful decision-making, empowering your leaders to foster a mentally healthy workplace from the top down.</span>
-          <Image src="/img5.jpeg" alt="Leadership Wellness Programs" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img5.jpeg" alt="Leadership Wellness Programs" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -130,7 +151,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Facilitated peer groups where employees can connect, share experiences, and support each other&apos;s mental health journeys. These circles nurture trust and empathy, reduce stigma, and create a sense of belonging, making mental wellness a shared responsibility across your organization.</span>
-          <Image src="/img6.jpeg" alt="Peer Support Circles" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img6.jpeg" alt="Peer Support Circles" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -142,7 +167,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Comprehensive assessments of existing HR policies, benefits, and workplace practices to identify mental health gaps and opportunities. Our audits provide actionable recommendations to create a supportive environment and ensure compliance with best practices in employee mental wellness.</span>
-          <Image src="/img7.jpeg" alt="HR Mental Health Audits" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img7.jpeg" alt="HR Mental Health Audits" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -154,7 +183,11 @@ export default function CorporatePage() {
       description: (
         <>
           <span className="corporate-desc-text">Tailored wellness programs designed for the unique demands and stressors of your industry. Whether in tech, healthcare, education, or manufacturing, our industry tracks address sector-specific challenges, boost engagement, and deliver measurable improvements in well-being and performance.</span>
-          <Image src="/img8.jpeg" alt="Industry-Specific Wellness Tracks" width={600} height={340} className="corporate-desc-img" />
+          <div className="mt-4 md:mt-0 w-full">
+            <div className="relative w-full" style={{ paddingBottom: '56.666%' }}>
+              <Image src="/img8.jpeg" alt="Industry-Specific Wellness Tracks" fill className="object-cover rounded-xl" />
+            </div>
+          </div>
         </>
       ),
       label: '',
@@ -195,6 +228,32 @@ workshops, group sessions, and strategic collaborations`}
           />
         }
       />
+
+      {/* Benefits / Stats Section (responsive + animated counters) */}
+      <section className="py-12 px-6 bg-bg-app">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8 text-center">
+            <h4 className="font-title text-lg text-[var(--color-primary)] mb-2">Benefits</h4>
+            <h2 className="font-title text-3xl md:text-4xl">Organizational Impact</h2>
+            <p className="max-w-2xl mx-auto text-[var(--color-text-body)] mt-3">Measured improvements from our programs across productivity, stress reduction and team collaboration.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {benefits.map((b, idx) => (
+              <div key={idx} className="bg-white/60 backdrop-blur-sm border border-[var(--color-border)] rounded-2xl p-6 flex flex-col items-start">
+                <div className="flex items-center justify-center bg-[var(--color-primary)]/10 rounded-full w-12 h-12 mb-4">
+                  <span className="text-[var(--color-primary)] font-bold">{idx + 1}</span>
+                </div>
+                <div className="text-2xl md:text-3xl font-extrabold text-[var(--color-primary)] mb-2">
+                  {/* Animated counter supports suffix like % */}
+                  <AnimatedCounter value={b.stat} className="inline-block" />
+                </div>
+                <div className="text-sm md:text-base text-[var(--color-text-body)]">{b.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Services Section - similar layout to About page cards */}
       <section className="relative py-24 px-6 bg-bg-app overflow-hidden">
@@ -400,14 +459,7 @@ workshops, group sessions, and strategic collaborations`}
     max-width: none !important;
   }
 }
-/* ✅ FORCE ALL CARDS TO SPAN FULL WIDTH (STACKED LAYOUT) */
-@media (min-width: 1024px) {
-  .corporate-bento-override
-    .card-grid
-    > .magic-bento-card {
-    grid-column: 1 / -1 !important;
-  }
-}
+/* Removed forced stacking to allow MagicBento's native grid (4 → 2 → 1) */
               `}</style>
 
               <MagicBento
@@ -425,7 +477,7 @@ workshops, group sessions, and strategic collaborations`}
 
       {/* Contact Form Section */}
       <section id="contact-form" className="py-24 px-6 bg-bg-card">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -462,7 +514,7 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.companyName}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body placeholder:text-text-body/40"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                   placeholder="Your company name"
                 />
               </div>
@@ -478,7 +530,7 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.contactPerson}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body placeholder:text-text-body/40"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                   placeholder="Full name"
                 />
               </div>
@@ -494,7 +546,7 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body placeholder:text-text-body/40"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
                   placeholder="you@company.com"
                 />
               </div>
@@ -524,7 +576,7 @@ workshops, group sessions, and strategic collaborations`}
                   name="employeeCount"
                   value={formData.employeeCount}
                   onChange={handleChange}
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body appearance-none cursor-pointer"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal appearance-none cursor-pointer bg-white"
                   style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23453859'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.25rem' }}
                 >
                   <option value="">Select range</option>
@@ -546,7 +598,7 @@ workshops, group sessions, and strategic collaborations`}
                   value={formData.serviceType}
                   onChange={handleChange}
                   required
-                  className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body appearance-none cursor-pointer"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal appearance-none cursor-pointer bg-white"
                   style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23453859'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E\")", backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1rem center', backgroundSize: '1.25rem' }}
                 >
                   <option value="">Select service</option>
@@ -569,7 +621,7 @@ workshops, group sessions, and strategic collaborations`}
                 onChange={handleChange}
                 required
                 rows={6}
-                className="w-full px-5 py-3.5 rounded-2xl border-2 border-border bg-white focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-body resize-none placeholder:text-text-body/40"
+                className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal resize-none bg-white"
                 placeholder="Tell us about your organization's wellness needs, goals, and any specific challenges you'd like to address..."
               />
             </div>
@@ -578,9 +630,9 @@ workshops, group sessions, and strategic collaborations`}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-5 bg-emerald-50 border-2 border-emerald-200 rounded-2xl"
+                className="mb-6 p-6 bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl text-center max-w-2xl mx-auto"
               >
-                <p className="font-body text-emerald-800 text-center font-medium">
+                <p className="font-body text-[var(--color-primary)] font-semibold">
                   ✓ Thank you! We'll get back to you within 24 hours.
                 </p>
               </motion.div>
@@ -590,25 +642,18 @@ workshops, group sessions, and strategic collaborations`}
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-5 bg-red-50 border-2 border-red-200 rounded-2xl"
+                className="mb-6 p-6 bg-red-50 border-2 border-red-200 rounded-3xl text-center max-w-2xl mx-auto"
               >
-                <p className="font-body text-red-800 text-center font-medium">
+                <p className="font-body text-red-800 font-semibold">
                   Something went wrong. Please try again or contact us directly.
                 </p>
               </motion.div>
             )}
 
-            <div className="flex justify-center">
-              <MagneticButton
-                text={isSubmitting ? 'Sending...' : 'Submit Request'}
-                onClick={() => {
-                  // MagneticButton doesn't have type="submit" by default, so we handle it via onClick
-                  if (!isSubmitting) {
-                    const form = document.querySelector('#contact-form form') as HTMLFormElement;
-                    form?.requestSubmit();
-                  }
-                }}
-              />
+            <div className="flex justify-center w-full">
+              <div className="w-full sm:w-auto">
+                <MagneticButton text={isSubmitting ? 'Sending...' : 'Submit Request'} type="submit" className="w-full" />
+              </div>
             </div>
           </motion.form>
         </div>

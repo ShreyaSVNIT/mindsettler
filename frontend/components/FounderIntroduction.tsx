@@ -27,6 +27,11 @@ export default function FounderIntroduction({
     "Former consultant at Apollo Hospitals"
   ],
   introduction = "I'm Parnika, and I created MindSettler because I believe everyone deserves a safe space to heal. My journey in psychology began with a simple question: how can we make mental wellness accessible to everyone, not just a privileged few?"
+  ,
+  certifications = [
+    "Trained in Counseling Psychology",
+    "Evidence-Based Therapeutic Practices"
+  ]
 }: FounderIntroductionProps) {
   return (
     <section className="relative py-20 px-4 bg-[var(--color-bg-subtle)] overflow-hidden">
@@ -69,7 +74,7 @@ export default function FounderIntroduction({
           />
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Video Side */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
@@ -108,9 +113,10 @@ export default function FounderIntroduction({
               </motion.div>
 
               {/* Video Container */}
-              <div className="relative bg-black rounded-3xl overflow-hidden shadow-2xl aspect-[9/16] max-w-[400px] mx-auto">
+              <div className="relative bg-black rounded-3xl overflow-hidden shadow-2xl aspect-[9/16] w-full max-w-[420px] sm:max-w-[480px] mx-auto">
                 <video
                   src={videoUrl}
+                  poster="/parnika.jpeg"
                   className="w-full h-full object-cover"
                   controls
                   playsInline
@@ -166,8 +172,8 @@ export default function FounderIntroduction({
                 <ul className="space-y-2 md:space-y-3">
                   {education.map((item, index) => (
                     <li key={index} className="font-body text-base md:text-lg lg:text-xl text-[var(--color-text-body)] opacity-80 flex items-start">
-                      <span className="text-[var(--color-primary)] mr-2 md:mr-3 mt-1">•</span>
-                      <span>{item}</span>
+                      <span className="text-[var(--color-primary)] mr-3 self-start mt-1.5">•</span>
+                      <span className="flex-1">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -189,8 +195,31 @@ export default function FounderIntroduction({
                 <ul className="space-y-2 md:space-y-3">
                   {experience.map((item, index) => (
                     <li key={index} className="font-body text-base md:text-lg lg:text-xl text-[var(--color-text-body)] opacity-80 flex items-start">
-                      <span className="text-[var(--color-primary)] mr-2 md:mr-3 mt-1">•</span>
-                      <span>{item}</span>
+                      <span className="text-[var(--color-primary)] mr-3 self-start mt-1.5">•</span>
+                      <span className="flex-1">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+
+            {/* Certifications Section - match styling with Education/Experience for consistency */}
+            {certifications && certifications.length > 0 && (
+              <motion.div
+                className="mb-6 md:mb-8"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+              >
+                <h4 className="font-title text-lg md:text-xl lg:text-2xl text-[var(--color-text-body)] mb-3 md:mb-4 tracking-wider uppercase">
+                  Certifications
+                </h4>
+                <ul className="space-y-2 md:space-y-3">
+                  {certifications.map((item, index) => (
+                    <li key={index} className="font-body text-base md:text-lg lg:text-xl text-[var(--color-text-body)] opacity-80 flex items-start">
+                      <span className="text-[var(--color-primary)] mr-3 self-start mt-1.5">•</span>
+                      <span className="flex-1">{item}</span>
                     </li>
                   ))}
                 </ul>

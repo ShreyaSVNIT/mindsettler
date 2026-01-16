@@ -205,7 +205,7 @@ export default function BookPage() {
       
       {/* Hero Section - Mode Selection */}
       {!selectedMode && bookingStatus === "idle" && (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-24 relative z-10">
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 pt-36 pb-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -224,22 +224,22 @@ export default function BookPage() {
             />
 
             {/* Session Info Cards */}
-            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12 mt-12">
-              <GlowCard>
-                <div className="font-body text-2xl text-[var(--color-text-body)]">
-                  <span className="font-bold block mb-4 text-3xl">Session Duration</span>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl md:max-w-3xl mx-auto mb-8 mt-12">
+              <GlowCard className="p-4 md:p-6 min-h-[120px]">
+                <div className="font-body text-lg md:text-2xl text-[var(--color-text-body)]">
+                  <span className="font-bold block mb-2 md:mb-4 text-xl md:text-3xl">Session Duration</span>
                   60 minutes per session
                 </div>
               </GlowCard>
-              <GlowCard className="border-2 border-[var(--color-primary)]/40">
-                <div className="font-body text-2xl text-[var(--color-text-body)]">
-                  <span className="font-bold block mb-4 text-3xl text-[var(--color-primary)]">First Session</span>
+              <GlowCard className="p-4 md:p-6 min-h-[120px] border-2 border-[var(--color-primary)]/40">
+                <div className="font-body text-lg md:text-2xl text-[var(--color-text-body)]">
+                  <span className="font-bold block mb-2 md:mb-4 text-xl md:text-3xl text-[var(--color-primary)]">First Session</span>
                   Introductory assessment & goal setting
                 </div>
               </GlowCard>
-              <GlowCard>
-                <div className="font-body text-2xl text-[var(--color-text-body)]">
-                  <span className="font-bold block mb-4 text-3xl">Location</span>
+              <GlowCard className="p-4 md:p-6 min-h-[120px]">
+                <div className="font-body text-lg md:text-2xl text-[var(--color-text-body)]">
+                  <span className="font-bold block mb-2 md:mb-4 text-xl md:text-3xl">Location</span>
                   Online platform or offline studio
                 </div>
               </GlowCard>
@@ -810,9 +810,7 @@ export default function BookPage() {
                     Submitting...
                   </button>
                 ) : (
-                  <div onClick={handleSubmit(onSubmit)}>
-                    <MagneticButton text="Book Session" />
-                  </div>
+                  <MagneticButton text="Book Session" type="submit" />
                 )}
               </div>
             </form>

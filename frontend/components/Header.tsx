@@ -92,6 +92,16 @@ export default function IntegratedHeader() {
     };
   }, [menuOpen]);
 
+  // Close menu on Escape for consistent behavior on mobile/tablet
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
   // Home page at top: white, else: primary
   const isHome = pathname === '/' || pathname === '/home';
   const isHomeAtTop = isHome && isAtTop;
@@ -100,7 +110,7 @@ export default function IntegratedHeader() {
     <>
       {/* --- MAIN HEADER --- */}
       <header
-        className={`fixed top-0 left-0 w-full z-[130] h-20 group transform transition-transform duration-300 ${
+        className={`fixed top-0 left-0 w-full z-[130] h-14 md:h-16 lg:h-20 group transform transition-transform duration-300 ${
           showHeader || menuOpen ? 'translate-y-0' : '-translate-y-full'
         } ${isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'}`}
       >
@@ -108,7 +118,10 @@ export default function IntegratedHeader() {
           <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className={`p-2 hover:scale-110 transition-all relative z-[140] hover:text-[var(--color-primary)] hover:opacity-100 ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}
+              aria-expanded={menuOpen}
+              aria-controls="main-menu"
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              className={`tap-target p-3 hover:scale-110 transition-all relative z-[140] hover:text-[var(--color-primary)] hover:opacity-100 ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -124,7 +137,7 @@ export default function IntegratedHeader() {
             </button>
           </div>
 
-          <nav className={`hidden xl:flex items-center px-12 gap-10 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+          <nav className={`hidden lg:flex items-center px-8 gap-12 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             {['How It Works', 'Corporate', 'Resources'].map((item) => (
               <Link
                 key={item}
@@ -152,13 +165,14 @@ export default function IntegratedHeader() {
                 width={180}
                 height={115}
                 priority
+                sizes="(max-width: 640px) 140px, 180px"
                 className="max-w-none transition-[filter] duration-300 group-hover/logo:[filter:brightness(0)_saturate(100%)_invert(67%)_sepia(19%)_saturate(1655%)_hue-rotate(307deg)_brightness(94%)_contrast(90%)]"
               />
             </Link>
           </div>
 
-          <div className={`hidden lg:flex items-stretch border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            <Link href="/about" className={`flex items-center justify-center px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+          <div className={`hidden lg:flex items-stretch gap-6 px-6 md:px-8 lg:px-10 border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+            <Link href="/about" className={`flex items-center justify-center px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
               <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors
                 ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/link:text-[var(--color-primary)] group-hover/link:opacity-100`}
               >
@@ -166,7 +180,7 @@ export default function IntegratedHeader() {
                 <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
               </span>
             </Link>
-            <Link href="/book" className={`flex items-center gap-3 px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+            <Link href="/book" className={`flex items-center gap-3 px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
               <Calendar size={20} className={`${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} transition-colors group-hover/book:text-[var(--color-primary)] group-hover/book:opacity-100`} />
               <span className={`relative text-[14px] uppercase tracking-[0.15em] font-black transition-colors
                 ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/book:text-[var(--color-primary)] group-hover/book:opacity-100`}
@@ -175,9 +189,10 @@ export default function IntegratedHeader() {
                 <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/book:w-full"></span>
               </span>
             </Link>
-            <div className="flex items-center gap-3 px-8">
-              <Phone size={20} className={isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} />
-              <span className={`text-[15px] font-black ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>+91 98765 43210</span>
+            <div className="flex items-center gap-3 px-2">
+              <Link href="/login" className={`flex items-center justify-center px-5 py-2 rounded-full transition-all hover:bg-[var(--color-primary)]/5 min-h-[44px] min-w-[44px] ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>
+                <span className={`text-[14px] font-black ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>Login</span>
+              </Link>
             </div>
           </div>
         </div>
@@ -188,6 +203,9 @@ export default function IntegratedHeader() {
         {menuOpen && (
           <motion.div
             key="menu-overlay"
+            id="main-menu"
+            role="dialog"
+            aria-modal="true"
             initial={{ y: '-100%' }}
             animate={{ y: 0 }}
             exit={{ y: '-100%' }}
@@ -195,8 +213,14 @@ export default function IntegratedHeader() {
               duration: 0.8,
               ease: [0.76, 0, 0.24, 1]
             }}
-            className="fixed top-20 left-0 right-0 h-[calc(100vh-5rem)] z-[120] bg-[var(--color-primary)] flex overflow-hidden"
+            className="fixed top-16 left-0 right-0 h-[calc(100vh-4rem)] z-[120] bg-[var(--color-primary)] flex overflow-hidden"
           >
+            {/* Backdrop / tap-to-close for mobile */}
+            <div
+              className="absolute inset-0 z-0 lg:hidden"
+              onClick={() => setMenuOpen(false)}
+              aria-hidden="true"
+            />
             {/* LEFT SIDE: TEXT LINKS */}
             <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-12 lg:p-24 relative z-10">
               <div className="space-y-4">
@@ -218,7 +242,7 @@ export default function IntegratedHeader() {
                       href={`/${link.toLowerCase().replace(/ /g, '-')}`}
                       onClick={(e) => handleLinkClick(e, `/${link.toLowerCase().replace(/ /g, '-')}`)}
                     >
-                      <div className="overflow-hidden h-[4.5rem] lg:h-[7.5rem]">
+                      <div className="overflow-hidden h-[5.5rem] md:h-[6.5rem] lg:h-[7.5rem]">
                         <motion.div
                           animate={hoveredLink === link ? { y: '-50%' } : { y: '0%' }}
                           transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
@@ -232,7 +256,7 @@ export default function IntegratedHeader() {
                 ))}
               </div>
               <div className="mt-20 space-y-2 text-white/90">
-                <p className="text-xl font-medium">+91 98765 43210</p>
+                <Link href="/login" className="text-xl font-medium hover:underline">Login</Link>
                 <p className="text-xl font-medium underline cursor-pointer">hello@mindsettler.com</p>
               </div>
             </div>
@@ -250,7 +274,7 @@ export default function IntegratedHeader() {
                     className="relative overflow-hidden shrink-0 rounded-xl shadow-2xl"
                     style={{ height: `${img.height}px` }}
                   >
-                    <Image src={img.src} alt="wellness" fill className="object-cover" />
+                    <Image src={img.src} alt="wellness" fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" />
                   </motion.div>
                 ))}
               </motion.div>
@@ -266,7 +290,7 @@ export default function IntegratedHeader() {
                     className="relative overflow-hidden shrink-0 rounded-xl shadow-2xl"
                     style={{ height: `${img.height}px` }}
                   >
-                    <Image src={img.src} alt="wellness" fill className="object-cover" />
+                    <Image src={img.src} alt="wellness" fill sizes="(max-width: 1024px) 50vw, 25vw" className="object-cover" />
                   </motion.div>
                 ))}
               </motion.div>
