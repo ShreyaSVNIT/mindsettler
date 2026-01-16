@@ -88,7 +88,7 @@ export default function ChatWidget() {
                 >
                   <div className={`max-w-[85%] p-4 rounded-2xl text-[14px] leading-relaxed shadow-sm ${m.sender === 'user'
                     ? 'bg-[var(--color-primary)] text-white rounded-tr-none'
-                    : 'bg-[var(--color-bg-card)] text-white border border-[var(--color-border)] rounded-tl-none'
+                    : 'bg-white text-[var(--color-primary)] border border-[var(--color-border)] rounded-tl-none'
                     }`}>
                     {m.text}
 

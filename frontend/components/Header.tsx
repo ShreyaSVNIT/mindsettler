@@ -218,7 +218,7 @@ export default function IntegratedHeader() {
               duration: 0.8,
               ease: [0.76, 0, 0.24, 1]
             }}
-            className="fixed top-16 left-0 right-0 h-[calc(100vh-4rem)] z-[120] bg-[var(--color-primary)] flex overflow-hidden"
+            className="fixed inset-0 z-[120] bg-[var(--color-primary)] flex overflow-hidden pt-16 lg:pt-20"
           >
             {/* Backdrop / tap-to-close for mobile */}
             <div
@@ -227,9 +227,9 @@ export default function IntegratedHeader() {
               aria-hidden="true"
             />
             {/* LEFT SIDE: TEXT LINKS */}
-            <div className="w-full lg:w-1/2 h-full flex flex-col justify-between p-6 lg:p-24 relative z-10">
-              <div className="flex-1 overflow-auto pr-2">
-                <div className="space-y-4">
+            <div className="w-full lg:w-1/2 h-full flex flex-col justify-between p-4 sm:p-6 lg:p-20 relative z-10">
+              <div className="flex-1 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-white/40 scrollbar-track-transparent">
+                <div className="flex flex-col gap-4 pr-4 overflow-y-auto">
                   {['About', 'How It Works', 'Corporate', 'Resources', 'Book', 'Login'].map((link, i) => (
                   <motion.div
                     key={link}
@@ -248,13 +248,14 @@ export default function IntegratedHeader() {
                       href={`/${link.toLowerCase().replace(/ /g, '-')}`}
                       onClick={(e) => handleLinkClick(e, `/${link.toLowerCase().replace(/ /g, '-')}`)}
                     >
-                      <div className="overflow-hidden h-[5.5rem] md:h-[6.5rem] lg:h-[7.5rem]">
+                      <div className="overflow-hidden min-h-[4.5rem] sm:min-h-[5.5rem] md:min-h-[6.5rem] lg:min-h-[7.5rem]">
                         <motion.div
+                          className="h-[200%] flex flex-col"
                           animate={hoveredLink === link ? { y: '-50%' } : { y: '0%' }}
                           transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
                         >
-                          <div className="text-4xl md:text-5xl lg:text-6xl font-title font-bold text-white leading-tight uppercase tracking-tight">{link}</div>
-                          <div className="text-4xl md:text-5xl lg:text-6xl font-title font-bold text-white leading-tight uppercase tracking-tight italic">{link}</div>
+                          <div className="flex-1 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-title font-bold text-white leading-tight uppercase tracking-tight">{link}</div>
+                          <div className="flex-1 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-title font-bold text-white leading-tight uppercase tracking-tight italic">{link}</div>
                         </motion.div>
                       </div>
                     </Link>
