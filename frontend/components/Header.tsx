@@ -138,16 +138,14 @@ export default function IntegratedHeader() {
           </div>
 
           <nav className={`hidden lg:flex items-center px-8 gap-12 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            {['How It Works', 'Corporate', 'Resources'].map((item) => (
+              {['How It Works', 'Corporate', 'Resources'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase().replace(/ /g, '-')}`}
-                className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors group/link
-                  ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
-              >
-                {item}
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
-              </Link>
+                  className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors group/link
+                    ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
+                  >
+                  </Link>
             ))}
           </nav>
 
@@ -158,7 +156,7 @@ export default function IntegratedHeader() {
                 <div className="w-[240px] h-[60px] bg-white shadow-[0_0_40px_rgba(255,255,255,0.7)] rounded-[100%] blur-xl opacity-70"></div>
               </div>
             )}
-            <Link href="/home" className="absolute left-1/2 -translate-x-1/2 mt-2 w-auto h-auto block group/logo">
+            <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto block">
               <Image
                 src="/MindSettlerLogo.png"
                 alt="Logo"
@@ -166,7 +164,7 @@ export default function IntegratedHeader() {
                 height={115}
                 priority
                 sizes="(max-width: 640px) 140px, 180px"
-                className="max-w-none transition-[filter] duration-300 group-hover/logo:[filter:brightness(0)_saturate(100%)_invert(67%)_sepia(19%)_saturate(1655%)_hue-rotate(307deg)_brightness(94%)_contrast(90%)]"
+                className="max-w-none"
               />
             </Link>
           </div>
@@ -190,8 +188,8 @@ export default function IntegratedHeader() {
               </span>
             </Link>
             <div className="flex items-center gap-3 px-2">
-              <Link href="/login" className={`flex items-center justify-center px-5 py-2 rounded-full transition-all hover:bg-[var(--color-primary)]/5 min-h-[44px] min-w-[44px] ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>
-                <span className={`text-[14px] font-black ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>Login</span>
+              <Link href="/admin" className={`flex items-center justify-center px-5 py-2 rounded-full transition-all hover:bg-[var(--color-primary)]/5 min-h-[44px] min-w-[44px] ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>
+                <span className={`text-[14px] font-black ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}>ADMIN</span>
               </Link>
             </div>
           </div>
@@ -222,9 +220,10 @@ export default function IntegratedHeader() {
               aria-hidden="true"
             />
             {/* LEFT SIDE: TEXT LINKS */}
-            <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-12 lg:p-24 relative z-10">
-              <div className="space-y-4">
-                {['About', 'How It Works', 'Corporate', 'Resources'].map((link, i) => (
+            <div className="w-full lg:w-1/2 h-full flex flex-col justify-between p-6 lg:p-24 relative z-10">
+              <div className="flex-1 overflow-auto pr-2">
+                <div className="space-y-4">
+                  {['About', 'How It Works', 'Corporate', 'Resources', 'Book', 'Login'].map((link, i) => (
                   <motion.div
                     key={link}
                     initial={{ opacity: 0, y: 40 }}
@@ -255,9 +254,12 @@ export default function IntegratedHeader() {
                   </motion.div>
                 ))}
               </div>
-              <div className="mt-20 space-y-2 text-white/90">
-                <Link href="/login" className="text-xl font-medium hover:underline">Login</Link>
-                <p className="text-xl font-medium underline cursor-pointer">hello@mindsettler.com</p>
+              <div className="mt-6 lg:mt-0">
+                <div className="space-y-2 text-white/90">
+                  <Link href="/admin" className="text-xl font-medium hover:underline">ADMIN</Link>
+                  <p className="text-xl font-medium break-words">mindsettler.dev@gmail.com</p>
+                  <p className="text-xl font-medium">+91 98765 43210</p>
+                </div>
               </div>
             </div>
 
