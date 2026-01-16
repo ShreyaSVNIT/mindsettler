@@ -611,9 +611,9 @@ workshops, group sessions, and strategic collaborations`}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="mb-8 bg-red-50 border-2 border-red-200 rounded-3xl p-6 text-center"
+              className="mb-8 bg-[var(--Color-bg-lavender)] bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
             >
-              <p className="font-body text-red-800 font-semibold">
+              <p className="font-body text-[var(--color-text-body)] font-semibold">
                 Something went wrong. Please try again or contact us directly at mindsettler.dev@gmail.com
               </p>
             </motion.div>

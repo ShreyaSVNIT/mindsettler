@@ -121,7 +121,7 @@ function VerifyEmailContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-[var(--color-primary)] mb-4">Invalid Link</h2>
+            <h2 className="font-title text-3xl text-white mb-4">Invalid Link</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">
               The verification link is invalid or missing. Please check your email and try again.
             </p>
@@ -135,7 +135,7 @@ function VerifyEmailContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-[var(--color-primary)] mb-4">Verifying…</h2>
+            <h2 className="font-title text-3xl text-white mb-4">Verifying…</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">
               Please wait while we verify your email address.
             </p>
@@ -149,7 +149,7 @@ function VerifyEmailContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-[var(--color-primary)] mb-4">Verification Failed</h2>
+            <h2 className="font-title text-3xl text-white mb-4">Verification Failed</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               {state.message}
             </p>
@@ -174,7 +174,7 @@ function VerifyEmailContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 shadow-xl"
           >
-            <h2 className="font-title text-3xl text-[var(--color-primary)] mb-6 text-center">Email Verified</h2>
+            <h2 className="font-title text-3xl text-white mb-6 text-center">Email Verified</h2>
 
             <div className="bg-white/60 rounded-2xl p-6 space-y-4 mb-6">
               <div className="flex justify-between items-center border-b border-[var(--color-primary)]/20 pb-3">
