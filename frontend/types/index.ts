@@ -29,6 +29,7 @@ export interface BookingDraftRequest {
   preferred_date: string;
   preferred_period: PeriodType;
   mode: ModeType;
+  payment_mode: PaymentModeType;
   preferred_time_start?: string;
   preferred_time_end?: string;
   user_message?: string;
