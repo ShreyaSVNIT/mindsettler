@@ -52,12 +52,12 @@ export default function MissionStatement() {
               </div>
 
               {/* Mixed Style Heading */}
-              <h2 className="font-title text-2xl sm:text-3xl md:text-5xl lg:text-6xl leading-tight mb-6 text-white">
+              <h2 className="font-title leading-tight mb-6 text-white">
                 A safe space where <span className="italic">growth</span> meets <span className="italic">compassion</span> and <span className="italic">clarity.</span>
               </h2>
 
               {/* Description for MindSettler */}
-              <p className="text-base sm:text-lg md:text-xl text-white mb-8 body-text">
+              <p className="text-white mb-8 body-text">
                 MindSettler is your digital sanctuary for mental well-being. 
                 Connect with licensed psychotherapists through structured, 
                 confidential sessions designed to help you navigate life's 
