@@ -13,6 +13,7 @@ class RequestCancellationView(APIView):
     Handles user-initiated cancellation requests.
 
     Rules:
+    - PENDING          → instant cancel (no email)
     - APPROVED         → instant cancel (no email)
     - PAYMENT_PENDING  → instant cancel (no email)
     - CONFIRMED        → email verification required
@@ -30,15 +31,15 @@ class RequestCancellationView(APIView):
         try:
             booking = Booking.objects.get(
                 acknowledgement_id=ack_id,
-                status__in=["APPROVED", "PAYMENT_PENDING", "CONFIRMED"],
+                status__in=["PENDING", "APPROVED", "PAYMENT_PENDING", "CONFIRMED"],
             )
         except Booking.DoesNotExist:
             raise ValidationError("Booking not found or not cancellable")
 
         # ─────────────────────────
-        # APPROVED / PAYMENT_PENDING → instant cancel
+        # PENDING / APPROVED / PAYMENT_PENDING → instant cancel
         # ─────────────────────────
-        if booking.status in {"APPROVED", "PAYMENT_PENDING"}:
+        if booking.status in {"PENDING", "APPROVED", "PAYMENT_PENDING"}:
             try:
                 cancel_by_user(booking)
                 booking.refresh_from_db()

@@ -39,12 +39,14 @@ def _validate_cancellation_window(booking):
 def cancel_by_user(booking, reason=None):
     """
     USER cancellation rules:
+    - PENDING         → immediate cancel (no verification)
     - PAYMENT_PENDING → immediate cancel (no verification)
     - APPROVED        → immediate cancel (no verification)
     - CONFIRMED       → allowed only before cutoff window
     """
 
     if booking.status not in {
+        "PENDING",
         "PAYMENT_PENDING",
         "APPROVED",
         "CONFIRMED",
