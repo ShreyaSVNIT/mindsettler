@@ -98,7 +98,10 @@ function VerifyEmailContent() {
         alert("Your booking has been cancelled successfully.");
       }
 
-      router.replace(`/verify-email?token=${token}`);
+      // IMPORTANT: refetch verification instead of redirecting
+      const refreshed = await bookingAPI.verifyEmail(token!);
+      setState({ kind: "success", data: refreshed });
+
     } catch (err: any) {
       setState({
         kind: "error",
