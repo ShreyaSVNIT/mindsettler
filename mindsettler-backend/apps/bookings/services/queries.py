@@ -13,6 +13,13 @@ ACTIVE_STATUSES = {
     "CONFIRMED",
 }
 
+CANCELLABLE_STATUSES = {
+    "PENDING",
+    "APPROVED",
+    "PAYMENT_PENDING",
+    "CONFIRMED",
+}
+
 
 def has_active_booking(user, exclude=None):
     """
@@ -44,3 +51,20 @@ def get_active_booking(user):
         .order_by("-created_at")
         .first()
     )
+
+
+def get_cancellable_booking(user, acknowledgement_id=None):
+    """
+    Returns a booking that is allowed to be cancelled.
+    Used explicitly by cancellation flows.
+    """
+
+    qs = Booking.objects.filter(
+        user=user,
+        status__in=CANCELLABLE_STATUSES,
+    )
+
+    if acknowledgement_id is not None:
+        qs = qs.filter(acknowledgement_id=acknowledgement_id)
+
+    return qs.order_by("-created_at").first()
