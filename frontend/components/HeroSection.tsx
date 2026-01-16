@@ -109,8 +109,9 @@ const HeroSection: React.FC = () => {
             <span className="hidden md:block">Discover a sanctuary for <span className="text-white">emotional well-being</span>. Expert psycho-education designed to help you navigate life's quieter, more profound moments.</span>
           </p>
 
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
             <MagneticButton text="Explore" onClick={() => (window.location.href = '/how-it-works')} aria-label="Explore how MindSettler works" />
+            <MagneticButton text="Book" onClick={() => (window.location.href = '/book')} aria-label="Book a session" />
           </div>
         </motion.div>
       )}

@@ -143,11 +143,13 @@ export default function IntegratedHeader() {
               <Link
                 key={item}
                 href={`/${item.toLowerCase().replace(/ /g, '-')}`}
-                  className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors group/link
-                    ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
-                  >
-                    <span>{item}</span>
-                  </Link>
+                className={`relative transition-colors group/link ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
+              >
+                <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/link:text-[var(--color-primary)] group-hover/link:opacity-100`}>
+                  {item}
+                  <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
+                </span>
+              </Link>
             ))}
           </nav>
 

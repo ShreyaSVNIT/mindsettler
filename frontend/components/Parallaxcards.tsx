@@ -10,6 +10,7 @@ import {
   useTransform,
   AnimatePresence,
 } from "framer-motion";
+import AnimatedBadge from "./AnimatedBadge";
 
 /* ---------------- DATA ---------------- */
 
@@ -74,7 +75,7 @@ export default function ParallaxCards() {
   const backgroundY = useTransform(
     scrollYProgress,
     [0, 1],
-    isMobile ? ["0%", "0%"] : ["-2%", "2%"]
+    isMobile ? ["0%", "0%"] : ["-8%", "8%"]
   );
   const activeStep = STEPS.find((s) => s.id === activeId)!;
 
@@ -124,8 +125,8 @@ export default function ParallaxCards() {
               layout
               initial={false}
               animate={{
-                // use subtle scale animations instead of hard width/height
-                scale: isActive ? 1.02 : 1,
+                // active card noticeably larger; inactive cards slightly reduced
+                scale: isActive ? 1.08 : 0.94,
               }}
               transition={{
                 type: "spring",
@@ -147,15 +148,10 @@ export default function ParallaxCards() {
               <motion.div layout className="flex flex-col h-full justify-between">
                 <div>
                   {/* STEP NUMBER CIRCLE */}
-                  <motion.div
-                    layout="position"
-                    className="w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center mb-6 md:mb-6 font-title text-lg md:text-2xl font-bold tracking-tight"
-                    style={{
-                      backgroundColor: "var(--color-primary)",
-                      color: "var(--color-bg-card)",
-                    }}
-                  >
-                    {step.id}
+                  <motion.div layout="position" className="mb-6 md:mb-6">
+                    <AnimatedBadge className="w-12 h-12 md:w-14 md:h-14 font-title text-lg md:text-2xl font-bold tracking-tight">
+                      {step.id}
+                    </AnimatedBadge>
                   </motion.div>
 
                   {/* TITLE */}
