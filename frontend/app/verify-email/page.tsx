@@ -98,7 +98,10 @@ function VerifyEmailContent() {
         alert("Your booking has been cancelled successfully.");
       }
 
-      router.replace(`/verify-email?token=${token}`);
+      // IMPORTANT: refetch verification instead of redirecting
+      const refreshed = await bookingAPI.verifyEmail(token!);
+      setState({ kind: "success", data: refreshed });
+
     } catch (err: any) {
       setState({
         kind: "error",
@@ -247,57 +250,45 @@ function VerifyEmailContent() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              {state.data.booking.status === "APPROVED" && (
-                <>
-                  {state.data.booking.mode === "OFFLINE" && (state.data.booking as any).payment_mode === "OFFLINE" ? (
-                    <div className="bg-white/70 rounded-xl p-5 text-center border border-[var(--color-primary)]/20 mb-3">
-                      <p className="font-body text-[var(--color-text-body)]">
-                        This is an <strong>offline session</strong> with <strong>offline payment</strong>.
-                        <br />
-                        No online payment is required. Please pay directly at the session.
-                      </p>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)
-                      }
-                      className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-                    >
-                      Proceed to Payment
-                    </button>
-                  )}
 
-                  <button
-                    onClick={handleCancelBooking}
-                    className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all shadow-sm border border-[var(--color-primary)]/10"
-                  >
-                    Cancel Booking
-                  </button>
-                </>
+              {/* Proceed to payment (only when approved & online) */}
+              {state.data.booking.status === "APPROVED" &&
+               !(state.data.booking.mode === "OFFLINE" && (state.data.booking as any).payment_mode === "OFFLINE") && (
+                <button
+                  onClick={() =>
+                    router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)
+                  }
+                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                >
+                  Proceed to Payment
+                </button>
               )}
-              
-              {state.data.booking.status === "CONFIRMED" && (
-                <>
-                  {calendarHref ? (
-                    <a
-                      href={calendarHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
-                    >
-                      Add to Google Calendar
-                    </a>
-                  ) : null}
-                  <button
-                    onClick={handleCancelBooking}
-                    className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all shadow-sm border border-[var(--color-primary)]/10"
-                  >
-                    Cancel Booking
-                  </button>
-                </>
+
+              {/* Cancel booking — ALWAYS visible for non-terminal states */}
+              {!["CANCELLED", "REJECTED", "COMPLETED"].includes(
+                state.data.booking.status
+              ) && (
+                <button
+                  onClick={handleCancelBooking}
+                  className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all shadow-sm border border-[var(--color-primary)]/10"
+                >
+                  Cancel Booking
+                </button>
               )}
-              
+
+              {/* Google Calendar (confirmed only) */}
+              {state.data.booking.status === "CONFIRMED" && calendarHref && (
+                <a
+                  href={calendarHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
+                >
+                  Add to Google Calendar
+                </a>
+              )}
+
+              {/* Home */}
               <button
                 onClick={() => {
                   window.location.href = "https://mindsettler.vercel.app/";
@@ -306,6 +297,7 @@ function VerifyEmailContent() {
               >
                 Go to Home
               </button>
+
             </div>
           </motion.div>
         )}
