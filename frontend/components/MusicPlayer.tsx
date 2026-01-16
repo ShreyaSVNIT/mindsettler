@@ -8,13 +8,8 @@ interface MusicPlayerProps {
 }
 
 // Use a loose `any` for the global YouTube API to avoid duplicate declaration conflicts
-declare global {
-  interface Window {
-    YT?: any;
-    onYouTubeIframeAPIReady?: () => void;
-    __msSplashDone?: boolean;
-  }
-}
+// Avoid declaring global `YT` to prevent duplicate-declaration TypeScript errors.
+// We'll reference the API via `(window as any).YT` at runtime.
 
 const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU&t=4s' }: MusicPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -41,10 +36,11 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     }
 
     // Initialize player when API is ready
-    const initializePlayer = () => {
+      const initializePlayer = () => {
       try {
-        if (!playerRef.current && window.YT && window.YT.Player) {
-          playerRef.current = new window.YT.Player('youtube-player', {
+        const YT = (window as any).YT;
+        if (!playerRef.current && YT && YT.Player) {
+          playerRef.current = new YT.Player('youtube-player', {
             videoId: videoId,
             playerVars: {
               autoplay: 0,
@@ -56,21 +52,22 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
               origin: window.location.origin,
             },
             events: {
-              onReady: (event: { target?: YT.Player }) => {
+              onReady: (event: any) => {
                 // Player ready
                 setIsLoaded(true);
                 setError(null);
               },
-              onStateChange: (event: { data?: number }) => {
-                if (window.YT && window.YT.PlayerState) {
-                  if (event.data === window.YT.PlayerState.PLAYING) {
+              onStateChange: (event: any) => {
+                const PlayerState = (window as any).YT?.PlayerState;
+                if (PlayerState) {
+                  if (event.data === PlayerState.PLAYING) {
                     setIsPlaying(true);
-                  } else if (event.data === window.YT.PlayerState.PAUSED) {
+                  } else if (event.data === PlayerState.PAUSED) {
                     setIsPlaying(false);
                   }
                 }
               },
-              onError: (event: { data?: number }) => {
+              onError: (event: any) => {
                 console.error('YouTube player error:', event.data);
                 setError('Failed to load video');
                 setIsLoaded(false);
@@ -85,7 +82,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     };
 
     // Check if API is already loaded
-    if (window.YT && window.YT.Player) {
+    if ((window as any).YT && (window as any).YT.Player) {
       initializePlayer();
       return;
     }
@@ -104,7 +101,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     }
 
     // Set up the callback for when API loads
-    window.onYouTubeIframeAPIReady = () => {
+    (window as any).onYouTubeIframeAPIReady = () => {
       initializePlayer();
     };
 
