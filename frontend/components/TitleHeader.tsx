@@ -35,7 +35,7 @@ export default function TitleHeader({
         transition={{ duration: 0.6, delay: 0.2 }}
         className="mb-3 sm:mb-4 md:mb-6"
       >
-        <span className="text-[var(--color-primary)] text-sm sm:text-sm md:text-base lg:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
+        <span className="text-[var(--color-primary)] text-sm sm:text-sm md:text-base lg:text-lg tracking-[0.25em] md:tracking-[0.5em] uppercase font-playfair font-bold">
           {subheader}
         </span>
       </motion.div>
@@ -58,7 +58,7 @@ export default function TitleHeader({
       {/* Description */}
       {description && (
         <motion.p
-            className={`font-body text-base sm:text-base md:text-xl lg:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed whitespace-pre-line ${descriptionClasses}`}
+          className={`font-body text-base sm:text-base md:text-xl lg:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed whitespace-pre-line ${descriptionClasses}`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

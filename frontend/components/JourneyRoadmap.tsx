@@ -54,6 +54,8 @@ const TimelineSection: React.FC<SectionProps> = ({
                 src={image}
                 alt={title}
                 fill
+                loading="lazy"
+                style={{ objectPosition: '50% 40%' }}
                 className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700"
               />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
@@ -252,7 +254,7 @@ export default function MindSettlerJourney() {
         </motion.div>
 
         {/* SECTIONS */}
-        <div className="space-y-10">
+        <div className="space-y-8">
           <>
             <TimelineSection
               step="STEP 01"
