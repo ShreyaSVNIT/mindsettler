@@ -133,7 +133,7 @@ export default function AboutPage() {
               <TitleHeader
                 subheader="About MindSettler"
                 title={<>
-                  <span className="block md:inline">Where <span className="inline md:inline text-[var(--color-primary)] italic">Healing</span></span>
+                  <span className="block md:inline">Where <span className="inline md:inline text-[var(--color-primary)] italic">Healing </span></span>
                   <span className="block md:inline md:ml-2">Meets Hope</span>
                 </>}
                 description="I created MindSettler to be more than just a platform. It's a companion in your journey toward understanding yourself, embracing your story, and finding peace in the present."

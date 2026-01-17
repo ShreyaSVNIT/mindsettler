@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Phone, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { X, Mail, Phone, Instagram, Linkedin } from 'lucide-react';
 import MagneticButton from './Button';
 
 export default function ContactOverlay({ initialOpen = false }: { initialOpen?: boolean }) {
@@ -149,22 +149,14 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
                         </a>
                       </div>
 
-                      <div>
-                        <h3 className="font-body text-sm font-bold uppercase tracking-wider text-[var(--color-text-body)]/60 mb-3">
-                          Join us
-                        </h3>
-                        <a href="/about#contact" className="font-body text-2xl text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors underline">
-                          See Opportunities
-                        </a>
-                      </div>
+
                     </div>
 
                     {/* Social Links */}
                     <div className="flex gap-4">
                       {[
-                        { icon: Instagram, href: '#' },
-                        { icon: Linkedin, href: '#' },
-                        { icon: Twitter, href: '#' }
+                        { icon: Instagram, href: 'https://www.instagram.com/mindsettlerbypb/' },
+                        { icon: Linkedin, href: 'https://www.linkedin.com/in/parnika-bajaj-190719195/' }
                       ].map((social, i) => (
                         <motion.a
                           key={i}
