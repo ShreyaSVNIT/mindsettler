@@ -11,7 +11,7 @@
   --color-primary: #E37383;
   --color-primary-hover: #eb81a5;
 
-  --color-bg-app: #F9D1D5;
+  --color-bg-app: #FCEBED;
   --color-bg-lavender: #F2ECF2;
   --color-bg-card: #ffffff;
   --color-bg-subtle: #faf9fb;
@@ -46,7 +46,9 @@ body {
 }
 
 /* Set a responsive root font-size to make rems scale smoothly */
-html { font-size: var(--fs-base); }
+html {
+  font-size: var(--fs-base);
+}
 
 html {
   scroll-behavior: smooth;
@@ -138,6 +140,7 @@ html {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -150,9 +153,11 @@ html {
   transform: translateY(-4px);
   overflow: hidden;
   transition: max-height 220ms ease, opacity 180ms ease, transform 180ms ease;
-  color: #b00020; /* accessible error red */
+  color: #b00020;
+  /* accessible error red */
   font-size: 0.95rem;
 }
+
 .form-error.show {
   max-height: 120px;
   opacity: 1;
