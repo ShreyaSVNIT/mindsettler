@@ -10,7 +10,7 @@ export default function Footer() {
     <footer className="relative bg-gradient-to-b from-[var(--color-bg-subtle)] to-[var(--color-bg-card)] overflow-hidden group">
 
       {/* Marquee */}
-      <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-8">
+      <div className="relative border-y border-[var(--color-border)] bg-[var(--color-bg-app)] py-4 md:py-8">
         <ScrollVelocity
           texts={['MINDFUL HEALING ✦ COMPASSIONATE CARE ✦ TRANSFORMATIVE JOURNEY ✦']}
           velocity={170}
