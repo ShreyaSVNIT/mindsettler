@@ -20,7 +20,7 @@ export default function HowItWorks() {
         your mental wellness journey every step of the way"
         alignment="center"
         layout="static"
-        className="h-[687px]"
+        className="lg:h-screen"
         cta={<a href="/how-it-works#start"><MagneticButton text="Get Started" /></a>}
       />
 

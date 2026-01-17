@@ -200,7 +200,7 @@ export default function CorporatePage() {
 workshops, group sessions, and strategic collaborations`}
         alignment="center"
         layout="static"
-        className="h-[687px]"
+        className="lg:h-screen"
         backgroundColor="white"
       />
 

@@ -217,7 +217,7 @@ export default function BookPage() {
               title={
                 <>
                   Let's begin your{" "}
-                  <span className="text-[var(--color-text-body)] italic">healing journey.</span>
+                  <span className="text-[var(--color-primary)] italic">healing journey.</span>
                 </>
               }
               description="Choose your session type to get started. It only takes a few minutes to share your details and move things forward."
@@ -230,7 +230,7 @@ export default function BookPage() {
                 <div className="font-body text-sm md:text-base text-[var(--color-text-body)] h-full flex flex-col">
                   <div className="flex items-center gap-3 mb-3 md:mb-4">
                     <AnimatedBadge className="flex-shrink-0 w-8 h-8 text-sm">1</AnimatedBadge>
-                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-text-body)]">Session Duration</span>
+                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-primary)]">Session Duration</span>
                   </div>
                   <div className="text-sm md:text-base">60 minutes per session, includes a brief check-in.</div>
                 </div>
@@ -239,7 +239,7 @@ export default function BookPage() {
                 <div className="font-body text-sm md:text-base text-[var(--color-text-body)] h-full flex flex-col">
                   <div className="flex items-center gap-3 mb-3 md:mb-4">
                     <AnimatedBadge className="flex-shrink-0 w-8 h-8 text-sm">2</AnimatedBadge>
-                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-text-body)]">First Session</span>
+                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-primary)]">First Session</span>
                   </div>
                   <div className="text-sm md:text-base">Introductory assessment & goal setting for new clients.</div>
                 </div>
@@ -248,7 +248,7 @@ export default function BookPage() {
                 <div className="font-body text-sm md:text-base text-[var(--color-text-body)] h-full flex flex-col">
                   <div className="flex items-center gap-3 mb-3 md:mb-4">
                     <AnimatedBadge className="flex-shrink-0 w-8 h-8 text-sm">3</AnimatedBadge>
-                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-text-body)]">Location</span>
+                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-primary)]">Location</span>
                   </div>
                   <div className="text-sm md:text-base">Online or in-studio; details shared after booking.</div>
                 </div>

@@ -43,7 +43,7 @@ export default function ResourcesPage() {
                 alignment="center"
                 layout="static"
                 backgroundColor="white"
-                className="h-[687px]"
+                className="lg:h-screen"
             />
 
             <section className="py-24 px-6 bg-white">
