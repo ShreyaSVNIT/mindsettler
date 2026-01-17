@@ -54,7 +54,7 @@ INTENTS = {
             "I feel like a failure", "isolated and alone", "lost my spark"
         ],
         "responses": ["It sounds like things are incredibly heavy right now. Please know that what you're feeling is valid, and you don't have to carry it alone. Our therapists specialize in mood disorders and provide a safe space to process these feelings."],
-        "link": "/services"
+        "link": "/book"
     },
     "anxiety_stress": {
         "examples": [
@@ -67,7 +67,7 @@ INTENTS = {
             "I feel like something bad will happen", "constant dread", "can't relax"
         ],
         "responses": ["Anxiety can make your mind and body feel like they're in a constant state of alarm. We use evidence-based approaches like CBT and grounding techniques to help you find your calm again."],
-        "link": "/services"
+        "link": "/book"
     },
     "pricing_info": {
         "examples": [
@@ -100,7 +100,7 @@ INTENTS = {
             "my parents don't understand", "marriage counseling", "couple therapy"
         ],
         "responses": ["Relationships are central to our happiness but can also be deeply painful. Whether you're navigating a breakup or family tension, our counselors can help you build healthier boundaries and communication."],
-        "link": "/services#relationships"
+        "link": "/book"
     },
     "grief_loss": {
         "examples": [
@@ -108,7 +108,7 @@ INTENTS = {
             "I can't get over my loss", "mourning"
         ],
         "responses": ["I am so sorry for your loss. Grief has no timeline, and you don't have to carry it alone. Our counselors provide a safe space to process your feelings."],
-        "link": "/services#grief"
+        "link": "/book"
     },
     "sleep_issues": {
         "examples": [
@@ -117,7 +117,7 @@ INTENTS = {
             "waking up at night", "exhausted", "fatigue"
         ],
         "responses": ["Sleep and mental health are deeply linked. Issues with sleep are often a sign of underlying stress or mood concerns. We can help you identify the root cause and improve your sleep hygiene."],
-        "link": "/services#sleep"
+        "link": "/book"
     },
 
     # ─── LOGISTICS & SERVICES ───
@@ -128,7 +128,7 @@ INTENTS = {
             "is the therapist experienced", "who will I talk to", "expert team"
         ],
         "responses": ["Your well-being is in safe hands. All MindSettler therapists are licensed psychologists (RCI registered where applicable) with a minimum of a Master's degree and extensive clinical experience."],
-        "link": "/team"
+        "link": "/about"
     },
     "online_vs_offline": {
         "examples": [
@@ -136,7 +136,7 @@ INTENTS = {
             "video call sessions", "where are you located", "physical office"
         ],
         "responses": ["We offer both: comfortable offline sessions at our center and convenient online video consultations from the privacy of your home."],
-        "link": "/locations"
+        "link": "/how-it-works"
     },
     "insurance_payment": {
         "examples": [
@@ -144,7 +144,7 @@ INTENTS = {
             "covered by health insurance", "reimbursement"
         ],
         "responses": ["We accept UPI, cards, and net banking. Regarding insurance, we provide invoices that you can submit for reimbursement if your policy covers mental health."],
-        "link": "/billing-faq"
+        "link": "/how-it-works"
     },
     "corporate_wellness": {
         "examples": [
@@ -161,8 +161,8 @@ INTENTS = {
             "I missed my session", "cancel booking", "postpone",
             "policy for cancellation", "can I get my money back"
         ],
-        "responses": ["We understand that life happens! You can reschedule or cancel your session through your dashboard. Cancellations made 24 hours in advance are eligible for a full refund."],
-        "link": "/contact"
+        "responses": ["We understand that life happens! You can reschedule or cancel your session through check status. Cancellations made 24 hours in advance are eligible for a full refund."],
+        "link": "/check-status"
     },
 
     # ─── USER EXPERIENCE & SMALL TALK ───
@@ -199,8 +199,8 @@ INTENTS = {
             "immediate help needed", "I have a plan to hurt myself",
             "I don't want to live anymore", "suicidal thoughts", "help me now"
         ],
-        "responses": ["I am very concerned about what you're sharing. Please reach out to a professional immediately. You can call AASRA (9820466726) or the Vandrevala Foundation (9999666555) 24/7. You are important, and help is available."],
-        "link": "/emergency-resources"
+        "responses": ["I am very concerned about what you're sharing. Please reach out to a professional immediately. You are important, and help is available."],
+        "link": None
     },
 }
 
