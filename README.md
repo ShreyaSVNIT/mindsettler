@@ -2,6 +2,8 @@
 
 > Your journey to mental wellness, one conversation at a time.
 
+- **Live Site:** https://mindsettler.vercel.app
+
 ## 🌟 What is MindSettler?
 
 MindSettler is a mental wellness platform that makes it easy to book confidential counseling sessions with qualified psychologists. Whether you're dealing with stress, anxiety, relationship issues, or just need someone to talk to, we're here to help—both online and offline.
@@ -28,7 +30,7 @@ Think of us as your mental health companion: we provide a safe space to explore 
 **AI/Chatbot**: PyTorch, Transformers, NLP models  
 **Database**: PostgreSQL (production), SQLite (development)  
 **Authentication**: Firebase Auth, JWT tokens  
-**Hosting**: Vercel (frontend), Firebase (functions)
+**Hosting / Deployment**: Frontend deployed at https://mindsettler.vercel.app (Vercel), Firebase for functions
 
 ---
 
@@ -225,3 +227,59 @@ Built for **GWoC (Google Winter of Code)**
 ---
 
 **Built with care for mental wellness** 
+
+---
+
+## 📁 Project Tree (top-level snapshot)
+
+```
+package.json
+README.md
+backend/
+	chatbot-backend/
+		db.sqlite3
+		Dockerfile
+		manage.py
+		requirements.txt
+		api/
+			__init__.py
+			admin.py
+			apps.py
+			engine.py
+			models.py
+			tests.py
+			urls.py
+			views.py
+			migrations/
+	core/
+		__init__.py
+		asgi.py
+		settings.py
+		urls.py
+		wsgi.py
+firebase/
+	firebase.json
+	functions/
+		index.js
+		package.json
+frontend/
+	app/
+		globals.css
+		layout.tsx
+		page.tsx
+		...
+	components/
+	public/
+	package.json
+mindsettler-backend/
+	db.sqlite3
+	manage.py
+	requirements.txt
+	apps/
+	mindsettler/
+studio-mindsettler/
+	schemaTypes/
+	static/
+```
+
+*This is a high-level snapshot — the repository contains additional files and folders used for development and deployment.*
