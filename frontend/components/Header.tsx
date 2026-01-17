@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import type { MouseEvent } from 'react';
-import { Calendar, Menu, X } from 'lucide-react';
+import { Calendar, Menu, X, Info, Building2, BookOpen, Sparkles, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter, usePathname } from 'next/navigation';
 
@@ -187,22 +187,28 @@ export default function IntegratedHeader() {
             </button>
           </div>
 
-          <nav ref={navRef} className={`hidden lg:flex items-center px-8 gap-12 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            {['About', 'Corporate', 'Resources'].map((item) => (
+          <nav ref={navRef} className={`hidden lg:flex items-center px-8 gap-8 xl:gap-12 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+            {[
+              { label: 'About', href: '/about', Icon: Info },
+              { label: 'Corporate', href: '/corporate', Icon: Building2 },
+              { label: 'Resources', href: '/resources', Icon: BookOpen }
+            ].map((item) => (
               <Link
-                key={item}
-                href={`/${item.toLowerCase().replace(/ /g, '-')}`}
-                className={`relative transition-colors group/link ${isHomeAtTop ? 'text-white hover:text-white' : 'text-[var(--color-text-body)] opacity-70 hover:text-[var(--color-primary)]'} hover:opacity-100`}
+                key={item.label}
+                href={item.href}
+                className={`relative transition-colors group/link flex items-center justify-center ${isHomeAtTop ? 'text-white hover:text-white' : 'text-[var(--color-text-body)] opacity-70 hover:text-[var(--color-primary)]'} hover:opacity-100`}
+                title={item.label}
               >
-                <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors ${isHomeAtTop ? 'text-white group-hover/link:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/link:text-[var(--color-primary)]'} group-hover/link:opacity-100`}>
-                  {item}
+                <item.Icon className={`w-6 h-6 2xl:hidden ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] group-hover/link:text-[var(--color-primary)]'}`} />
+                <span className={`hidden 2xl:block relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors ${isHomeAtTop ? 'text-white group-hover/link:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/link:text-[var(--color-primary)]'} group-hover/link:opacity-100`}>
+                  {item.label}
                   <span className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full ${isHomeAtTop ? 'bg-white' : 'bg-[var(--color-primary)]'}`}></span>
                 </span>
               </Link>
             ))}
           </nav>
 
-          <div ref={logoRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-1 md:mt-0 flex items-center justify-center isolate pointer-events-none z-[150]">
+          <div ref={logoRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center isolate pointer-events-none z-[150]">
             {/* Cloud Shape Background - Reduced Size & Opacity */}
             {pathname === '/' && isAtTop && (
               <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
@@ -213,28 +219,33 @@ export default function IntegratedHeader() {
               <Image
                 src="/MindSettlerLogo.png"
                 alt="Logo"
-                width={180}
-                height={115}
+                width={220}
+                height={140}
                 priority
-                sizes="(max-width: 640px) 130px, 180px"
-                className="max-w-none mx-auto w-32 h-auto md:w-auto"
+                sizes="(max-width: 640px) 130px, (max-width: 1024px) 160px, 220px"
+                className="max-w-none mx-auto w-32 h-auto md:w-40 lg:w-48 xl:w-52"
               />
             </Link>
           </div>
 
-          <div className="w-24 md:w-28 lg:w-32 lg:hidden" aria-hidden="true" />
-          <div className={`hidden lg:flex ml-auto items-stretch gap-6 border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            <Link href="/how-it-works" className={`flex items-center justify-center px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors
+          <div className="w-24 md:w-28 lg:w-32 lg:hidden ml-auto flex items-center justify-center border-l border-[var(--color-primary)]/20">
+            <Link href="/book" className={`tap-target p-3 hover:scale-110 transition-all ${isHomeAtTop ? 'text-white hover:text-white' : 'text-[var(--color-text-body)] opacity-70 hover:text-[var(--color-primary)]'} hover:opacity-100`}>
+              <Calendar className="w-6 h-6 md:w-7 md:h-7" />
+            </Link>
+          </div>
+          <div className={`hidden lg:flex ml-auto items-stretch gap-6 xl:gap-6 border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+            <Link href="/how-it-works" className={`flex items-center justify-center px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`} title="How It Works">
+              <Sparkles className={`w-6 h-6 2xl:hidden ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] group-hover/link:text-[var(--color-primary)]'}`} />
+              <span className={`hidden 2xl:block relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors
                 ${isHomeAtTop ? 'text-white group-hover/link:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/link:text-[var(--color-primary)]'} group-hover/link:opacity-100`}
               >
                 How It Works
                 <span className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full ${isHomeAtTop ? 'bg-white' : 'bg-[var(--color-primary)]'}`}></span>
               </span>
             </Link>
-            <Link href="/book" className={`flex items-center gap-3 px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              <Calendar size={20} className={`${isHomeAtTop ? 'text-white group-hover/book:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/book:text-[var(--color-primary)]'} transition-colors group-hover/book:opacity-100`} />
-              <span className={`relative text-[14px] uppercase tracking-[0.15em] font-black transition-colors
+            <Link href="/book" className={`flex items-center gap-3 px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`} title="Book Session">
+              <Calendar size={24} className={`2xl:w-5 2xl:h-5 ${isHomeAtTop ? 'text-white group-hover/book:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/book:text-[var(--color-primary)]'} transition-colors group-hover/book:opacity-100`} />
+              <span className={`hidden 2xl:block relative text-[14px] uppercase tracking-[0.15em] font-black transition-colors
                 ${isHomeAtTop ? 'text-white group-hover/book:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/book:text-[var(--color-primary)]'} group-hover/book:opacity-100`}
               >
                 Book Session
@@ -242,11 +253,13 @@ export default function IntegratedHeader() {
               </span>
             </Link>
             <Link
-              href="/admin"
+              href={`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000'}/admin`}
               className={`relative flex items-center justify-center px-6 md:px-8 transition-all group/link
                 ${isHomeAtTop ? 'text-white hover:text-white' : 'text-[var(--color-text-body)] opacity-70 hover:text-[var(--color-primary)]'} hover:opacity-100`}
+              title="Admin"
             >
-              <span className="relative text-[15px] uppercase tracking-[0.25em] font-bold">
+              <ShieldCheck className={`w-6 h-6 2xl:hidden ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] group-hover/link:text-[var(--color-primary)]'}`} />
+              <span className="hidden 2xl:block relative text-[15px] uppercase tracking-[0.25em] font-bold">
                 Admin
                 <span className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full ${isHomeAtTop ? 'bg-white' : 'bg-[var(--color-primary)]'}`}></span>
               </span>

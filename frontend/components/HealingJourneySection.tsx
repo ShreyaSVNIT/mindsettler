@@ -53,7 +53,7 @@ export default function HealingJourneySection() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1, ease: "easeOut" }}
-                    className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] leading-tight drop-shadow-sm"
+                    className="font-title text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-[var(--color-text-body)] leading-tight drop-shadow-sm"
                 >
                     Healing happens in <br /> <span className="text-[var(--color-primary)] italic">circles,</span> not <span className="text-[var(--color-primary)] italic">lines.</span>
                     <br />
