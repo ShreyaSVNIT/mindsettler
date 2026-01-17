@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
 import MagneticButton from './Button';
 import AnimatedLogo from './AnimatedLogo';
 
@@ -28,7 +27,7 @@ const HeroSection: React.FC = () => {
         try {
           const playPromise = videoRef.current.play();
           if (playPromise && typeof playPromise.catch === 'function') {
-            playPromise.catch(() => {});
+            playPromise.catch(() => { });
           }
         } catch {
           // ignore play errors
@@ -52,12 +51,8 @@ const HeroSection: React.FC = () => {
     };
   }, []);
 
-  const scrollToNextSection = () => {
-    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-  };
-
   return (
-    <section className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] lg:min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black text-center py-12 md:py-24">
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black text-center py-12 md:py-24">
       <div className="absolute inset-0 z-0">
         <video
           loop
@@ -83,7 +78,7 @@ const HeroSection: React.FC = () => {
           animate={prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
           transition={prefersReducedMotion ? {} : { duration: 1.0, delay: 0.1, ease: [0.65, 0, 0.35, 1] }}
         >
-          <p className="font-playfair font-bold uppercase tracking-[0.5em] text-white text-[clamp(0.7rem,1.2vw,0.9rem)] mb-8">
+          <p className="font-playfair font-bold uppercase tracking-[0.5em] text-white text-[clamp(0.85rem,1.5vw,1.1rem)] mb-8">
             Your Journey Inward Begins Here
           </p>
 
@@ -104,7 +99,7 @@ const HeroSection: React.FC = () => {
             </h1>
           </div>
 
-          <p className="font-body leading-relaxed text-white text-[clamp(0.95rem,1.8vw,1.25rem)] max-w-[50ch] mb-8 md:mb-12">
+          <p className="font-body leading-relaxed text-white text-[clamp(1.1rem,2.0vw,1.4rem)] max-w-[50ch] mb-8 md:mb-12">
             <span className="block md:hidden">Confidential therapy sessions. Book a free consultation.</span>
             <span className="hidden md:block">Discover a sanctuary for <span className="text-white">emotional well-being</span>. Expert psycho-education designed to help you navigate life's quieter, more profound moments.</span>
           </p>
@@ -115,17 +110,6 @@ const HeroSection: React.FC = () => {
           </div>
         </motion.div>
       )}
-
-      <div className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-4">
-        <button
-          onClick={scrollToNextSection}
-          className="group flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md transition-all duration-500 hover:border-[var(--color-primary)]/50 hover:bg-[var(--color-primary)]/10"
-        >
-          <div className="animate-bounce-slow">
-            <ChevronDown size={24} color="white" strokeWidth={1} className="group-hover:text-[var(--color-primary)] transition-colors" />
-          </div>
-        </button>
-      </div>
 
       <div className="h-12 md:h-20" aria-hidden="true" />
 

@@ -118,18 +118,17 @@ export default function IntegratedHeader() {
     <>
       {/* --- MAIN HEADER --- */}
       <header
-        className={`fixed top-0 left-0 w-full z-[130] h-14 md:h-16 lg:h-20 group transform transition-transform duration-300 ${
-          showHeader || menuOpen ? 'translate-y-0' : '-translate-y-full'
-        } ${isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'}`}
+        className={`fixed top-0 left-0 w-full z-[130] h-14 md:h-16 lg:h-20 group transform transition-transform duration-300 ${showHeader || menuOpen ? 'translate-y-0' : '-translate-y-full'
+          } ${isAtTop ? 'bg-transparent' : 'bg-[var(--color-bg-card)]/80 backdrop-blur-xl border-b border-[var(--color-border)]/50'}`}
       >
-        <div className="h-full w-full flex items-stretch">
-          <div className={`flex items-center justify-center px-8 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+        <div className="h-full w-full flex items-stretch relative">
+          <div className={`w-24 md:w-28 lg:w-32 flex items-center justify-center border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               aria-expanded={menuOpen}
               aria-controls="main-menu"
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-              className={`tap-target p-3 hover:scale-110 transition-all relative z-[140] hover:text-[var(--color-primary)] hover:opacity-100 ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'}`}
+              className={`tap-target p-3 hover:scale-110 transition-all relative z-[140] ${isHomeAtTop ? 'text-white hover:text-white' : 'text-[var(--color-text-body)] opacity-70 hover:text-[var(--color-primary)]'} hover:opacity-100`}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -139,73 +138,74 @@ export default function IntegratedHeader() {
                   exit={{ opacity: 0, rotate: 90 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {menuOpen ? <X size={28} /> : <Menu size={28} />}
+                  {menuOpen ? <X className="w-6 h-6 md:w-7 md:h-7" /> : <Menu className="w-6 h-6 md:w-7 md:h-7" />}
                 </motion.div>
               </AnimatePresence>
             </button>
           </div>
 
           <nav className={`hidden lg:flex items-center px-8 gap-12 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              {['How It Works', 'Corporate', 'Resources'].map((item) => (
+            {['About', 'Corporate', 'Resources'].map((item) => (
               <Link
                 key={item}
                 href={`/${item.toLowerCase().replace(/ /g, '-')}`}
-                className={`relative transition-colors group/link ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
+                className={`relative transition-colors group/link ${isHomeAtTop ? 'text-white hover:text-white' : 'text-[var(--color-text-body)] opacity-70 hover:text-[var(--color-primary)]'} hover:opacity-100`}
               >
-                <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/link:text-[var(--color-primary)] group-hover/link:opacity-100`}>
+                <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors ${isHomeAtTop ? 'text-white group-hover/link:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/link:text-[var(--color-primary)]'} group-hover/link:opacity-100`}>
                   {item}
-                  <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
+                  <span className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full ${isHomeAtTop ? 'bg-white' : 'bg-[var(--color-primary)]'}`}></span>
                 </span>
               </Link>
             ))}
           </nav>
 
-          <div className="flex-grow relative flex items-center justify-center px-8 isolate">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-1 md:mt-0 flex items-center justify-center isolate pointer-events-none z-[150]">
             {/* Cloud Shape Background - Reduced Size & Opacity */}
             {pathname === '/' && isAtTop && (
               <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">
                 <div className="w-[240px] h-[60px] bg-white shadow-[0_0_40px_rgba(255,255,255,0.7)] rounded-[100%] blur-xl opacity-70"></div>
               </div>
             )}
-            <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-auto h-auto block">
+            <Link href="/" className="block pointer-events-auto">
               <Image
                 src="/MindSettlerLogo.png"
                 alt="Logo"
                 width={180}
                 height={115}
                 priority
-                sizes="(max-width: 640px) 140px, 180px"
-                className="max-w-none"
+                sizes="(max-width: 640px) 130px, 180px"
+                className="max-w-none mx-auto w-32 h-auto md:w-auto"
               />
             </Link>
           </div>
 
-          <div className={`hidden lg:flex items-stretch gap-6 px-6 md:px-8 lg:px-10 border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-            <Link href="/about" className={`flex items-center justify-center px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+          <div className="w-24 md:w-28 lg:w-32 lg:hidden" aria-hidden="true" />
+          <div className={`hidden lg:flex ml-auto items-stretch gap-6 border-l transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+            <Link href="/how-it-works" className={`flex items-center justify-center px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/link ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
               <span className={`relative text-[15px] uppercase tracking-[0.25em] font-bold transition-colors
-                ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/link:text-[var(--color-primary)] group-hover/link:opacity-100`}
+                ${isHomeAtTop ? 'text-white group-hover/link:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/link:text-[var(--color-primary)]'} group-hover/link:opacity-100`}
               >
-                About
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
+                How It Works
+                <span className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full ${isHomeAtTop ? 'bg-white' : 'bg-[var(--color-primary)]'}`}></span>
               </span>
             </Link>
             <Link href="/book" className={`flex items-center gap-3 px-6 md:px-8 border-r transition-all hover:bg-[var(--color-primary)]/5 group/book ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
-              <Calendar size={20} className={`${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} transition-colors group-hover/book:text-[var(--color-primary)] group-hover/book:opacity-100`} />
+              <Calendar size={20} className={`${isHomeAtTop ? 'text-white group-hover/book:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/book:text-[var(--color-primary)]'} transition-colors group-hover/book:opacity-100`} />
               <span className={`relative text-[14px] uppercase tracking-[0.15em] font-black transition-colors
-                ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} group-hover/book:text-[var(--color-primary)] group-hover/book:opacity-100`}
+                ${isHomeAtTop ? 'text-white group-hover/book:text-white' : 'text-[var(--color-text-body)] opacity-70 group-hover/book:text-[var(--color-primary)]'} group-hover/book:opacity-100`}
               >
                 Book Session
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/book:w-full"></span>
+                <span className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] transition-all duration-300 group-hover/book:w-full ${isHomeAtTop ? 'bg-white' : 'bg-[var(--color-primary)]'}`}></span>
               </span>
             </Link>
             <Link
               href="/admin"
               className={`relative flex items-center justify-center px-6 md:px-8 transition-all group/link
-                ${isHomeAtTop ? 'text-white' : 'text-[var(--color-text-body)] opacity-70'} hover:text-[var(--color-primary)] hover:opacity-100`}
+                ${isHomeAtTop ? 'text-white hover:text-white' : 'text-[var(--color-text-body)] opacity-70 hover:text-[var(--color-primary)]'} hover:opacity-100`}
             >
               <span className="relative text-[15px] uppercase tracking-[0.25em] font-bold">
                 Admin
-                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] bg-[var(--color-primary)] transition-all duration-300 group-hover/link:w-full"></span>
+                <span className={`absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-0 h-[2px] transition-all duration-300 group-hover/link:w-full ${isHomeAtTop ? 'bg-white' : 'bg-[var(--color-primary)]'}`}></span>
               </span>
             </Link>
           </div>
@@ -236,42 +236,42 @@ export default function IntegratedHeader() {
               aria-hidden="true"
             />
             {/* LEFT SIDE: TEXT LINKS */}
-            <div className="w-full lg:w-1/2 h-full flex flex-col justify-between p-4 sm:p-6 lg:p-20 relative z-10">
-              <div className="flex-1 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-white/40 scrollbar-track-transparent">
-                <div className="flex flex-col gap-4 pr-4 overflow-y-auto">
-                  {['About', 'How It Works', 'Corporate', 'Resources', 'Book', 'Login'].map((link, i) => (
-                  <motion.div
-                    key={linkObj.label}
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: 0.3 + i * 0.08, duration: 0.45 }}
-                    onMouseEnter={() => {
-                      setHoveredLink(linkObj.label);
-                      setHoveredIndex(i);
-                    }}
-                    onMouseLeave={() => setHoveredLink(null)}
-                    className="overflow-hidden"
-                  >
-                    <Link
-                      href={linkObj.href}
-                      onClick={(e) => handleLinkClick(e, linkObj.href)}
-                      className="block"
+            <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-4 sm:p-6 lg:p-16 relative z-10">
+              <div className="pr-3">
+                <div className="flex flex-col gap-[0.5px] pr-0">
+                  {menuLinks.map((linkObj, i) => (
+                    <motion.div
+                      key={linkObj.label}
+                      initial={{ opacity: 0, y: 40 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ delay: 0.3 + i * 0.08, duration: 0.45 }}
+                      onMouseEnter={() => {
+                        setHoveredLink(linkObj.label);
+                        setHoveredIndex(i);
+                      }}
+                      onMouseLeave={() => setHoveredLink(null)}
+                      className="overflow-hidden -mt-[0.5px]"
                     >
-                      <div className="overflow-hidden min-h-[4.5rem] sm:min-h-[5.5rem] md:min-h-[6.5rem] lg:min-h-[7.5rem]">
-                        <motion.div
-                          className="h-[200%] flex flex-col"
-                          animate={hoveredLink === link ? { y: '-50%' } : { y: '0%' }}
-                          transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
-                        >
-                          <div className="flex-1 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-title font-bold text-white leading-tight uppercase tracking-tight">{link}</div>
-                          <div className="flex-1 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-title font-bold text-white leading-tight uppercase tracking-tight italic">{link}</div>
-                        </motion.div>
-                      </div>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
+                      <Link
+                        href={linkObj.href}
+                        onClick={(e) => handleLinkClick(e, linkObj.href)}
+                        className="block"
+                      >
+                        <div className="overflow-hidden min-h-[1.75rem] sm:min-h-[2rem] md:min-h-[2.5rem] lg:min-h-[3rem]">
+                          <motion.div
+                            className="h-[200%] flex flex-col"
+                            animate={hoveredLink === linkObj.label ? { y: '-50%' } : { y: '0%' }}
+                            transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
+                          >
+                            <div className="h-[49.5%] flex-none text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-title font-bold text-white leading-none uppercase tracking-tight">{linkObj.label}</div>
+                            <div className={`h-[49.5%] flex-none text-5xl sm:text-6xl md:text-7xl lg:text-7xl font-title font-bold text-white leading-none uppercase tracking-tight italic transition-all duration-300 ${hoveredLink === linkObj.label ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-1'}`}>{linkObj.label}</div>
+                          </motion.div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
 
