@@ -5,11 +5,12 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import MagneticButton from './Button';
 import AnimatedLogo from './AnimatedLogo';
+import Link from 'next/link';
 
 const HERO_VIDEO_POSTER =
   'https://res.cloudinary.com/dqz1ffhyo/video/upload/q_auto:best,w_1920,so_0,f_jpg/v1766503247/WhatsApp_Video_2025-12-23_at_13.54.39_Precise_Proteus_tuqnir.jpg';
 
-const HeroSection: React.FC = () => {
+const HeroSection = () => {
   const [showContent, setShowContent] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -35,9 +36,11 @@ const HeroSection: React.FC = () => {
         }
       }
 
+      // Let the video move a bit before text appears
       setTimeout(() => setShowContent(true), 150);
     };
 
+    // If the event already fired (race), start immediately.
     if ((window as any).__msSplashDone) {
       startHero();
       return;
@@ -53,11 +56,15 @@ const HeroSection: React.FC = () => {
   }, []);
 
   const scrollToNextSection = () => {
-    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+    window.scrollTo({
+      top: window.innerHeight,
+      behavior: 'smooth',
+    });
   };
 
   return (
-    <section className="relative min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] lg:min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black text-center py-12 md:py-24">
+    <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black text-center py-12 md:py-24">
+      {/* Background video */}
       <div className="absolute inset-0 z-0">
         <video
           loop
@@ -109,9 +116,8 @@ const HeroSection: React.FC = () => {
             <span className="hidden md:block">Discover a sanctuary for <span className="text-white">emotional well-being</span>. Expert psycho-education designed to help you navigate life's quieter, more profound moments.</span>
           </p>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center">
             <MagneticButton text="Explore" onClick={() => (window.location.href = '/how-it-works')} aria-label="Explore how MindSettler works" />
-            <MagneticButton text="Book" onClick={() => (window.location.href = '/book')} aria-label="Book a session" />
           </div>
         </motion.div>
       )}

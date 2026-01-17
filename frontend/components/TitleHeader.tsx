@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import SplitText from './SplitText';
 
 interface TitleHeaderProps {
   subheader: string;
@@ -27,7 +28,7 @@ export default function TitleHeader({
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.2 }}
-        className="mb-6 sm:mb-8 md:mb-12"
+        className="mb-3 sm:mb-4 md:mb-6"
       >
         <span className="text-[var(--color-primary)] text-sm sm:text-sm md:text-base lg:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
           {subheader}
@@ -36,13 +37,17 @@ export default function TitleHeader({
 
       {/* Title */}
       <motion.h1
-        className="font-title text-5xl sm:text-5xl md:text-7xl lg:text-9xl text-[var(--color-text-body)] mb-4 sm:mb-6 md:mb-8 leading-tight sm:leading-[0.95]"
+        className="font-title text-5xl sm:text-5xl md:text-7xl lg:text-9xl text-[var(--color-text-body)] mb-6 sm:mb-8 md:mb-10 leading-tight sm:leading-[0.95]"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8, delay: 0.3 }}
       >
-        {title}
+        {typeof title === 'string' ? (
+          <SplitText text={title} className="text-inherit" tag="span" />
+        ) : (
+          title
+        )}
       </motion.h1>
 
       {/* Description */}

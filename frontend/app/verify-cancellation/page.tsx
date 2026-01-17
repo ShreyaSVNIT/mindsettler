@@ -48,11 +48,10 @@ function VerifyCancellationContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-3xl p-10 text-center shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <div className="text-7xl mb-6">⚠️</div>
-            <h2 className="font-title text-4xl text-red-800 mb-4">Invalid Link</h2>
-            <p className="font-body text-lg text-red-700">
+            <h2 className="font-title text-3xl text-white mb-4">Invalid Link</h2>
+            <p className="font-body text-lg text-[var(--color-text-body)]">
               The cancellation link is invalid or missing. Please check your email and try again.
             </p>
           </motion.div>
@@ -63,17 +62,10 @@ function VerifyCancellationContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-3xl p-10 text-center shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              className="text-7xl mb-6 inline-block"
-            >
-              🔄
-            </motion.div>
-            <h2 className="font-title text-4xl text-blue-800 mb-4">Verifying Cancellation...</h2>
-            <p className="font-body text-lg text-blue-700">
+            <h2 className="font-title text-3xl text-white mb-4">Verifying Cancellation...</h2>
+            <p className="font-body text-lg text-[var(--color-text-body)]">
               Please wait while we process your cancellation request.
             </p>
           </motion.div>
@@ -84,22 +76,18 @@ function VerifyCancellationContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-3xl p-10 text-center shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <div className="text-7xl mb-6">❌</div>
-            <h2 className="font-title text-4xl text-red-800 mb-4">Cancellation Failed</h2>
-            <p className="font-body text-lg text-red-700 mb-6">
-              {state.message}
-            </p>
+            <h2 className="font-title text-3xl text-white mb-4">Cancellation Failed</h2>
+            <p className="font-body text-lg text-[var(--color-text-body)] mb-6">{state.message}</p>
             <div className="bg-white/50 rounded-xl p-4">
-              <p className="font-body text-sm text-red-600">
-                💡 The link may have expired or the booking cannot be cancelled at this time. 
-                Cancellations are only allowed up to 24 hours before the session.
+              <p className="font-body text-sm text-[var(--color-text-body)]">
+                The link may have expired or the booking cannot be cancelled at this time. Cancellations are only allowed up to 24 hours before the session.
               </p>
             </div>
             <button
               onClick={() => router.push("/")}
-              className="mt-6 bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
+              className="mt-6 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
             >
               Go to Status Page
             </button>
@@ -111,51 +99,34 @@ function VerifyCancellationContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-200 rounded-3xl p-10 shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 shadow-xl"
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="text-7xl mb-6 text-center"
-            >
-              ✅
-            </motion.div>
-            <h2 className="font-title text-4xl text-orange-800 mb-6 text-center">
-              Booking Cancelled Successfully
-            </h2>
-            
+            <h2 className="font-title text-3xl text-white mb-6 text-center">Booking Cancelled Successfully</h2>
+
             <div className="bg-white/60 rounded-2xl p-6 mb-6">
-              <p className="font-body text-center text-orange-700">
+              <p className="font-body text-center text-[var(--color-text-body)]">
                 {"message" in state.data && state.data.message
                   ? state.data.message
                   : "Your booking has been cancelled and you'll receive a confirmation email shortly."}
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-orange-600/10 to-orange-500/10 rounded-xl p-5 mb-6">
-              <p className="font-body text-sm text-orange-700 text-center">
-                <span className="font-bold">Status:</span>{" "}
-                {"status" in state.data ? state.data.status : "CANCELLED"}
-              </p>
-            </div>
-
             <div className="bg-white/50 rounded-xl p-4 mb-6">
-              <p className="font-body text-xs text-orange-600 text-center">
-                ℹ️ If you change your mind, you'll need to create a new booking from the booking page.
+              <p className="font-body text-xs text-[var(--color-text-body)] text-center">
+                If you change your mind, you'll need to create a new booking from the booking page.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={() => router.push("/book")}
-                className="bg-orange-600 hover:bg-orange-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
               >
                 Book New Session
               </button>
               <button
                 onClick={() => router.push("/")}
-                className="bg-white hover:bg-orange-50 text-orange-700 font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-orange-200"
+                className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-[var(--color-primary)]/20"
               >
                 Go to Home
               </button>

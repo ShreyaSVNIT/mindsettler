@@ -12,12 +12,14 @@ const imbue = Imbue({
   variable: "--font-title",
   weight: ["400", "700"],
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const playfair = Playfair_Display({
   variable: "--font-body",
   weight: ["400", "700"],
   subsets: ["latin"],
+  display: 'swap',
 });
 
 const ivyPresto = localFont({

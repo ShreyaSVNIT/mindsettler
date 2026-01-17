@@ -14,7 +14,7 @@ export default function Footer() {
         <ScrollVelocity
           texts={['MINDFUL HEALING ✦ COMPASSIONATE CARE ✦ TRANSFORMATIVE JOURNEY ✦']}
           velocity={170}
-          className="text-5xl md:text-6xl font-title font-bold text-[var(--color-primary)] tracking-wider"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-title font-bold text-[var(--color-primary)] tracking-wider"
         />
       </div>
 
@@ -30,7 +30,7 @@ export default function Footer() {
       <div className="absolute bottom-32 left-20 w-80 h-80 bg-[var(--color-primary)] opacity-[0.02] blur-[120px] rounded-full" />
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 pt-20 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 pt-20 relative z-10">
 
         {/* MAIN GRID */}
         <div
@@ -137,7 +137,7 @@ export default function Footer() {
               Find Us
             </h4>
 
-            <div className="w-full max-w-[300px] h-[170px] rounded-xl overflow-hidden border border-[var(--color-border)] shadow-md">
+            <div className="w-full max-w-[300px] h-[140px] md:h-[170px] rounded-xl overflow-hidden border border-[var(--color-border)] shadow-md">
 
               <iframe
                 src="https://maps.google.com/maps?q=Cafe+De+Meet+Siguiente+Surat&t=&z=13&ie=UTF8&iwloc=&output=embed"

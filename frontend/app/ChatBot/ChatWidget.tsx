@@ -65,11 +65,7 @@ export default function ChatWidget() {
             <div className="bg-[var(--color-primary)] p-6 text-white">
               <div className="flex justify-between items-center">
                 <div>
-                  <h3 className="font-title font-semibold text-xl tracking-tight">MindSettler Guide</h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="w-4 h-2 bg-white/80 rounded-full animate-pulse"></span>
-                    <p className="text-xs text-white/90 font-light">Online & Confidential</p>
-                  </div>
+                  <h3 className="font-title font-extrabold text-2xl md:text-3xl tracking-tight">MindSettler Guide</h3>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="bg-white/20 hover:bg-white/30 p-2 rounded-full transition-all text-white">
                   ✕
@@ -86,9 +82,9 @@ export default function ChatWidget() {
                   key={i}
                   className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-[85%] p-4 rounded-2xl text-[14px] leading-relaxed shadow-sm ${m.sender === 'user'
-                    ? 'bg-[var(--color-primary)] text-white rounded-tr-none'
-                    : 'bg-[var(--color-bg-card)] text-white border border-[var(--color-border)] rounded-tl-none'
+                  <div className={`max-w-[85%] p-3 rounded-2xl text-[16px] md:text-[17px] leading-snug font-medium shadow-sm ${m.sender === 'user'
+                    ? 'bg-[var(--color-primary)] text-white rounded-tr-none font-semibold'
+                    : 'bg-white text-[var(--color-primary)] border border-[var(--color-border)] rounded-tl-none font-semibold'
                     }`}>
                     {m.text}
 

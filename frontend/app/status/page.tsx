@@ -164,30 +164,11 @@ function StatusPageContent() {
   // Helpers
   // ─────────────────────────
   const getStatusColor = (status: string) => {
-    const colors: Record<string, string> = {
-      DRAFT: "bg-gray-200 text-gray-800",
-      PENDING: "bg-yellow-200 text-yellow-800",
-      APPROVED: "bg-blue-200 text-blue-800",
-      PAYMENT_PENDING: "bg-purple-200 text-purple-800",
-      CONFIRMED: "bg-green-200 text-green-800",
-      CANCELLED: "bg-red-200 text-red-800",
-      REJECTED: "bg-red-200 text-red-800",
-    };
-    return colors[status] || "bg-gray-200 text-gray-800";
+    // Use primary-accent badge style for all statuses to keep design consistent
+    return "bg-[var(--color-primary)]/10 text-[var(--color-primary)]";
   };
 
-  const getStatusEmoji = (status: string) => {
-    const emojis: Record<string, string> = {
-      DRAFT: "📝",
-      PENDING: "⏳",
-      APPROVED: "✅",
-      PAYMENT_PENDING: "💳",
-      CONFIRMED: "🎉",
-      CANCELLED: "❌",
-      REJECTED: "⛔",
-    };
-    return emojis[status] || "📋";
-  };
+  // emojis removed to follow unified design
 
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)] py-24 px-6">
@@ -232,14 +213,13 @@ function StatusPageContent() {
         {/* Rest of UI unchanged */}
         {state.kind === "loading" && (
           <div className="bg-white/95 rounded-3xl shadow-xl p-12 text-center">
-            <div className="text-7xl mb-4">🔄</div>
-            Loading booking status...
+            <div className="mb-4">Loading booking status...</div>
           </div>
         )}
 
         {state.kind === "error" && (
-          <div className="bg-red-100 rounded-3xl p-10 text-center">
-            <p>{state.message}</p>
+          <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl">
+            <p className="text-[var(--color-text-body)]">{state.message}</p>
           </div>
         )}
 
@@ -253,20 +233,20 @@ function StatusPageContent() {
               <button
                 onClick={handleRequestCancellation}
                 disabled={isCancelling || cancellationPending}
-                className="bg-red-600 text-white px-6 py-3 rounded-full"
+                className="bg-[var(--color-primary)] text-white px-6 py-3 rounded-full"
               >
                 {cancellationPending
                   ? "Cancellation Pending (Check Email)"
                   : isCancelling
                   ? "Processing..."
-                  : "❌ Request Cancellation"}
+                  : "Request Cancellation"}
               </button>
             )}
 
             {cancellationPending && (
-              <div className="bg-yellow-50 border-2 border-yellow-200 rounded-2xl p-4 text-center">
-                <p className="font-body text-yellow-800">
-                  📧 Cancellation requested. Please verify using the link sent to your email.
+              <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-2xl p-4 text-center">
+                <p className="font-body text-[var(--color-text-body)]">
+                  Cancellation requested. Please verify using the link sent to your email.
                 </p>
               </div>
             )}

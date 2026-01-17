@@ -1,41 +1,23 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Play, Pause } from 'lucide-react';
+import { Play, Pause, Music, X } from 'lucide-react';
 
 interface MusicPlayerProps {
   youtubeUrl?: string;
 }
 
-// Lightweight YT typings for the methods we use (avoid `any`)
-declare namespace YT {
-  interface Player {
-    playVideo(): void;
-    pauseVideo(): void;
-    destroy(): void;
-  }
-  interface PlayerState {
-    PLAYING: number;
-    PAUSED: number;
-  }
-}
-
-declare global {
-  interface Window {
-    YT?: {
-      Player?: { new (elementId: string | HTMLElement, options: Record<string, unknown>): YT.Player };
-      PlayerState?: { PLAYING: number; PAUSED: number };
-    };
-    onYouTubeIframeAPIReady?: () => void;
-    __msSplashDone?: boolean;
-  }
-}
+// Use a loose `any` for the global YouTube API to avoid duplicate declaration conflicts
+// Avoid declaring global `YT` to prevent duplicate-declaration TypeScript errors.
+// We'll reference the API via `(window as any).YT` at runtime.
 
 const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU&t=4s' }: MusicPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const playerRef = useRef<YT.Player | null>(null);
+  const [playerExpanded, setPlayerExpanded] = useState(false);
+  const [footerVisible, setFooterVisible] = useState(false);
+  const playerRef = useRef<any | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const hasAutoPlayedRef = useRef(false);
 
@@ -54,10 +36,11 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     }
 
     // Initialize player when API is ready
-    const initializePlayer = () => {
+      const initializePlayer = () => {
       try {
-        if (!playerRef.current && window.YT && window.YT.Player) {
-          playerRef.current = new window.YT.Player('youtube-player', {
+        const YT = (window as any).YT;
+        if (!playerRef.current && YT && YT.Player) {
+          playerRef.current = new YT.Player('youtube-player', {
             videoId: videoId,
             playerVars: {
               autoplay: 0,
@@ -69,21 +52,22 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
               origin: window.location.origin,
             },
             events: {
-              onReady: (event: { target?: YT.Player }) => {
+              onReady: (event: any) => {
                 // Player ready
                 setIsLoaded(true);
                 setError(null);
               },
-              onStateChange: (event: { data?: number }) => {
-                if (window.YT && window.YT.PlayerState) {
-                  if (event.data === window.YT.PlayerState.PLAYING) {
+              onStateChange: (event: any) => {
+                const PlayerState = (window as any).YT?.PlayerState;
+                if (PlayerState) {
+                  if (event.data === PlayerState.PLAYING) {
                     setIsPlaying(true);
-                  } else if (event.data === window.YT.PlayerState.PAUSED) {
+                  } else if (event.data === PlayerState.PAUSED) {
                     setIsPlaying(false);
                   }
                 }
               },
-              onError: (event: { data?: number }) => {
+              onError: (event: any) => {
                 console.error('YouTube player error:', event.data);
                 setError('Failed to load video');
                 setIsLoaded(false);
@@ -98,7 +82,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     };
 
     // Check if API is already loaded
-    if (window.YT && window.YT.Player) {
+    if ((window as any).YT && (window as any).YT.Player) {
       initializePlayer();
       return;
     }
@@ -117,7 +101,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     }
 
     // Set up the callback for when API loads
-    window.onYouTubeIframeAPIReady = () => {
+    (window as any).onYouTubeIframeAPIReady = () => {
       initializePlayer();
     };
 
@@ -158,6 +142,22 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
     return () => window.removeEventListener('splashDone', handleSplashDone);
   }, [isLoaded]);
 
+  // Hide player when footer is visible to avoid overlap on small screens
+  useEffect(() => {
+    if (typeof IntersectionObserver === 'undefined') return;
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        setFooterVisible(entry.isIntersecting);
+      });
+    }, { root: null, threshold: 0.05 });
+
+    obs.observe(footer);
+    return () => obs.disconnect();
+  }, []);
+
   const togglePlay = () => {
     if (!playerRef.current || !isLoaded) return;
 
@@ -179,8 +179,8 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
         <div id="youtube-player"></div>
       </div>
 
-      {/* Music Control Corner - rounded icon anchored bottom-left (next to chat button) */}
-      <div className="fixed bottom-6 left-20 z-50">
+      {/* Music Control Corner - show on md+; on small screens use collapsible toggle */}
+      <div className={`hidden md:block fixed bottom-6 left-20 z-50 ${footerVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
         <button
           onClick={togglePlay}
           disabled={!isLoaded}
@@ -193,6 +193,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
             transition-all hover:scale-105
             disabled:opacity-50 disabled:cursor-not-allowed
             flex items-center justify-center
+            min-h-[44px] min-w-[44px]
           `}
           aria-label={isPlaying ? 'Pause music' : 'Play music'}
         >
@@ -202,6 +203,30 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
             <Play className="w-6 h-6 md:w-8 md:h-8" fill="currentColor" />
           )}
         </button>
+      </div>
+
+      {/* Mobile collapsible player: toggle button and expandable panel */}
+      <div className={`md:hidden fixed bottom-6 left-4 z-50 flex flex-col items-start gap-2 ${footerVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <button
+          onClick={() => setPlayerExpanded(!playerExpanded)}
+          aria-label={playerExpanded ? 'Collapse music player' : 'Open music player'}
+          className="bg-[var(--color-primary)] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center min-h-[44px] min-w-[44px]"
+        >
+          {playerExpanded ? <X className="w-5 h-5" /> : <Music className="w-5 h-5" />}
+        </button>
+
+        <div className={`transition-all ${playerExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+          <div className="bg-white/90 p-2 rounded-xl shadow-2xl flex items-center">
+            <button
+              onClick={togglePlay}
+              disabled={!isLoaded}
+              className={`group bg-[var(--color-primary)] text-white w-12 h-12 rounded-full flex items-center justify-center min-h-[44px] min-w-[44px] ${!isLoaded ? 'opacity-50 cursor-not-allowed' : ''}`}
+              aria-label={isPlaying ? 'Pause music' : 'Play music'}
+            >
+              {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

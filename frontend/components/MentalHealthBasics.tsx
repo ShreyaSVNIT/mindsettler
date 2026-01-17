@@ -134,7 +134,7 @@ export default function MentalHealthBasics() {
   };
 
   return (
-    <section className="relative py-12 sm:py-16 md:py-20 lg:py-24 px-4 sm:px-6 md:px-8 overflow-hidden bg-[var(--color-bg-card)]">
+    <section className="relative py-10 sm:py-12 md:py-16 lg:py-20 px-4 sm:px-6 md:px-8 overflow-hidden bg-[var(--color-bg-card)]">
       <div className="relative w-full flex flex-col items-center">
         {/* TITLE - Centered for symmetry */}
         <motion.div
@@ -142,7 +142,7 @@ export default function MentalHealthBasics() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="max-w-3xl mb-12 sm:mb-16 md:mb-20 text-center px-2"
+          className="max-w-3xl mb-6 sm:mb-8 md:mb-12 text-center px-2"
         >
           <SectionHeader
             subheader="Emotional Alphabet"
@@ -156,7 +156,7 @@ export default function MentalHealthBasics() {
 
         {/* GRID - Centered with equal side spacing */}
         <motion.div
-          className="flex flex-col items-center gap-2 sm:gap-3 md:gap-4 w-full md:snap-none snap-y snap-mandatory overflow-y-auto md:overflow-visible"
+          className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3 w-full md:snap-none snap-y snap-mandatory overflow-y-auto md:overflow-visible"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

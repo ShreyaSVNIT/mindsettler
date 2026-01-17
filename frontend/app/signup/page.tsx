@@ -247,22 +247,17 @@ export default function SignupPage() {
                           key={bar}
                           className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${bar <= passwordStrength.score
                             ? passwordStrength.score <= 2
-                              ? 'bg-red-500'
+                              ? 'bg-[var(--color-primary)]/30'
                               : passwordStrength.score <= 3
-                                ? 'bg-yellow-500'
-                                : 'bg-green-500'
+                                ? 'bg-[var(--color-primary)]/50'
+                                : 'bg-[var(--color-primary)]/70'
                             : 'bg-gray-200'
                             }`}
                         />
                       ))}
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className={`font-body text-xs font-medium ${passwordStrength.score <= 2
-                        ? 'text-red-600'
-                        : passwordStrength.score <= 3
-                          ? 'text-yellow-600'
-                          : 'text-green-600'
-                        }`}>
+                      <span className={`font-body text-xs font-medium text-[var(--color-primary)]`}>
                         {passwordStrength.label}
                       </span>
                       <span className="font-body text-xs text-[var(--color-text-body)]/60">

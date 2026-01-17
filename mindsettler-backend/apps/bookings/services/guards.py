@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 # ─────────────────────────
 ALLOWED_TRANSITIONS = {
     "DRAFT": {"PENDING", "REJECTED"},
-    "PENDING": {"APPROVED", "REJECTED"},
+    "PENDING": {"APPROVED", "REJECTED", "CANCELLED"},
     "APPROVED": {"PAYMENT_PENDING", "CONFIRMED", "CANCELLED"},
     "PAYMENT_PENDING": {
         "CONFIRMED",

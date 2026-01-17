@@ -79,6 +79,17 @@ export default function GlowCard({
   const memoizedParticles = useRef<HTMLDivElement[]>([]);
   const particlesInitialized = useRef(false);
   const magnetismAnimationRef = useRef<gsap.core.Tween | null>(null);
+  
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const touch = 'ontouchstart' in window || window.matchMedia('(pointer: coarse)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setIsTouchDevice(Boolean(touch));
+    setReduceMotion(Boolean(reduced));
+  }, []);
 
   const initializeParticles = useCallback(() => {
     if (particlesInitialized.current || !cardRef.current) return;
@@ -111,6 +122,8 @@ export default function GlowCard({
 
   const animateParticles = useCallback(() => {
     if (!cardRef.current || !isHoveredRef.current || !enableParticles) return;
+    if (isTouchDevice) return; // disable heavy particle work on touch
+    if (reduceMotion) return; // respect reduced motion
 
     if (!particlesInitialized.current) {
       initializeParticles();
@@ -167,7 +180,8 @@ export default function GlowCard({
     card.style.setProperty('--glow-intensity', glowIntensity.toString());
 
     // Tilt effect
-    if (enableTilt) {
+    const tiltEnabled = enableTilt && !isTouchDevice && !reduceMotion;
+    if (tiltEnabled) {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       const rotateX = ((mouseY - centerY) / centerY) * -4;
@@ -183,7 +197,8 @@ export default function GlowCard({
     }
 
     // Magnetism effect
-    if (enableMagnetism && isHoveredRef.current) {
+    const magnetismEnabled = enableMagnetism && !isTouchDevice;
+    if (magnetismEnabled && isHoveredRef.current) {
       const centerX = rect.width / 2;
       const centerY = rect.height / 2;
       const magnetX = (mouseX - centerX) * 0.02;
@@ -204,13 +219,15 @@ export default function GlowCard({
 
     const handleMouseEnter = () => {
       isHoveredRef.current = true;
-      if (enableParticles) {
+      if (enableParticles && !isTouchDevice && !reduceMotion) {
         animateParticles();
       }
       gsap.to(card, {
-        boxShadow: `0 20px 50px rgba(${glowColor}, 0.25)`,
         duration: 0.3,
-        ease: 'power2.out'
+        ease: 'power2.out',
+        onStart: () => {
+          card.style.setProperty('--brand-shadow', `0 20px 50px rgba(${glowColor}, 0.25)`);
+        }
       });
     };
 
@@ -226,24 +243,31 @@ export default function GlowCard({
           rotateY: 0,
           x: 0,
           y: 0,
-          boxShadow: `0 12px 40px rgba(${glowColor}, 0.1)`,
           duration: 0.3,
-          ease: 'power2.out'
+          ease: 'power2.out',
+          onStart: () => {
+            card.style.setProperty('--brand-shadow', `0 12px 40px rgba(${glowColor}, 0.1)`);
+          }
         });
       } else {
         gsap.to(card, {
-          boxShadow: `0 12px 40px rgba(${glowColor}, 0.1)`,
           duration: 0.3,
-          ease: 'power2.out'
+          ease: 'power2.out',
+          onStart: () => {
+            card.style.setProperty('--brand-shadow', `0 12px 40px rgba(${glowColor}, 0.1)`);
+          }
         });
       }
 
       card.style.setProperty('--glow-intensity', '0');
     };
 
-    card.addEventListener('mouseenter', handleMouseEnter);
-    card.addEventListener('mouseleave', handleMouseLeave);
-    card.addEventListener('mousemove', updateGlowPosition);
+    // Only attach pointer listeners for non-touch devices
+    if (!isTouchDevice) {
+      card.addEventListener('mouseenter', handleMouseEnter);
+      card.addEventListener('mouseleave', handleMouseLeave);
+      card.addEventListener('mousemove', updateGlowPosition);
+    }
 
     return () => {
       isHoveredRef.current = false;
@@ -254,14 +278,18 @@ export default function GlowCard({
         clearAllParticles();
       }
     };
-  }, [updateGlowPosition, animateParticles, clearAllParticles, enableParticles, enableTilt, enableMagnetism, glowColor]);
+  }, [updateGlowPosition, animateParticles, clearAllParticles, enableParticles, enableTilt, enableMagnetism, glowColor, isTouchDevice, reduceMotion]);
+
+  const baseCardClasses = 'group overflow-hidden rounded-xl border shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-md';
 
   return (
     <div
       ref={cardRef}
-      className={`glow-card ${className}`}
+      className={`glow-card ${baseCardClasses} ${className}`}
       style={{
         '--glow-color': glowColor,
+        '--brand-pink': glowColor,
+        '--brand-shadow': `0 12px 40px rgba(${glowColor}, 0.1)`,
         '--glow-radius': `${glowRadius}px`,
         '--glow-x': '50%',
         '--glow-y': '50%',

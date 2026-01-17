@@ -98,7 +98,10 @@ function VerifyEmailContent() {
         alert("Your booking has been cancelled successfully.");
       }
 
-      router.replace(`/verify-email?token=${token}`);
+      // IMPORTANT: refetch verification instead of redirecting
+      const refreshed = await bookingAPI.verifyEmail(token!);
+      setState({ kind: "success", data: refreshed });
+
     } catch (err: any) {
       setState({
         kind: "error",
@@ -116,11 +119,10 @@ function VerifyEmailContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-3xl p-10 text-center shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <div className="text-7xl mb-6">⚠️</div>
-            <h2 className="font-title text-4xl text-red-800 mb-4">Invalid Link</h2>
-            <p className="font-body text-lg text-red-700">
+            <h2 className="font-title text-3xl text-white mb-4">Invalid Link</h2>
+            <p className="font-body text-lg text-[var(--color-text-body)]">
               The verification link is invalid or missing. Please check your email and try again.
             </p>
           </motion.div>
@@ -131,17 +133,10 @@ function VerifyEmailContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-blue-50 to-blue-100 border-2 border-blue-200 rounded-3xl p-10 text-center shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-              className="text-7xl mb-6 inline-block"
-            >
-              🔄
-            </motion.div>
-            <h2 className="font-title text-4xl text-blue-800 mb-4">Verifying...</h2>
-            <p className="font-body text-lg text-blue-700">
+            <h2 className="font-title text-3xl text-white mb-4">Verifying…</h2>
+            <p className="font-body text-lg text-[var(--color-text-body)]">
               Please wait while we verify your email address.
             </p>
           </motion.div>
@@ -152,21 +147,20 @@ function VerifyEmailContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-red-50 to-red-100 border-2 border-red-200 rounded-3xl p-10 text-center shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <div className="text-7xl mb-6">❌</div>
-            <h2 className="font-title text-4xl text-red-800 mb-4">Verification Failed</h2>
-            <p className="font-body text-lg text-red-700 mb-6">
+            <h2 className="font-title text-3xl text-white mb-4">Verification Failed</h2>
+            <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               {state.message}
             </p>
             <div className="bg-white/50 rounded-xl p-4">
-              <p className="font-body text-sm text-red-600">
-                💡 The link may have expired or been used already. Please request a new verification email from the booking page.
+              <p className="font-body text-sm text-[var(--color-text-body)]">
+                The link may have expired or been used already. Please request a new verification email from the booking page.
               </p>
             </div>
             <button
               onClick={() => router.push("/book")}
-              className="mt-6 bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
+              className="mt-6 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
             >
               Go to Booking Page
             </button>
@@ -178,43 +172,33 @@ function VerifyEmailContent() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-br from-green-50 to-green-100 border-2 border-green-200 rounded-3xl p-10 shadow-xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 shadow-xl"
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-              className="text-7xl mb-6 text-center"
-            >
-              ✅
-            </motion.div>
-            <h2 className="font-title text-4xl text-green-800 mb-6 text-center">
-              Email Verified Successfully!
-            </h2>
-            
+            <h2 className="font-title text-3xl text-white mb-6 text-center">Email Verified</h2>
+
             <div className="bg-white/60 rounded-2xl p-6 space-y-4 mb-6">
-              <div className="flex justify-between items-center border-b border-green-200 pb-3">
-                <span className="font-body font-semibold text-green-700">Acknowledgement ID:</span>
-                <span className="font-mono font-bold text-green-800">{state.data.booking.acknowledgement_id}</span>
+              <div className="flex justify-between items-center border-b border-[var(--color-primary)]/20 pb-3">
+                <span className="font-body font-semibold text-[var(--color-primary)]">Acknowledgement ID:</span>
+                <span className="font-mono font-bold text-[var(--color-text-body)]">{state.data.booking.acknowledgement_id}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="font-body font-semibold text-green-700">Status:</span>
-                <span className="font-body uppercase bg-green-200 px-3 py-1 rounded-full text-xs font-bold text-green-800">
+                <span className="font-body font-semibold text-[var(--color-primary)]">Status:</span>
+                <span className="font-body uppercase bg-[var(--color-primary)]/10 px-3 py-1 rounded-full text-xs font-bold text-[var(--color-primary)]">
                   {state.data.booking.status}
                 </span>
               </div>
             </div>
 
-            {["APPROVED", "PAYMENT_PENDING", "CONFIRMED"].includes(state.data.booking.status) && (
+            {(["APPROVED", "PAYMENT_PENDING", "CONFIRMED"].includes(state.data.booking.status)) && (
               <div className="bg-white/60 rounded-2xl p-6 space-y-3 mb-6">
-                <h3 className="font-body font-semibold text-green-700 mb-2">
+                <h3 className="font-body font-semibold text-[var(--color-primary)] mb-2">
                   Session Details
                 </h3>
 
                 {state.data.booking.approved_slot_start && (
                   <div className="flex justify-between">
-                    <span className="font-body text-green-700">Start Time</span>
-                    <span className="font-body font-semibold text-green-800">
+                    <span className="font-body text-[var(--color-primary)]">Start Time</span>
+                    <span className="font-body font-semibold text-[var(--color-text-body)]">
                       {new Date(state.data.booking.approved_slot_start).toLocaleString()}
                     </span>
                   </div>
@@ -222,8 +206,8 @@ function VerifyEmailContent() {
 
                 {state.data.booking.approved_slot_end && (
                   <div className="flex justify-between">
-                    <span className="font-body text-green-700">End Time</span>
-                    <span className="font-body font-semibold text-green-800">
+                    <span className="font-body text-[var(--color-primary)]">End Time</span>
+                    <span className="font-body font-semibold text-[var(--color-text-body)]">
                       {new Date(state.data.booking.approved_slot_end).toLocaleString()}
                     </span>
                   </div>
@@ -232,25 +216,25 @@ function VerifyEmailContent() {
               </div>
             )}
 
-            <div className="bg-gradient-to-r from-green-600/10 to-green-500/10 rounded-xl p-5 mb-6">
-              <p className="font-body text-sm text-green-700 text-center">
+            <div className="bg-[var(--color-primary)]/10 rounded-xl p-5 mb-6">
+              <p className="font-body text-sm text-[var(--color-text-body)] text-center">
                 {state.data.booking.status === "PENDING" && (
                   <>
-                    <span className="font-bold">📋 Your booking is now awaiting admin review.</span>
+                    <span className="font-bold">Your booking is awaiting admin review.</span>
                     <br />
                     You'll receive an email once it's been approved.
                   </>
                 )}
                 {state.data.booking.status === "APPROVED" && (
                   <>
-                    <span className="font-bold">💳 Your booking has been approved!</span>
+                    <span className="font-bold">Your booking has been approved.</span>
                     <br />
                     Please proceed to payment to confirm your session.
                   </>
                 )}
                 {state.data.booking.status === "CONFIRMED" && (
                   <>
-                    <span className="font-bold">✓ Your booking has been verified and payment received!</span>
+                    <span className="font-bold">Your booking is confirmed and payment received.</span>
                     <br />
                     You can cancel your booking if needed.
                   </>
@@ -266,67 +250,54 @@ function VerifyEmailContent() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              {state.data.booking.status === "APPROVED" && (
-                <>
-                  {state.data.booking.mode === "OFFLINE" &&
-                  state.data.booking.payment_mode === "OFFLINE" ? (
-                    <div className="bg-white/70 rounded-xl p-5 text-center border border-green-200 mb-3">
-                      <p className="font-body text-green-700">
-                        💼 This is an <strong>offline session</strong> with
-                        <strong> offline payment</strong>.
-                        <br />
-                        No online payment is required. Please pay directly at the session.
-                      </p>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)
-                      }
-                      className="bg-green-600 hover:bg-green-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-                    >
-                      Proceed to Payment
-                    </button>
-                  )}
 
-                  <button
-                    onClick={handleCancelBooking}
-                    className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-                  >
-                    Cancel Booking
-                  </button>
-                </>
+              {/* Proceed to payment (only when approved & online) */}
+              {state.data.booking.status === "APPROVED" &&
+               !(state.data.booking.mode === "OFFLINE" && (state.data.booking as any).payment_mode === "OFFLINE") && (
+                <button
+                  onClick={() =>
+                    router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)
+                  }
+                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
+                >
+                  Proceed to Payment
+                </button>
               )}
-              
-              {state.data.booking.status === "CONFIRMED" && (
-                <>
-                  {calendarHref ? (
-                    <a
-                      href={calendarHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-blue-600 hover:bg-blue-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
-                    >
-                      Add to Google Calendar
-                    </a>
-                  ) : null}
-                  <button
-                    onClick={handleCancelBooking}
-                    className="bg-red-600 hover:bg-red-700 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-                  >
-                    Cancel Booking
-                  </button>
-                </>
+
+              {/* Cancel booking — ALWAYS visible for non-terminal states */}
+              {!["CANCELLED", "REJECTED", "COMPLETED"].includes(
+                state.data.booking.status
+              ) && (
+                <button
+                  onClick={handleCancelBooking}
+                  className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all shadow-sm border border-[var(--color-primary)]/10"
+                >
+                  Cancel Booking
+                </button>
               )}
-              
+
+              {/* Google Calendar (confirmed only) */}
+              {state.data.booking.status === "CONFIRMED" && calendarHref && (
+                <a
+                  href={calendarHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
+                >
+                  Add to Google Calendar
+                </a>
+              )}
+
+              {/* Home */}
               <button
                 onClick={() => {
                   window.location.href = "https://mindsettler.vercel.app/";
                 }}
-                className="bg-white hover:bg-green-50 text-green-700 font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-green-200"
+                className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-[var(--color-primary)]/10"
               >
                 Go to Home
               </button>
+
             </div>
           </motion.div>
         )}

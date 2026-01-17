@@ -11,6 +11,7 @@ import { bookingAPI } from "@/lib/api";
 import type { BookingDraftRequest } from "@/types";
 import { trackBookingFormOpened, trackBookingSubmitted } from "@/lib/analytics";
 import GlowCard from "@/components/GlowCard";
+import AnimatedBadge from "@/components/AnimatedBadge";
 
 /* ---------------- Zod Schema Following Backend Contract ---------------- */
 
@@ -205,7 +206,7 @@ export default function BookPage() {
       
       {/* Hero Section - Mode Selection */}
       {!selectedMode && bookingStatus === "idle" && (
-        <div className="min-h-screen flex flex-col items-center justify-center px-6 py-24 relative z-10">
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 pt-36 pb-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -224,23 +225,32 @@ export default function BookPage() {
             />
 
             {/* Session Info Cards */}
-            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto mb-12 mt-12">
-              <GlowCard>
-                <div className="font-body text-2xl text-[var(--color-text-body)]">
-                  <span className="font-bold block mb-4 text-3xl">Session Duration</span>
-                  60 minutes per session
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-2xl md:max-w-3xl mx-auto mb-12 mt-10">
+              <GlowCard className="p-4 md:p-6 w-full flex flex-col min-h-[140px]" enableParticles={false} enableTilt={false} enableMagnetism={false}>
+                <div className="font-body text-sm md:text-base text-[var(--color-text-body)] h-full flex flex-col">
+                  <div className="flex items-center gap-3 mb-3 md:mb-4">
+                    <AnimatedBadge className="flex-shrink-0 w-8 h-8 text-sm">1</AnimatedBadge>
+                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-primary)]">Session Duration</span>
+                  </div>
+                  <div className="text-sm md:text-base">60 minutes per session, includes a brief check-in.</div>
                 </div>
               </GlowCard>
-              <GlowCard className="border-2 border-[var(--color-primary)]/40">
-                <div className="font-body text-2xl text-[var(--color-text-body)]">
-                  <span className="font-bold block mb-4 text-3xl text-[var(--color-primary)]">First Session</span>
-                  Introductory assessment & goal setting
+              <GlowCard className="p-4 md:p-6 w-full flex flex-col min-h-[140px] border-2 border-[var(--color-primary)]/20" enableParticles={false} enableTilt={false} enableMagnetism={false}>
+                <div className="font-body text-sm md:text-base text-[var(--color-text-body)] h-full flex flex-col">
+                  <div className="flex items-center gap-3 mb-3 md:mb-4">
+                    <AnimatedBadge className="flex-shrink-0 w-8 h-8 text-sm">2</AnimatedBadge>
+                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-primary)]">First Session</span>
+                  </div>
+                  <div className="text-sm md:text-base">Introductory assessment & goal setting for new clients.</div>
                 </div>
               </GlowCard>
-              <GlowCard>
-                <div className="font-body text-2xl text-[var(--color-text-body)]">
-                  <span className="font-bold block mb-4 text-3xl">Location</span>
-                  Online platform or offline studio
+              <GlowCard className="p-4 md:p-6 w-full flex flex-col min-h-[140px]" enableParticles={false} enableTilt={false} enableMagnetism={false}>
+                <div className="font-body text-sm md:text-base text-[var(--color-text-body)] h-full flex flex-col">
+                  <div className="flex items-center gap-3 mb-3 md:mb-4">
+                    <AnimatedBadge className="flex-shrink-0 w-8 h-8 text-sm">3</AnimatedBadge>
+                    <span className="font-title text-xl md:text-2xl font-bold text-[var(--color-primary)]">Location</span>
+                  </div>
+                  <div className="text-sm md:text-base">Online or in-studio; details shared after booking.</div>
                 </div>
               </GlowCard>
             </div>
@@ -810,9 +820,7 @@ export default function BookPage() {
                     Submitting...
                   </button>
                 ) : (
-                  <div onClick={handleSubmit(onSubmit)}>
-                    <MagneticButton text="Book Session" />
-                  </div>
+                  <MagneticButton text="Book Session" type="submit" />
                 )}
               </div>
             </form>
@@ -831,23 +839,23 @@ export default function BookPage() {
             </h3>
             <ol className="font-body text-sm text-[var(--color-text-body)]/80 space-y-3 list-none">
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">1</span>
+                <AnimatedBadge className="flex-shrink-0 w-6 h-6 text-xs">1</AnimatedBadge>
                 <span>You'll receive a <strong>verification email</strong></span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">2</span>
+                <AnimatedBadge className="flex-shrink-0 w-6 h-6 text-xs">2</AnimatedBadge>
                 <span>Click the link to <strong>verify your booking</strong> (moves to PENDING)</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">3</span>
+                <AnimatedBadge className="flex-shrink-0 w-6 h-6 text-xs">3</AnimatedBadge>
                 <span>Our admin will <strong>review and approve</strong> your booking (moves to APPROVED)</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)]/20 flex items-center justify-center text-xs font-semibold text-[var(--color-primary)]">4</span>
+                <AnimatedBadge className="flex-shrink-0 w-6 h-6 text-xs">4</AnimatedBadge>
                 <span>You'll be notified and need to <strong>complete payment</strong> (moves to PAYMENT_PENDING → CONFIRMED)</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="flex-shrink-0 w-6 h-6 rounded-full bg-[var(--color-primary)] flex items-center justify-center text-xs font-semibold text-white">5</span>
+                <AnimatedBadge className="flex-shrink-0 w-6 h-6 text-xs">5</AnimatedBadge>
                 <span>Session confirmed! <strong className="text-[var(--color-primary)]">🎉</strong></span>
               </li>
             </ol>
