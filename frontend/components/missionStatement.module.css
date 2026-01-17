@@ -35,15 +35,16 @@
   inset: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  padding: 6vw 12vw;
+  padding: 4vw 8vw;
   gap: 2vw;
   color: white;
   background: rgba(0, 0, 0, 0.35);
+  align-items: center;
   z-index: 10;
 }
 
 .textSide {
-  max-width: 700px;
+  max-width: 900px;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -68,6 +69,7 @@
 
 .buttonWrapper {
   margin-top: 1rem;
+  z-index: 20;
 }
 
 .timelineSide {
@@ -201,8 +203,12 @@
     /* Reduced scroll distance for mobile */
   }
 
+  .stickyBox {
+    overflow: visible; /* allow overlay scroll to show fully on small screens */
+  }
+
   .overlay {
-    padding: 24vw 5vw 10vw 5vw;
+    padding: 24vw 5vw 16vw 5vw;
     /* More top padding to clear header if needed */
     gap: 2.5rem;
     overflow-y: auto;
