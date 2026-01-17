@@ -119,7 +119,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)]">
       {/* Hero Section - Elegant Parallax */}
-      <section ref={heroRef} className="relative py-40 px-4 overflow-hidden min-h-screen flex items-center">
+      <section ref={heroRef} className="relative py-20 md:py-40 px-4 overflow-hidden md:min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Text Content with subtle parallax */}
@@ -133,20 +133,17 @@ export default function AboutPage() {
               <TitleHeader
                 subheader="About MindSettler"
                 title={<>
-                  Where
-                  <span className="block text-[var(--color-primary)] italic mt-2">
-                    Healing
-                  </span>
-                  <span className="block mt-2">Meets Hope</span>
+                  <span className="block md:inline">Where <span className="inline md:inline text-[var(--color-primary)] italic">Healing</span></span>
+                  <span className="block md:inline md:ml-2">Meets Hope</span>
                 </>}
                 description="I created MindSettler to be more than just a platform. It's a companion in your journey toward understanding yourself, embracing your story, and finding peace in the present."
                 alignment="left"
               />
 
-              <div className="mb-8" />
+              <div className="mb-4 md:mb-8" />
 
               <motion.div
-                className="flex flex-wrap gap-4"
+                className="flex flex-wrap gap-4 justify-center md:justify-start mb-2 md:mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -236,7 +233,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-app)" />
+      {/* simple solid divider instead of decorative wave */}
+      <div className="w-full h-px bg-[var(--color-border)]" />
 
       {/* What We Offer - MagicBento Grid */}
       <section className="relative py-12 bg-[var(--color-bg-app)] overflow-hidden">
@@ -271,7 +269,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <WaveDividerSolid topColor="var(--color-bg-app)" bottomColor="var(--color-bg-subtle)" />
+      {/* simple solid divider instead of decorative wave */}
+      <div className="w-full h-px bg-[var(--color-border)]" />
 
       {/* Founder Introduction Section */}
       <FounderIntroduction
