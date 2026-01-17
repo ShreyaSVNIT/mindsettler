@@ -54,21 +54,21 @@ const MagneticButton = ({
 
   // Size variations - Responsive by default
   const textSize = size === 'small'
-    ? "text-base md:text-lg"
-    : "text-xl md:text-3xl";
+    ? "text-sm sm:text-base md:text-lg"
+    : "text-lg sm:text-xl md:text-2xl lg:text-3xl";
 
   const arrowContainerSize = size === 'small'
     ? "h-8 w-8 md:h-10 md:w-10"
-    : "h-10 w-10 md:h-14 md:w-14";
+    : "h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16";
 
   // Use Tailwind classes for icon sizing instead of fixed prop
   const arrowIconClass = size === 'small'
-    ? "w-4 h-4"
-    : "w-4 h-4 md:w-6 md:h-6";
+    ? "w-3 h-3 sm:w-4 sm:h-4"
+    : "w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-7 lg:h-7";
 
   const buttonPadding = size === 'small'
-    ? "py-1.5 pl-4 pr-1.5 gap-2 md:py-2 md:pl-6 md:pr-2 md:gap-3"
-    : "py-2 pl-5 pr-2 gap-3 md:pl-8 md:gap-4";
+    ? "py-1.5 pl-3 pr-1.5 gap-1.5 md:py-2 md:pl-6 md:pr-2 md:gap-3"
+    : "py-2 pl-4 pr-2 gap-2 sm:pl-5 sm:gap-3 md:pl-8 md:gap-4 lg:pl-10 lg:gap-5";
 
   return (
     <button
