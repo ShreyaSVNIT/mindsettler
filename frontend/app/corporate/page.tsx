@@ -200,7 +200,7 @@ export default function CorporatePage() {
 workshops, group sessions, and strategic collaborations`}
         alignment="center"
         layout="static"
-        className="h-screen"
+        className="h-[687px]"
         backgroundColor="white"
       />
 
@@ -219,7 +219,7 @@ workshops, group sessions, and strategic collaborations`}
           >
             <SectionHeader
               subheader="Get in Touch"
-              title={<>Request <span className="text-primary italic">Services</span></>}
+              title={<>Request <span className="italic">Services</span></>}
               bodyText="Let's discuss how we can support your organization's mental wellness goals"
               alignment="center"
               decoration="whiskers"

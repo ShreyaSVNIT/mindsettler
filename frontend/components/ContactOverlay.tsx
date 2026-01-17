@@ -60,12 +60,12 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
               setIsOpen(true);
             }}
           >
-            <div className="relative bg-[var(--color-primary)] text-white px-8 py-4 md:px-10 md:py-6 rounded-tl-[1.75rem] md:rounded-tl-[2.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all">
+            <div className="relative bg-[var(--color-primary)] text-white px-4 py-2 md:px-6 md:py-3 rounded-tl-[1rem] md:rounded-tl-[1.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all">
               <div className="flex flex-col items-start">
-                <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-lg md:text-xl font-bold uppercase tracking-wider leading-none">
                   LET&apos;S
                 </span>
-                <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-lg md:text-xl font-bold uppercase tracking-wider leading-none">
                   TALK
                 </span>
               </div>

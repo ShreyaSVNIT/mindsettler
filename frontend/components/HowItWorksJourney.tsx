@@ -80,8 +80,9 @@ export default function HowItWorksJourney() {
         {/* ---------- HEADER ---------- */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          viewport={{ once: true, amount: 0.2 }}
           className="text-center mb-16 lg:mb-24"
         >
           <div className="inline-block mb-4">

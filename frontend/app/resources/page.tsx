@@ -42,8 +42,8 @@ export default function ResourcesPage() {
                 description="Curated content to support your mental wellness journey. Explore articles, videos, and tools designed to help you thrive."
                 alignment="center"
                 layout="static"
-                className="h-screen"
                 backgroundColor="white"
+                className="h-[687px]"
             />
 
             <section className="py-24 px-6 bg-white">
