@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import BookingCard from "@/components/BookingCard";
 import TitleHeader from "@/components/TitleHeader";
 import MagneticButton from "@/components/Button";
 import { BACKEND_URL } from "@/lib/api";
@@ -40,18 +41,19 @@ export default function CheckStatusPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-24">
-      <TitleHeader
+    <main className="min-h-screen bg-white flex flex-col items-center justify-center px-6 py-12">
+      <div className="w-full max-w-3xl relative">
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div className="absolute w-72 h-72 rounded-full bg-[var(--color-primary)]/10 blur-3xl" animate={{ x: [0, 40, 0], y: [0, -40, 0] }} transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }} style={{ top: '-96px', left: '50%', transform: 'translateX(-50%)' }} />
+          <motion.div className="absolute w-72 h-72 rounded-full bg-purple-400/10 blur-3xl" animate={{ x: [0, -40, 0], y: [0, 40, 0] }} transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }} style={{ bottom: '-96px', left: '50%', transform: 'translateX(-50%)' }} />
+        </div>
+        <TitleHeader
         subheader="CHECK BOOKING STATUS"
         title={<span className="italic">Check your session status</span>}
         description="Enter your email to see if you have an active booking or to resend your verification link."
         alignment="center"
       />
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-xl p-8 mt-8"
-      >
+      <BookingCard className="mx-auto mt-8" variant="white">
         <label className="block mb-4 font-body text-lg text-[var(--color-text-body)]">Email Address</label>
         <input
           type="email"
@@ -70,7 +72,8 @@ export default function CheckStatusPage() {
         {error && (
           <p className="mt-6 text-lg font-body text-red-500 text-center">{error}</p>
         )}
-      </motion.div>
+      </BookingCard>
+        </div>
     </main>
   );
 }
