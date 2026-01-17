@@ -53,9 +53,8 @@ export default function TitleHeader({
       {/* Description */}
       {description && (
         <motion.p
-          className={`font-body text-base sm:text-base md:text-xl lg:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed whitespace-pre-line ${
-            alignment === 'center' ? 'max-w-2xl mx-auto' : 'max-w-prose'
-          }`}
+          className={`font-body text-base sm:text-base md:text-xl lg:text-2xl text-[var(--color-text-body)] opacity-80 leading-relaxed whitespace-pre-line ${alignment === 'center' ? 'max-w-2xl mx-auto' : 'max-w-prose'
+            }`}
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
