@@ -78,7 +78,7 @@ function PaymentPageContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-white mb-4">Invalid Payment Link</h2>
+            <h2 className="font-title text-3xl text-[var(--color-text-body)] mb-4">Invalid Payment Link</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               Acknowledgement ID is missing. Please initiate payment from your email or booking status page.
             </p>
@@ -98,7 +98,7 @@ function PaymentPageContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-white mb-4">Initiating Payment...</h2>
+            <h2 className="font-title text-3xl text-[var(--color-text-body)] mb-4">Initiating Payment...</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">
               Please wait while we prepare your payment details.
             </p>
@@ -113,7 +113,7 @@ function PaymentPageContent() {
             className="bg-white/95 rounded-3xl shadow-xl p-10"
           >
             <div className="text-center mb-8">
-              <h2 className="font-title text-3xl text-white mb-4">Complete Payment</h2>
+              <h2 className="font-title text-3xl text-[var(--color-text-body)] mb-4">Complete Payment</h2>
               <p className="font-body text-lg text-[var(--color-text-body)]/70">
                 You're almost there! Complete the payment to confirm your booking.
               </p>
@@ -173,7 +173,7 @@ function PaymentPageContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-white mb-4">Processing Payment...</h2>
+            <h2 className="font-title text-3xl text-[var(--color-text-body)] mb-4">Processing Payment...</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">Please wait while we confirm your payment.</p>
           </motion.div>
         )}
@@ -185,7 +185,7 @@ function PaymentPageContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-white mb-4">Payment Successful!</h2>
+            <h2 className="font-title text-3xl text-[var(--color-text-body)] mb-4">Payment Successful!</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               Your booking is now <strong>CONFIRMED</strong>. You'll receive a confirmation email shortly with your session details.
             </p>
@@ -218,7 +218,7 @@ function PaymentPageContent() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
           >
-            <h2 className="font-title text-3xl text-white mb-4">Payment Failed</h2>
+            <h2 className="font-title text-3xl text-[var(--color-text-body)] mb-4">Payment Failed</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">{state.message}</p>
             <div className="flex gap-3 justify-center">
               <button

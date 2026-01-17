@@ -232,7 +232,7 @@ export default function MindSettlerJourney() {
         {/* HEADER */}
         <motion.div style={{ opacity: headerOpacity }}>
           <SectionHeader
-            subheader="Guided Wellness Journey"
+            subheader={"Guided Wellness\nJourney"}
             title={<>Build your <span className="italic">peace</span> on a foundation of <span className="italic">presence.</span></>}
             bodyText="Lasting clarity isn't found in a single breakthrough, but in the steady accumulation of small, intentional pauses. This is how you build a foundation that doesn't just hold, but heals. Every session is a step towards understanding yourself more deeply."
             layout="split"

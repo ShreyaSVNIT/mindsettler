@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion, useScroll, useTransform } from "framer-motion";
 import styles from "./missionStatement.module.css";
 import MagneticButton from "./Button";
+import SectionHeader from "./SectionHeader";
 
 export default function MissionStatement() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -43,26 +44,18 @@ export default function MissionStatement() {
           
           <motion.div style={{ opacity }} className={styles.overlay}>
              <div className={styles.textSide}>
-              {/* The Header with glowing dot */}
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                <span className="text-white text-base md:text-lg tracking-[0.5em] uppercase font-playfair font-bold">
-                  Our Mission
-                </span>
-              </div>
-
-              {/* Mixed Style Heading */}
-              <h2 className="font-title leading-tight mb-6 text-white">
-                A safe space where <span className="italic">growth</span> meets <span className="italic">compassion</span> and <span className="italic">clarity.</span>
-              </h2>
-
-              {/* Description for MindSettler */}
-              <p className="text-white mb-8 body-text">
-                MindSettler is your digital sanctuary for mental well-being. 
-                Connect with licensed psychotherapists through structured, 
-                confidential sessions designed to help you navigate life's 
-                complexities from the comfort of your own space.
-              </p>
+              <SectionHeader
+                subheader="Our Mission"
+                title={<>A safe space where <span className="italic">growth</span> meets <span className="italic">compassion</span> and <span className="italic">clarity.</span></>}
+                bodyText={"MindSettler is your digital sanctuary for mental well-being. Connect with licensed psychotherapists through structured, confidential sessions designed to help you navigate life's complexities from the comfort of your own space."}
+                alignment="left"
+                decoration="none"
+                layout="single"
+                titleColor="text-white"
+                bodyColor="text-white"
+                subheaderColor="text-white"
+                titleClassName="md:text-5xl lg:text-6xl xl:text-7xl"
+              />
 
               <div className={styles.buttonWrapper}>
                 <Link href="/book">

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { MouseEvent } from 'react';
 import { Calendar, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,6 +25,10 @@ export default function IntegratedHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const logoRef = useRef<HTMLDivElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const [compactNav, setCompactNav] = useState(false);
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -74,18 +78,57 @@ export default function IntegratedHeader() {
     return () => window.removeEventListener('scroll', onScroll);
   }, [menuOpen]);
 
+  // Detect overlap between center logo and nav items; switch to compact spacing when overlap occurs
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const checkOverlap = () => {
+      if (!logoRef.current || !navRef.current) {
+        setCompactNav(false);
+        return;
+      }
+      // Only run on large screens where nav is visible
+      if (window.innerWidth < 1024) {
+        setCompactNav(false);
+        return;
+      }
+      const logoRect = logoRef.current.getBoundingClientRect();
+      const navLinks = Array.from(navRef.current.querySelectorAll('a')) as HTMLElement[];
+      let overlap = false;
+      for (const link of navLinks) {
+        const r = link.getBoundingClientRect();
+        if (!(r.right < logoRect.left || r.left > logoRect.right)) {
+          overlap = true;
+          break;
+        }
+      }
+      setCompactNav(overlap);
+    };
+
+    const onResize = () => checkOverlap();
+    window.addEventListener('resize', onResize);
+    const obs = new MutationObserver(() => checkOverlap());
+    if (headerRef.current) obs.observe(headerRef.current, { childList: true, subtree: true });
+    // initial check
+    checkOverlap();
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      obs.disconnect();
+    };
+  }, []);
+
   useEffect(() => {
     if (!menuOpen) return;
 
-    const { body, documentElement } = document;
+    const body = document.body;
+    const documentElement = document.documentElement;
     const prevOverflow = body.style.overflow;
     const prevPaddingRight = body.style.paddingRight;
     const scrollBarWidth = window.innerWidth - documentElement.clientWidth;
 
     body.style.overflow = 'hidden';
-    if (scrollBarWidth > 0) {
-      body.style.paddingRight = `${scrollBarWidth}px`;
-    }
+    if (scrollBarWidth > 0) body.style.paddingRight = `${scrollBarWidth}px`;
 
     return () => {
       body.style.overflow = prevOverflow;
@@ -144,7 +187,7 @@ export default function IntegratedHeader() {
             </button>
           </div>
 
-          <nav className={`hidden lg:flex items-center px-8 gap-12 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
+          <nav ref={navRef} className={`hidden lg:flex items-center px-8 gap-12 border-r transition-all ${isAtTop ? 'border-transparent group-hover:border-[var(--color-primary)]' : 'border-[var(--color-primary)]'}`}>
             {['About', 'Corporate', 'Resources'].map((item) => (
               <Link
                 key={item}
@@ -159,7 +202,7 @@ export default function IntegratedHeader() {
             ))}
           </nav>
 
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-1 md:mt-0 flex items-center justify-center isolate pointer-events-none z-[150]">
+          <div ref={logoRef} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-1 md:mt-0 flex items-center justify-center isolate pointer-events-none z-[150]">
             {/* Cloud Shape Background - Reduced Size & Opacity */}
             {pathname === '/' && isAtTop && (
               <div className="absolute inset-0 flex items-center justify-center -z-10 pointer-events-none">

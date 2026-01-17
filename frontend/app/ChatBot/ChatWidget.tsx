@@ -23,6 +23,13 @@ export default function ChatWidget() {
   // Requirement: Scroll-based storytelling & smooth transitions [cite: 64, 66]
   useEffect(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
 
+  // Broadcast chat open/close so other UI (e.g., floating CTAs) can hide
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const evName = isOpen ? 'chat-opened' : 'chat-closed';
+    window.dispatchEvent(new CustomEvent(evName));
+  }, [isOpen]);
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -59,13 +66,13 @@ export default function ChatWidget() {
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
-            className="fixed bottom-28 left-6 w-80 sm:w-96 h-[550px] bg-[var(--color-bg-card)] rounded-[2rem] shadow-[0_20px_50px_rgba(229,93,128,0.15)] flex flex-col overflow-hidden border border-[var(--color-border)] mb-4"
+              className="fixed bottom-6 left-4 right-4 sm:left-6 sm:right-auto sm:bottom-28 sm:w-80 sm:h-[550px] w-[92vw] max-w-[520px] max-h-[72vh] h-auto bg-[var(--color-bg-card)] rounded-md sm:rounded-[2rem] shadow-[0_20px_50px_rgba(229,93,128,0.15)] flex flex-col overflow-hidden border border-[var(--color-border)] mb-4 z-[1000]"
           >
             {/* Header: Reassuring & Human  */}
             <div className="bg-[var(--color-primary)] p-6 text-white">
               <div className="flex justify-between items-center">
                 <div>
-                  <h3 className="font-title font-extrabold text-2xl md:text-3xl tracking-tight">MindSettler Guide</h3>
+                  <h3 className="font-title font-extrabold text-2xl sm:text-3xl md:text-4xl tracking-tight">MindSettler Guide</h3>
                 </div>
                 <button onClick={() => setIsOpen(false)} className="bg-white/20 hover:bg-white/30 p-2 rounded-full transition-all text-white">
                   ✕
@@ -82,7 +89,7 @@ export default function ChatWidget() {
                   key={i}
                   className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-[85%] p-3 rounded-2xl text-[16px] md:text-[17px] leading-snug font-medium shadow-sm ${m.sender === 'user'
+                  <div className={`max-w-[85%] p-3 rounded-2xl text-sm md:text-[16px] leading-snug font-medium shadow-sm ${m.sender === 'user'
                     ? 'bg-[var(--color-primary)] text-white rounded-tr-none font-semibold'
                     : 'bg-white text-[var(--color-primary)] border border-[var(--color-border)] rounded-tl-none font-semibold'
                     }`}>
@@ -118,7 +125,7 @@ export default function ChatWidget() {
             {/* Input: Seamless Integration [cite: 68] */}
             <div className="p-5 bg-[var(--color-bg-card)] border-t border-[var(--color-border)] flex gap-3 items-center">
               <input
-                className="flex-1 bg-[var(--color-bg-subtle)] p-3 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 text-[var(--color-text-body)] transition-all placeholder:text-[var(--color-text-body)]/60"
+                className="flex-1 bg-[var(--color-bg-subtle)] p-3 rounded-2xl text-sm md:text-base outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 text-[var(--color-text-body)] transition-all placeholder:text-[var(--color-text-body)]/60"
                 placeholder="How are you feeling?"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -141,13 +148,14 @@ export default function ChatWidget() {
           whileHover={{ scale: 1.06 }}
           whileTap={{ scale: 0.98 }}
           type="button"
-          onClick={() => setIsOpen(true)}
+          onClick={() => { setIsOpen(true); }}
           className="fixed bottom-6 left-6 bg-[var(--color-primary)] w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl transition-all z-[220] p-0"
           aria-label="Open Chatbot"
         >
             <Image src="/chatlogo.png" alt="Chatbot" width={32} height={32} className="w-6 h-6 md:w-8 md:h-8" />
         </motion.button>
       )}
+      
     </div>
   );
 }
