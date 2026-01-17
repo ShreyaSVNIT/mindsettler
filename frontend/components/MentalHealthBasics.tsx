@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import SectionHeader from './SectionHeader';
 
@@ -40,47 +40,55 @@ const mentalHealthBasics: TermData[] = [
   { letter: 'Z', term: 'Zen', hindi: 'सुकून', explanation: 'Deep calm and clarity' }
 ];
 
-const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => (
-  <div className="w-full h-full breathing-hex group">
-    <div className="relative w-full h-full transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)]" style={{ perspective: '1200px' }}>
-      <div
-        className="relative w-full h-full transition-transform duration-700 ease-out group-hover:rotate-y-180"
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        {/* FRONT */}
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center p-2 sm:p-3"
-          style={{
-            backgroundColor: 'var(--color-bg-app)',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            backfaceVisibility: 'hidden'
-          }}
-        >
-          <div className="font-title text-3xl sm:text-4xl md:text-5xl mb-1 text-[var(--color-primary)]">
-            {data.letter}
-          </div>
-          <div className="font-body text-xs sm:text-sm md:text-base lg:text-lg font-medium line-clamp-1">{data.term}</div>
-          <div className="font-body text-xs opacity-60 line-clamp-1">({data.hindi})</div>
-        </div>
+const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => {
+  const [isFlipped, setIsFlipped] = useState(false);
 
-        {/* BACK */}
+  return (
+    <div
+      className="w-full h-full breathing-hex group"
+      onClick={() => setIsFlipped(!isFlipped)}
+      onMouseLeave={() => setIsFlipped(false)}
+    >
+      <div className="relative w-full h-full transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_8px_16px_rgba(0,0,0,0.15)]" style={{ perspective: '1200px' }}>
         <div
-          className="absolute inset-0 flex items-center justify-center p-2 sm:p-3"
-          style={{
-            backgroundColor: 'var(--color-bg-lavender)',
-            clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
-            backfaceVisibility: 'hidden',
-            transform: 'rotateY(180deg)'
-          }}
+          className={`relative w-full h-full transition-transform duration-700 ease-out ${isFlipped ? 'rotate-y-180' : 'group-hover:rotate-y-180'}`}
+          style={{ transformStyle: 'preserve-3d' }}
         >
-          <p className="font-body text-xs sm:text-sm md:text-base text-center leading-tight sm:leading-snug text-[var(--color-text-secondary)]">
-            {data.explanation}
-          </p>
+          {/* FRONT */}
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center p-2 sm:p-3"
+            style={{
+              backgroundColor: 'var(--color-bg-app)',
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+              backfaceVisibility: 'hidden'
+            }}
+          >
+            <div className="font-title text-3xl sm:text-4xl md:text-5xl mb-1 text-[var(--color-primary)]">
+              {data.letter}
+            </div>
+            <div className="font-body text-xs sm:text-sm md:text-base lg:text-lg font-medium line-clamp-1">{data.term}</div>
+            <div className="font-body text-xs opacity-60 line-clamp-1">({data.hindi})</div>
+          </div>
+
+          {/* BACK */}
+          <div
+            className="absolute inset-0 flex items-center justify-center p-2 sm:p-3"
+            style={{
+              backgroundColor: 'var(--color-bg-lavender)',
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)',
+              backfaceVisibility: 'hidden',
+              transform: 'rotateY(180deg)'
+            }}
+          >
+            <p className="font-body text-xs sm:text-sm md:text-base text-center leading-tight sm:leading-snug text-[var(--color-text-secondary)]">
+              {data.explanation}
+            </p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default function MentalHealthBasics() {
   // Balanced rows for a centered look
@@ -172,7 +180,7 @@ export default function MentalHealthBasics() {
                   key={term.letter}
                   custom={{ r, c, rowLen: row.length }}
                   variants={cardVariants}
-                  className="w-24 h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40"
+                  className="w-[28vw] h-[28vw] sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40"
                   viewport={{ once: true, amount: 0.3 }}
                   initial="hidden"
                   whileInView="visible"
