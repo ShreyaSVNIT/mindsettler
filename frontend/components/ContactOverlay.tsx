@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Mail, Phone, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { X, Mail, Phone, Instagram, Linkedin } from 'lucide-react';
 import MagneticButton from './Button';
 
 export default function ContactOverlay({ initialOpen = false }: { initialOpen?: boolean }) {
   const [isOpen, setIsOpen] = useState(initialOpen);
+  const [hideDueToChat, setHideDueToChat] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -22,11 +23,26 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
     // You can add your form submission logic here
   };
 
+  useEffect(() => {
+    const onOpen = () => setHideDueToChat(true);
+    const onClose = () => setHideDueToChat(false);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('chat-opened', onOpen as EventListener);
+      window.addEventListener('chat-closed', onClose as EventListener);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('chat-opened', onOpen as EventListener);
+        window.removeEventListener('chat-closed', onClose as EventListener);
+      }
+    };
+  }, []);
+
   return (
     <>
       {/* Floating CTA Corner */}
       <AnimatePresence>
-        {!isOpen && (
+        {!isOpen && !hideDueToChat && (
           <motion.div
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
@@ -44,12 +60,12 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
               setIsOpen(true);
             }}
           >
-            <div className="relative bg-[var(--color-primary)] text-white px-8 py-4 md:px-10 md:py-6 rounded-tl-[1.75rem] md:rounded-tl-[2.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all">
+            <div className="relative bg-[var(--color-primary)] text-white px-4 py-2 md:px-8 md:py-4 rounded-tl-[1rem] md:rounded-tl-[1.75rem] shadow-2xl hover:shadow-[var(--color-primary)]/50 transition-all">
               <div className="flex flex-col items-start">
-                <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-lg md:text-2xl font-bold uppercase tracking-wider leading-none">
                   LET&apos;S
                 </span>
-                <span className="font-title text-2xl md:text-3xl font-bold uppercase tracking-wider leading-none">
+                <span className="font-title text-lg md:text-2xl font-bold uppercase tracking-wider leading-none">
                   TALK
                 </span>
               </div>
@@ -133,22 +149,14 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
                         </a>
                       </div>
 
-                      <div>
-                        <h3 className="font-body text-sm font-bold uppercase tracking-wider text-[var(--color-text-body)]/60 mb-3">
-                          Join us
-                        </h3>
-                        <a href="/about#contact" className="font-body text-2xl text-[var(--color-text-body)] hover:text-[var(--color-primary)] transition-colors underline">
-                          See Opportunities
-                        </a>
-                      </div>
+
                     </div>
 
                     {/* Social Links */}
                     <div className="flex gap-4">
                       {[
-                        { icon: Instagram, href: '#' },
-                        { icon: Linkedin, href: '#' },
-                        { icon: Twitter, href: '#' }
+                        { icon: Instagram, href: 'https://www.instagram.com/mindsettlerbypb/' },
+                        { icon: Linkedin, href: 'https://www.linkedin.com/in/parnika-bajaj-190719195/' }
                       ].map((social, i) => (
                         <motion.a
                           key={i}

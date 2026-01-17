@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
+import BookingCard from "@/components/BookingCard";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
@@ -68,17 +69,27 @@ function PaymentPageContent() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-subtle)] flex items-center justify-center px-6 py-24">
-      <div className="max-w-2xl w-full">
+    <main className="min-h-screen bg-[var(--color-bg-subtle)] flex items-center justify-center px-6 py-12">
+      <div className="max-w-2xl w-full relative">
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            className="absolute w-80 h-80 rounded-full bg-[var(--color-primary)]/10 blur-3xl"
+            animate={{ x: [0, 50, 0], y: [0, -50, 0] }}
+            transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+            style={{ top: '-120px', left: '50%', transform: 'translateX(-50%)' }}
+          />
+          <motion.div
+            className="absolute w-80 h-80 rounded-full bg-purple-400/10 blur-3xl"
+            animate={{ x: [0, -50, 0], y: [0, 50, 0] }}
+            transition={{ duration: 28, repeat: Infinity, ease: "easeInOut" }}
+            style={{ bottom: '-120px', left: '50%', transform: 'translateX(-50%)' }}
+          />
+        </div>
         
         {/* Invalid Acknowledgement ID */}
         {!acknowledgementId && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Invalid Payment Link</h2>
+          <BookingCard>
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Invalid Payment Link</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               Acknowledgement ID is missing. Please initiate payment from your email or booking status page.
             </p>
@@ -88,42 +99,34 @@ function PaymentPageContent() {
             >
               Go to Booking Page
             </button>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Initiating Payment */}
         {acknowledgementId && state.kind === "initiating" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Initiating Payment...</h2>
+          <BookingCard>
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Initiating Payment...</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">
               Please wait while we prepare your payment details.
             </p>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Payment UI - Ready */}
         {state.kind === "ready" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white/95 rounded-3xl shadow-xl p-10"
-          >
+          <BookingCard className="text-center" variant="white">
             <div className="text-center mb-8">
-              <h2 className="font-title text-3xl text-white mb-4">Complete Payment</h2>
+              <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Complete Payment</h2>
               <p className="font-body text-lg text-[var(--color-text-body)]/70">
                 You're almost there! Complete the payment to confirm your booking.
               </p>
             </div>
-
+            
             {/* Payment Details */}
-            <div className="bg-gradient-to-br from-[var(--color-primary)]/5 to-[var(--color-primary)]/10 rounded-2xl p-8 mb-6">
-              <div className="flex justify-between items-center mb-4 pb-4 border-b border-[var(--color-primary)]/20">
+            <div className="bg-gradient-to-br from-[var(--color-text-body)]/5 to-[var(--color-text-body)]/10 rounded-2xl p-8 mb-6">
+              <div className="flex justify-between items-center mb-4 pb-4 border-b border-[var(--color-text-body)]/20">
                 <span className="font-body font-semibold text-[var(--color-text-body)]">Amount to Pay:</span>
-                <span className="font-title text-3xl text-[var(--color-primary)]">₹{state.amount}</span>
+                <span className="font-title text-3xl text-[var(--color-text-body)]">₹{state.amount}</span>
               </div>
               <div className="flex justify-between items-center text-sm">
                 <span className="font-body text-[var(--color-text-body)]/60">Payment Reference:</span>
@@ -144,7 +147,7 @@ function PaymentPageContent() {
             </div>
 
             {/* Simulate Payment Button */}
-            <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-2xl p-6 mb-6">
+            <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-text-body)]/20 rounded-2xl p-6 mb-6">
               <p className="font-body text-sm text-[var(--color-text-body)] text-center mb-4">
                 <strong>Demo Mode:</strong> This is a dummy payment gateway. Click below to simulate successful payment.
               </p>
@@ -152,7 +155,7 @@ function PaymentPageContent() {
 
             <button
               onClick={handleCompletePayment}
-              className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-6 py-4 rounded-full transition-all shadow-lg"
+              className="w-full bg-[var(--color-text-body)] hover:bg-[var(--color-text-body)]/90 text-white font-body font-semibold px-6 py-4 rounded-full transition-all shadow-lg"
             >
               Complete Payment (Demo)
             </button>
@@ -163,29 +166,21 @@ function PaymentPageContent() {
             >
               ← Go Back
             </button>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Processing */}
         {state.kind === "processing" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Processing Payment...</h2>
+          <BookingCard>
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Processing Payment...</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">Please wait while we confirm your payment.</p>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Success */}
         {state.kind === "success" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Payment Successful!</h2>
+          <BookingCard className="text-center">
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Payment Successful!</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               Your booking is now <strong>CONFIRMED</strong>. You'll receive a confirmation email shortly with your session details.
             </p>
@@ -204,37 +199,33 @@ function PaymentPageContent() {
                   "Your booking has been confirmed. Please check your email and open the verification link to view your booking details."
                 );
               }}
-              className="w-full bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-4 rounded-full transition-all shadow-lg"
+              className="w-full bg-[var(--color-text-body)] hover:bg-[var(--color-text-body)]/90 text-white font-body font-semibold px-8 py-4 rounded-full transition-all shadow-lg"
             >
               Check Email for Booking Details
             </button>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Error */}
         {state.kind === "error" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Payment Failed</h2>
+          <BookingCard>
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Payment Failed</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">{state.message}</p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setState({ kind: "idle" })}
-                className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
+                className="bg-[var(--color-text-body)] hover:bg-[var(--color-text-body)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
               >
                 Try Again
               </button>
               <button
                 onClick={() => router.push("/book")}
-                className="bg-white hover:bg-gray-50 text-[var(--color-primary)] border-2 border-[var(--color-primary)]/20 font-body font-semibold px-8 py-3 rounded-full transition-all"
+                className="bg-white hover:bg-gray-50 text-[var(--color-text-body)] border-2 border-[var(--color-text-body)]/20 font-body font-semibold px-8 py-3 rounded-full transition-all"
               >
                 Go to Booking
               </button>
             </div>
-          </motion.div>
+          </BookingCard>
         )}
       </div>
     </main>

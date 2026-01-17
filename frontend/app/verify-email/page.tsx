@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, Suspense } from "react";
+import BookingCard from "@/components/BookingCard";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
@@ -111,45 +112,48 @@ function VerifyEmailContent() {
   };
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-subtle)] flex items-center justify-center px-6 py-24">
-      <div className="max-w-2xl w-full">
+    <main className="min-h-screen bg-[var(--color-bg-subtle)] flex items-center justify-center px-6 py-12">
+      <div className="max-w-2xl w-full relative">
+        {/* Decorative glowing circles (from 404 style) */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div
+            className="absolute w-72 h-72 rounded-full bg-[var(--color-primary)]/10 blur-3xl"
+            animate={{ x: [0, 40, 0], y: [0, -40, 0] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            style={{ top: '-96px', left: '50%', transform: 'translateX(-50%)' }}
+          />
+          <motion.div
+            className="absolute w-72 h-72 rounded-full bg-purple-400/10 blur-3xl"
+            animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+            style={{ bottom: '-96px', left: '50%', transform: 'translateX(-50%)' }}
+          />
+        </div>
         
         {/* Missing Token */}
         {!token && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Invalid Link</h2>
+          <BookingCard>
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Invalid Link</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">
               The verification link is invalid or missing. Please check your email and try again.
             </p>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Loading */}
         {token && state.kind === "loading" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Verifying…</h2>
+          <BookingCard>
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Verifying…</h2>
             <p className="font-body text-lg text-[var(--color-text-body)]">
               Please wait while we verify your email address.
             </p>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Error */}
         {state.kind === "error" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-4">Verification Failed</h2>
+          <BookingCard>
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Verification Failed</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               {state.message}
             </p>
@@ -164,26 +168,22 @@ function VerifyEmailContent() {
             >
               Go to Booking Page
             </button>
-          </motion.div>
+          </BookingCard>
         )}
 
         {/* Success */}
         {state.kind === "success" && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 shadow-xl"
-          >
-            <h2 className="font-title text-3xl text-white mb-6 text-center">Email Verified</h2>
+          <BookingCard className="text-left" variant="white">
+            <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-6 text-center">Email Verified</h2>
 
             <div className="bg-white/60 rounded-2xl p-6 space-y-4 mb-6">
-              <div className="flex justify-between items-center border-b border-[var(--color-primary)]/20 pb-3">
-                <span className="font-body font-semibold text-[var(--color-primary)]">Acknowledgement ID:</span>
+              <div className="flex justify-between items-center border-b border-[var(--color-text-body)]/20 pb-3">
+                <span className="font-body font-semibold text-[var(--color-text-body)]">Acknowledgement ID:</span>
                 <span className="font-mono font-bold text-[var(--color-text-body)]">{state.data.booking.acknowledgement_id}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="font-body font-semibold text-[var(--color-primary)]">Status:</span>
-                <span className="font-body uppercase bg-[var(--color-primary)]/10 px-3 py-1 rounded-full text-xs font-bold text-[var(--color-primary)]">
+                <span className="font-body font-semibold text-[var(--color-text-body)]">Status:</span>
+                <span className="font-body uppercase bg-[var(--color-text-body)]/10 px-3 py-1 rounded-full text-xs font-bold text-[var(--color-text-body)]">
                   {state.data.booking.status}
                 </span>
               </div>
@@ -191,13 +191,13 @@ function VerifyEmailContent() {
 
             {(["APPROVED", "PAYMENT_PENDING", "CONFIRMED"].includes(state.data.booking.status)) && (
               <div className="bg-white/60 rounded-2xl p-6 space-y-3 mb-6">
-                <h3 className="font-body font-semibold text-[var(--color-primary)] mb-2">
+                <h3 className="font-body font-semibold text-[var(--color-text-body)] mb-2">
                   Session Details
                 </h3>
 
                 {state.data.booking.approved_slot_start && (
                   <div className="flex justify-between">
-                    <span className="font-body text-[var(--color-primary)]">Start Time</span>
+                    <span className="font-body text-[var(--color-text-body)]">Start Time</span>
                     <span className="font-body font-semibold text-[var(--color-text-body)]">
                       {new Date(state.data.booking.approved_slot_start).toLocaleString()}
                     </span>
@@ -206,7 +206,7 @@ function VerifyEmailContent() {
 
                 {state.data.booking.approved_slot_end && (
                   <div className="flex justify-between">
-                    <span className="font-body text-[var(--color-primary)]">End Time</span>
+                    <span className="font-body text-[var(--color-text-body)]">End Time</span>
                     <span className="font-body font-semibold text-[var(--color-text-body)]">
                       {new Date(state.data.booking.approved_slot_end).toLocaleString()}
                     </span>
@@ -216,7 +216,7 @@ function VerifyEmailContent() {
               </div>
             )}
 
-            <div className="bg-[var(--color-primary)]/10 rounded-xl p-5 mb-6">
+            <div className="bg-[var(--color-text-body)]/10 rounded-xl p-5 mb-6">
               <p className="font-body text-sm text-[var(--color-text-body)] text-center">
                 {state.data.booking.status === "PENDING" && (
                   <>
@@ -299,7 +299,7 @@ function VerifyEmailContent() {
               </button>
 
             </div>
-          </motion.div>
+          </BookingCard>
         )}
       </div>
     </main>

@@ -177,7 +177,7 @@ export default function BookPage() {
       {/* Animated background orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute w-96 h-96 rounded-full bg-[var(--color-primary)]/10 blur-3xl"
+          className="absolute w-96 h-96 rounded-full bg-[var(--color-text-body)]/10 blur-3xl"
           animate={{
             x: [0, 100, 0],
             y: [0, -100, 0],
@@ -235,7 +235,7 @@ export default function BookPage() {
                   <div className="text-sm md:text-base">60 minutes per session, includes a brief check-in.</div>
                 </div>
               </GlowCard>
-              <GlowCard className="p-4 md:p-6 w-full flex flex-col min-h-[140px] border-2 border-[var(--color-primary)]/20" enableParticles={false} enableTilt={false} enableMagnetism={false}>
+              <GlowCard className="p-4 md:p-6 w-full flex flex-col min-h-[140px] border-2 border-[var(--color-text-body)]/20" enableParticles={false} enableTilt={false} enableMagnetism={false}>
                 <div className="font-body text-sm md:text-base text-[var(--color-text-body)] h-full flex flex-col">
                   <div className="flex items-center gap-3 mb-3 md:mb-4">
                     <AnimatedBadge className="flex-shrink-0 w-8 h-8 text-sm">2</AnimatedBadge>
@@ -276,7 +276,7 @@ export default function BookPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl max-w-2xl"
+            className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-text-body)]/20 rounded-3xl p-10 text-center shadow-xl max-w-2xl"
           >
             <motion.div 
               initial={{ scale: 0 }}
@@ -286,11 +286,11 @@ export default function BookPage() {
             >
               📧
             </motion.div>
-            <h2 className="font-title text-4xl text-[var(--color-primary)] mb-4">Check Your Email</h2>
+            <h2 className="font-title text-4xl text-[var(--color-text-body)] mb-4">Check Your Email</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-4 max-w-md mx-auto">
               We've sent a verification link to your email address. Please click the link to verify your booking.
             </p>
-            <div className="bg-[var(--color-primary)]/10 rounded-xl p-4 max-w-md mx-auto">
+            <div className="bg-[var(--color-text-body)]/10 rounded-xl p-4 max-w-md mx-auto">
               <p className="font-body text-sm text-[var(--color-text-body)]">
                 💡 Didn't receive it? Check your spam folder or wait a few minutes before trying again.
               </p>
@@ -371,30 +371,30 @@ export default function BookPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-[var(--color-bg-lavender)] rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-primary)]/20"
+              className="bg-[var(--color-bg-lavender)] rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-text-body)]/20"
             >
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 
                 {/* Personal Information Section */}
                 <div className="space-y-5">
-                  <h3 className="font-body text-base font-bold text-[var(--color-text-body)] mb-3">
+                  <h3 className="font-body text-lg md:text-xl font-bold text-[var(--color-text-body)] mb-3">
                     Personal Information
                   </h3>
 
                   {/* Full Name */}
                   <div>
                     <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                      Full Name <span className="text-[var(--color-primary)]">*</span>
+                      Full Name <span className="text-[var(--color-text-body)]">*</span>
                     </label>
                     <input
                       type="text"
                       {...register("full_name")}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-text-body)]/20 focus:border-[var(--color-text-body)] outline-none transition-all font-body font-normal bg-white"
                       placeholder="Enter your full name"
                       disabled={bookingStatus === "submitting"}
                     />
                     {errors.full_name && (
-                      <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.full_name.message}</p>
+                      <p className="text-[var(--color-text-body)] text-sm mt-1 font-body">{errors.full_name.message}</p>
                     )}
                   </div>
 
@@ -402,34 +402,34 @@ export default function BookPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                        Email Address <span className="text-[var(--color-primary)]">*</span>
+                        Email Address <span className="text-[var(--color-text-body)]">*</span>
                       </label>
                       <input
                         type="email"
                         {...register("email")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-text-body)]/20 focus:border-[var(--color-text-body)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="mindsettler.dev@gmail.com"
                         disabled={bookingStatus === "submitting"}
                       />
                       {errors.email && (
-                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.email.message}</p>
+                        <p className="text-[var(--color-text-body)] text-sm mt-1 font-body">{errors.email.message}</p>
                       )}
                     </div>
 
                     <div>
                       <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                        Phone Number <span className="text-[var(--color-primary)]">*</span>
+                        Phone Number <span className="text-[var(--color-text-body)]">*</span>
                       </label>
                       <input
                         type="tel"
                         {...register("phone_number")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-text-body)]/20 focus:border-[var(--color-text-body)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="9876543210"
                         maxLength={10}
                         disabled={bookingStatus === "submitting"}
                       />
                       {errors.phone_number && (
-                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.phone_number.message}</p>
+                        <p className="text-[var(--color-text-body)] text-sm mt-1 font-body">{errors.phone_number.message}</p>
                       )}
                     </div>
                   </div>
@@ -438,29 +438,29 @@ export default function BookPage() {
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                        Age <span className="text-[var(--color-primary)]">*</span>
+                        Age <span className="text-[var(--color-text-body)]">*</span>
                       </label>
                       <input
                         type="number"
                         {...register("age")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-text-body)]/20 focus:border-[var(--color-text-body)] outline-none transition-all font-body font-normal bg-white"
                         placeholder="Your age"
                         min={13}
                         max={120}
                         disabled={bookingStatus === "submitting"}
                       />
                       {errors.age && (
-                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.age.message}</p>
+                        <p className="text-[var(--color-text-body)] text-sm mt-1 font-body">{errors.age.message}</p>
                       )}
                     </div>
 
                     <div>
                       <label className="block font-body text-sm font-semibold text-[var(--color-text-body)] mb-2">
-                        Gender <span className="text-[var(--color-primary)]">*</span>
+                        Gender <span className="text-[var(--color-text-body)]">*</span>
                       </label>
                       <select
                         {...register("gender")}
-                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-primary)]/20 focus:border-[var(--color-primary)] outline-none transition-all font-body font-normal bg-white"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-[var(--color-text-body)]/20 focus:border-[var(--color-text-body)] outline-none transition-all font-body font-normal bg-white"
                         disabled={bookingStatus === "submitting"}
                       >
                         <option value="">Select gender</option>
@@ -470,7 +470,7 @@ export default function BookPage() {
                         <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
                       </select>
                       {errors.gender && (
-                        <p className="text-[var(--color-primary)] text-sm mt-1 font-body">{errors.gender.message}</p>
+                        <p className="text-[var(--color-text-body)] text-sm mt-1 font-body">{errors.gender.message}</p>
                       )}
                     </div>
                   </div>

@@ -119,7 +119,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[var(--color-bg-subtle)]">
       {/* Hero Section - Elegant Parallax */}
-      <section ref={heroRef} className="relative py-40 px-4 overflow-hidden min-h-screen flex items-center">
+      <section ref={heroRef} className="relative py-20 md:py-40 px-4 overflow-hidden md:min-h-screen flex items-center">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Text Content with subtle parallax */}
@@ -133,27 +133,24 @@ export default function AboutPage() {
               <TitleHeader
                 subheader="About MindSettler"
                 title={<>
-                  Where
-                  <span className="block text-[var(--color-primary)] italic mt-2">
-                    Healing
-                  </span>
-                  <span className="block mt-2">Meets Hope</span>
+                  <span className="block md:inline">Where <span className="inline md:inline text-[var(--color-primary)] italic">Healing </span></span>
+                  <span className="block md:inline md:ml-2">Meets Hope</span>
                 </>}
                 description="I created MindSettler to be more than just a platform. It's a companion in your journey toward understanding yourself, embracing your story, and finding peace in the present."
                 alignment="left"
               />
 
-              <div className="mb-8" />
+              <div className="mb-4 md:mb-8" />
 
               <motion.div
-                className="flex flex-wrap gap-4"
+                className="flex flex-wrap gap-4 justify-center md:justify-start mb-2 md:mb-8"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.7 }}
               >
                 <a href="/how-it-works">
-                  <MagneticButton text="Start Your Journey" />
+                  <MagneticButton text="Start Your Journey" className="transform md:scale-105" />
                 </a>
               </motion.div>
             </motion.div>
@@ -164,9 +161,9 @@ export default function AboutPage() {
               className="relative"
             >
               <div className="relative">
-                {/* Subtle background accents */}
+                {/* Subtle background accents - hidden on small screens */}
                 <motion.div
-                  className="absolute -inset-4 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent rounded-[3.5rem] blur-2xl"
+                  className="hidden md:block absolute -inset-4 bg-gradient-to-br from-[var(--color-primary)]/5 to-transparent rounded-[3.5rem] blur-2xl"
                   animate={{
                     scale: [1, 1.02, 1],
                     opacity: [0.2, 0.35, 0.2]
@@ -178,37 +175,40 @@ export default function AboutPage() {
                   }}
                 />
 
-                {/* Primary color shadow box */}
-                <div className="absolute top-6 left-6 md:top-10 md:left-10 w-full h-[40vh] sm:h-[48vh] md:h-[60vh] lg:h-[500px] max-h-[600px] bg-[var(--color-primary)]/20 rounded-[2rem] md:rounded-[3rem]" />
+                {/* Primary color shadow box - hide on mobile to avoid 3D pink shadow */}
+                <div className="hidden md:block absolute top-6 left-6 md:top-10 md:left-10 w-full h-[48vh] md:h-[60vh] lg:h-[500px] max-h-[600px] bg-[var(--color-primary)]/20 rounded-[2rem] md:rounded-[3rem]" />
 
                 {/* Main image container with mask reveal and hover zoom */}
                 <motion.div
-                  className="relative h-[40vh] sm:h-[48vh] md:h-[60vh] lg:h-[500px] max-h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden group"
-                  initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
+                  className="relative h-[32vh] sm:h-[44vh] md:h-[56vh] lg:h-[500px] max-h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden group max-w-[92%] sm:max-w-[85%] md:max-w-none mx-auto md:mx-0"
+                  initial={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                   animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
                   transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
                   whileHover={{ scale: 1.02 }}
                 >
                   {/* Image wrapper with subtle scale and hover zoom */}
                   <motion.div
-                    className="relative w-full h-full bg-white"
+                    className="relative w-full h-full bg-white border-2 border-[var(--color-primary)]/30"
                     initial={{ scale: 1.2 }}
                     animate={{ scale: 1 }}
                     transition={{ duration: 1.2, delay: 0.5, ease: [0.65, 0, 0.35, 1] }}
                   >
                     <Image
                       src="/parnika.jpeg"
-                      alt="Mental wellness"
+                      alt="Parnika Bajaj - founder of MindSettler"
                       fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                      loading="eager"
+                      sizes="(max-width: 640px) 92vw, (max-width: 1024px) 45vw, 600px"
+                      style={{ objectPosition: '50% 35%' }}
+                      className="object-cover object-center transition-transform duration-700 group-hover:scale-110"
                       priority
                     />
                     {/* Subtle gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-bg-subtle)]/20 to-transparent" />
                   </motion.div>
 
-                  {/* Elegant border */}
-                  <div className="absolute inset-0 rounded-[2rem] md:rounded-[3rem] ring-1 ring-white/10" />
+                  {/* Elegant border replacement (kept for larger screens) */}
+                  <div className="absolute inset-0 rounded-[2rem] md:rounded-[3rem] ring-1 ring-white/10 hidden md:block" />
                 </motion.div>
 
                 {/* Floating accent elements with rotation on hover */}
@@ -236,10 +236,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <WaveDividerSolid topColor="var(--color-bg-subtle)" bottomColor="var(--color-bg-app)" />
+      {/* simple solid divider instead of decorative wave */}
+      <div className="w-full h-px bg-[var(--color-border)]" />
 
       {/* What We Offer - MagicBento Grid */}
-      <section className="relative py-12 bg-[var(--color-bg-app)] overflow-hidden">
+      <section className="relative py-8 bg-[var(--color-bg-app)] overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
           {/* Header */}
           <div className="text-center mb-12">
@@ -271,7 +272,8 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <WaveDividerSolid topColor="var(--color-bg-app)" bottomColor="var(--color-bg-subtle)" />
+      {/* simple solid divider instead of decorative wave */}
+      <div className="w-full h-px bg-[var(--color-border)]" />
 
       {/* Founder Introduction Section */}
       <FounderIntroduction

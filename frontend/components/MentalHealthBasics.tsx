@@ -45,7 +45,7 @@ const HexagonCard: React.FC<{ data: TermData }> = ({ data }) => {
 
   return (
     <div
-      className="w-full h-full breathing-hex group"
+      className="w-full h-full group"
       onClick={() => setIsFlipped(!isFlipped)}
       onMouseLeave={() => setIsFlipped(false)}
     >
@@ -164,11 +164,11 @@ export default function MentalHealthBasics() {
 
         {/* GRID - Centered with equal side spacing */}
         <motion.div
-          className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3 w-full md:snap-none snap-y snap-mandatory overflow-y-auto md:overflow-visible"
+          className="flex flex-col items-center gap-1 sm:gap-2 md:gap-3 w-full"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px", amount: 0.2 }}
+          viewport={{ once: true, amount: 0.1 }}
         >
           {rows.map((row, r) => (
             <div
@@ -193,16 +193,7 @@ export default function MentalHealthBasics() {
         </motion.div>
       </div>
 
-      <style>{`
-        @keyframes breathe {
-          0% { transform: scale(1); }
-          50% { transform: scale(1.04); }
-          100% { transform: scale(1); }
-        }
-        .breathing-hex {
-          animation: breathe 5.5s ease-in-out infinite;
-        }
-      `}</style>
+
     </section>
   );
 }

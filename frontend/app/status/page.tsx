@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import BookingCard from "@/components/BookingCard";
 import { bookingAPI, statusHelpers } from "@/lib/api";
 import type { BookingStatusResponse } from "@/types";
 import {
@@ -164,15 +165,19 @@ function StatusPageContent() {
   // Helpers
   // ─────────────────────────
   const getStatusColor = (status: string) => {
-    // Use primary-accent badge style for all statuses to keep design consistent
-    return "bg-[var(--color-primary)]/10 text-[var(--color-primary)]";
+    // Use text-body badge style for all statuses to keep design consistent
+    return "bg-[var(--color-text-body)]/10 text-[var(--color-text-body)]";
   };
 
   // emojis removed to follow unified design
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-subtle)] py-24 px-6">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen bg-[var(--color-bg-subtle)] py-12 px-6">
+      <div className="max-w-4xl mx-auto relative">
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div className="absolute w-72 h-72 rounded-full bg-[var(--color-primary)]/10 blur-3xl" animate={{ x: [0, 40, 0], y: [0, -40, 0] }} transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }} style={{ top: '-96px', left: '50%', transform: 'translateX(-50%)' }} />
+          <motion.div className="absolute w-72 h-72 rounded-full bg-purple-400/10 blur-3xl" animate={{ x: [0, -40, 0], y: [0, 40, 0] }} transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }} style={{ bottom: '-96px', left: '50%', transform: 'translateX(-50%)' }} />
+        </div>
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -182,12 +187,8 @@ function StatusPageContent() {
         </motion.h1>
 
         {!acknowledgementId && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white/95 rounded-3xl shadow-xl p-8 mb-6"
-          >
-            <h2 className="font-title text-2xl mb-4">
+          <BookingCard variant="white" className="mb-6">
+            <h2 className="font-title text-3xl md:text-4xl lg:text-5xl mb-4">
               Enter Your Acknowledgement ID
             </h2>
 
@@ -202,12 +203,12 @@ function StatusPageContent() {
             />
 
             <button
-              onClick={() => setAcknowledgementId(inputId.trim())}
-              className="w-full bg-[var(--color-primary)] text-white px-6 py-3 rounded-full"
-            >
-              Check Status
-            </button>
-          </motion.div>
+                onClick={() => setAcknowledgementId(inputId.trim())}
+                className="w-full bg-[var(--color-text-body)] text-white px-6 py-3 rounded-full"
+              >
+                Check Status
+              </button>
+            </BookingCard>
         )}
 
         {/* Rest of UI unchanged */}
@@ -218,7 +219,7 @@ function StatusPageContent() {
         )}
 
         {state.kind === "error" && (
-          <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-3xl p-10 text-center shadow-xl">
+          <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-text-body)]/20 rounded-3xl p-10 text-center shadow-xl">
             <p className="text-[var(--color-text-body)]">{state.message}</p>
           </div>
         )}
@@ -233,7 +234,7 @@ function StatusPageContent() {
               <button
                 onClick={handleRequestCancellation}
                 disabled={isCancelling || cancellationPending}
-                className="bg-[var(--color-primary)] text-white px-6 py-3 rounded-full"
+                className="bg-[var(--color-text-body)] text-white px-6 py-3 rounded-full"
               >
                 {cancellationPending
                   ? "Cancellation Pending (Check Email)"
@@ -244,7 +245,7 @@ function StatusPageContent() {
             )}
 
             {cancellationPending && (
-              <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-primary)]/20 rounded-2xl p-4 text-center">
+              <div className="bg-[var(--color-bg-lavender)] border-2 border-[var(--color-text-body)]/20 rounded-2xl p-4 text-center">
                 <p className="font-body text-[var(--color-text-body)]">
                   Cancellation requested. Please verify using the link sent to your email.
                 </p>

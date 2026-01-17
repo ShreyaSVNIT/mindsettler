@@ -13,7 +13,7 @@ export default function SplitText({
   tag?: string;
 }) {
   const letters = Array.from(text);
-  const MotionTag: any = motion[tag as keyof JSX.IntrinsicElements] || motion.p;
+  const MotionTag: any = (motion as any)[tag] || motion.p;
 
   const container = {
     hidden: {},

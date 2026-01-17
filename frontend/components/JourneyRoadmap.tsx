@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useState, useEffect } from "react";
 import {
   motion,
   useScroll,
@@ -39,8 +39,7 @@ const TimelineSection: React.FC<SectionProps> = ({
   return (
     <div
       ref={ref}
-      className={`relative flex flex-col items-center ${reverse ? "md:flex-row-reverse" : "md:flex-row"
-        } gap-12 md:gap-24 mb-64 last:mb-0`}
+      className={`relative flex flex-col items-center ${reverse ? "md:flex-row-reverse" : "md:flex-row"} gap-8 md:gap-20 mb-28 last:mb-0`}
     >
       {/* IMAGE SIDE */}
       <motion.div
@@ -55,6 +54,8 @@ const TimelineSection: React.FC<SectionProps> = ({
                 src={image}
                 alt={title}
                 fill
+                loading="lazy"
+                style={{ objectPosition: '50% 40%' }}
                 className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-700"
               />
           <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500" />
@@ -104,6 +105,14 @@ const TimelineSection: React.FC<SectionProps> = ({
 export default function MindSettlerJourney() {
   const containerRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   /* ---------------- SCROLL ---------------- */
 
@@ -142,8 +151,8 @@ export default function MindSettlerJourney() {
   const headerOpacity = useTransform(pathProgress, [0, 0.05], [0, 1]); // Fade In
 
   /* ---------------- PERFECT PATH ---------------- */
-  // Adjusted curves for a smoother central flow that waves between the content
-  const pathD = `
+  // Curved path for desktop, straight vertical line for mobile
+  const curvedPath = `
     M 500 -100
     C 500 150, 500 350, 500 550
     C 200 750, 200 1150, 500 1350
@@ -151,6 +160,10 @@ export default function MindSettlerJourney() {
     C 200 2350, 200 2750, 500 2950
     L 500 3400
   `;
+
+  const straightPath = `M 500 -100 L 500 3400`;
+
+  const pathD = isMobile ? straightPath : curvedPath;
 
   // Pick shuffled images once per render lifecycle
   const [a, b, c] = useMemo(() => {
@@ -169,7 +182,7 @@ export default function MindSettlerJourney() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full py-24 md:py-32 bg-[var(--color-bg-subtle)] overflow-hidden"
+      className="relative w-full py-16 md:py-28 bg-[var(--color-bg-subtle)] overflow-hidden"
     >
       {/* PATH + DOT */}
       {/* Added mask-image to fade the line in/out at the top/bottom for a smoother transition */}
@@ -232,7 +245,7 @@ export default function MindSettlerJourney() {
         {/* HEADER */}
         <motion.div style={{ opacity: headerOpacity }}>
           <SectionHeader
-            subheader="Guided Wellness Journey"
+            subheader={"Guided Wellness\nJourney"}
             title={<>Build your <span className="italic">peace</span> on a foundation of <span className="italic">presence.</span></>}
             bodyText="Lasting clarity isn't found in a single breakthrough, but in the steady accumulation of small, intentional pauses. This is how you build a foundation that doesn't just hold, but heals. Every session is a step towards understanding yourself more deeply."
             layout="split"
@@ -241,7 +254,7 @@ export default function MindSettlerJourney() {
         </motion.div>
 
         {/* SECTIONS */}
-        <div className="space-y-10">
+        <div className="space-y-8">
           <>
             <TimelineSection
               step="STEP 01"

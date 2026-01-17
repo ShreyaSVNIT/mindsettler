@@ -20,12 +20,11 @@ export default function HowItWorks() {
         your mental wellness journey every step of the way"
         alignment="center"
         layout="static"
-        className="h-screen"
+        className="lg:h-screen"
         cta={<a href="/how-it-works#start"><MagneticButton text="Get Started" /></a>}
       />
 
-      {/* Reduced spacer so cards appear sooner and avoid large mid-scroll reveal */}
-      <div className="h-[8vh] md:h-[18vh] lg:h-[24vh]" />
+
 
       <Parallaxcards />
       <HowItWorksFAQs />

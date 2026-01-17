@@ -205,29 +205,7 @@ const MusicPlayer = ({ youtubeUrl = 'https://www.youtube.com/watch?v=fNh2yB0w8gU
         </button>
       </div>
 
-      {/* Mobile collapsible player: toggle button and expandable panel */}
-      <div className={`md:hidden fixed bottom-6 left-4 z-50 flex flex-col items-start gap-2 ${footerVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-        <button
-          onClick={() => setPlayerExpanded(!playerExpanded)}
-          aria-label={playerExpanded ? 'Collapse music player' : 'Open music player'}
-          className="bg-[var(--color-primary)] text-white w-12 h-12 rounded-full shadow-xl flex items-center justify-center min-h-[44px] min-w-[44px]"
-        >
-          {playerExpanded ? <X className="w-5 h-5" /> : <Music className="w-5 h-5" />}
-        </button>
-
-        <div className={`transition-all ${playerExpanded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-          <div className="bg-white/90 p-2 rounded-xl shadow-2xl flex items-center">
-            <button
-              onClick={togglePlay}
-              disabled={!isLoaded}
-              className={`group bg-[var(--color-primary)] text-white w-12 h-12 rounded-full flex items-center justify-center min-h-[44px] min-w-[44px] ${!isLoaded ? 'opacity-50 cursor-not-allowed' : ''}`}
-              aria-label={isPlaying ? 'Pause music' : 'Play music'}
-            >
-              {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Mobile music controls removed per design — music only available on md+ screens */}
     </>
   );
 };
