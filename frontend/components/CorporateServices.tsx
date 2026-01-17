@@ -100,7 +100,7 @@ export default function CorporateServices() {
                 >
                     <SectionHeader
                         subheader="Our Services"
-                        title={<>What We <span className="text-[var(--color-primary)] italic">Offer</span></>}
+                        title={<>What We <span className="italic">Offer</span></>}
                         bodyText="Comprehensive mental wellness solutions tailored for modern workplaces"
                         alignment="center"
                         decoration="whiskers"

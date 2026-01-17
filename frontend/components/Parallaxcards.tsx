@@ -112,9 +112,15 @@ export default function ParallaxCards() {
       </div>
 
       {/* ---------- CARDS ---------- */}
-      <div className={`relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-6 ${
-        isMobile ? "py-6" : "py-12"
-      }`}>
+      <motion.div
+        className={`relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full max-w-7xl px-6 ${
+          isMobile ? "py-6" : "py-12"
+        }`}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true, amount: 0.15 }}
+      >
         {STEPS.map((step) => {
           const isActive = activeId === step.id;
 
@@ -228,7 +234,7 @@ export default function ParallaxCards() {
             </motion.div>
           );
         })}
-      </div>
+      </motion.div>
     </section>
   );
 }
