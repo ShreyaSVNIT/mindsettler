@@ -95,6 +95,13 @@ export default function IntegratedHeader() {
   // Home page at top: white, else: primary
   const isHome = pathname === '/' || pathname === '/home';
   const isHomeAtTop = isHome && isAtTop;
+  const menuLinks = [
+    { label: 'About', href: '/about' },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'Corporate', href: '/corporate' },
+    { label: 'Resources', href: '/resources' },
+    { label: 'Book Session', href: '/book' },
+  ];
 
   return (
     <>
@@ -199,32 +206,41 @@ export default function IntegratedHeader() {
           >
             {/* LEFT SIDE: TEXT LINKS */}
             <div className="w-full lg:w-1/2 h-full flex flex-col justify-center p-12 lg:p-24 relative z-10">
-              <div className="space-y-4">
-                {['About', 'How It Works', 'Corporate', 'Resources'].map((link, i) => (
+              <div className="space-y-3">
+                {menuLinks.map((linkObj, i) => (
                   <motion.div
-                    key={link}
+                    key={linkObj.label}
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+                    transition={{ delay: 0.3 + i * 0.08, duration: 0.45 }}
                     onMouseEnter={() => {
-                      setHoveredLink(link);
+                      setHoveredLink(linkObj.label);
                       setHoveredIndex(i);
                     }}
                     onMouseLeave={() => setHoveredLink(null)}
                     className="overflow-hidden"
                   >
                     <Link
-                      href={`/${link.toLowerCase().replace(/ /g, '-')}`}
-                      onClick={(e) => handleLinkClick(e, `/${link.toLowerCase().replace(/ /g, '-')}`)}
+                      href={linkObj.href}
+                      onClick={(e) => handleLinkClick(e, linkObj.href)}
+                      className="block"
                     >
-                      <div className="overflow-hidden h-[4.5rem] lg:h-[7.5rem]">
+                      <div className="overflow-hidden h-[4.5rem] lg:h-[6.5rem] relative pt-2 lg:pt-3">
                         <motion.div
-                          animate={hoveredLink === link ? { y: '-50%' } : { y: '0%' }}
-                          transition={{ duration: 0.4, ease: [0.43, 0.13, 0.23, 0.96] }}
+                          className="absolute inset-0 flex items-start pt-2 lg:pt-2"
+                          animate={hoveredLink === linkObj.label ? { y: '-100%' } : { y: '0%' }}
+                          transition={{ duration: 0.45, ease: [0.43, 0.13, 0.23, 0.96] }}
                         >
-                          <div className="text-6xl lg:text-8xl font-title font-bold text-white leading-tight uppercase tracking-tighter">{link}</div>
-                          <div className="text-6xl lg:text-8xl font-title font-bold text-white leading-tight uppercase tracking-tighter italic">{link}</div>
+                          <div className="whitespace-nowrap text-6xl lg:text-8xl font-title font-bold text-white leading-tight uppercase tracking-tighter">{linkObj.label}</div>
+                        </motion.div>
+
+                        <motion.div
+                          className="absolute inset-0 flex items-start pt-2 lg:pt-3"
+                          animate={hoveredLink === linkObj.label ? { y: '0%' } : { y: '100%' }}
+                          transition={{ duration: 0.45, ease: [0.43, 0.13, 0.23, 0.96] }}
+                        >
+                          <div className="whitespace-nowrap text-6xl lg:text-8xl font-title font-bold text-white leading-tight uppercase tracking-tighter italic">{linkObj.label}</div>
                         </motion.div>
                       </div>
                     </Link>

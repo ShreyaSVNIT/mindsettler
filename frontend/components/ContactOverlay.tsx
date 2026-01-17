@@ -106,7 +106,6 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
                       <h1 className="font-title text-6xl md:text-7xl lg:text-8xl font-bold text-[var(--color-text-body)] mb-6 leading-none">
                         LET&apos;S WORK<br />
                         <span className="text-[var(--color-primary)] italic">TOGETHER</span>
-                        <span className="inline-block ml-4 text-6xl">😊</span>
                       </h1>
 
                       <p className="font-body text-lg text-[var(--color-text-body)]/70 max-w-lg">
