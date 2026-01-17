@@ -199,20 +199,20 @@
 
 @media (max-width: 640px) {
   .outerContainer {
-    height: 200vh;
-    /* Reduced scroll distance for mobile */
+    height: 320vh;
+    /* Longer scroll distance so the sticky section can occupy more vertical space on mobile */
   }
 
   .stickyBox {
-    overflow: visible; /* allow overlay scroll to show fully on small screens */
+    overflow: hidden; /* keep overlay within the sticky area (no inner scrolling) */
+    height: 140vh; /* make the sticky block taller so content fits without inner scrolling */
   }
 
   .overlay {
-    padding: 24vw 5vw 16vw 5vw;
-    /* More top padding to clear header if needed */
-    gap: 2.5rem;
-    overflow-y: auto;
-    /* Allow scrolling content if it overflows viewport */
+    padding: 18vw 5vw 14vw 5vw;
+    /* Reduced top padding while keeping generous spacing */
+    gap: 2rem;
+    /* no internal scrolling; the outer stickyBox is taller */
   }
 
   .textSide {

@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Phone, Instagram, Linkedin, Twitter } from 'lucide-react';
 import MagneticButton from './Button';
 
 export default function ContactOverlay({ initialOpen = false }: { initialOpen?: boolean }) {
   const [isOpen, setIsOpen] = useState(initialOpen);
+  const [hideDueToChat, setHideDueToChat] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -22,11 +23,26 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
     // You can add your form submission logic here
   };
 
+  useEffect(() => {
+    const onOpen = () => setHideDueToChat(true);
+    const onClose = () => setHideDueToChat(false);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('chat-opened', onOpen as EventListener);
+      window.addEventListener('chat-closed', onClose as EventListener);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('chat-opened', onOpen as EventListener);
+        window.removeEventListener('chat-closed', onClose as EventListener);
+      }
+    };
+  }, []);
+
   return (
     <>
       {/* Floating CTA Corner */}
       <AnimatePresence>
-        {!isOpen && (
+        {!isOpen && !hideDueToChat && (
           <motion.div
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
