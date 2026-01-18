@@ -164,7 +164,13 @@ export default function IntegratedHeader() {
     // pick 6 unique random images from 1..13
     const picks = new Set<number>();
     while (picks.size < 6) picks.add(Math.floor(Math.random() * 13) + 1);
-    setOverlayImages(Array.from(picks).map((n) => `/img${n}.jpg`));
+    setOverlayImages(
+      Array.from(picks).map((n) => {
+        // images 1..7 are .jpeg, 8..13 are .jpg
+        const ext = n <= 7 ? '.jpeg' : '.jpg';
+        return `/img${n}${ext}`;
+      })
+    );
   }, []);
 
   return (
@@ -303,6 +309,7 @@ export default function IntegratedHeader() {
               ease: [0.76, 0, 0.24, 1]
             }}
             className="fixed inset-0 z-[120] bg-[var(--color-primary)] text-white flex overflow-hidden pt-16 lg:pt-20"
+            style={{ willChange: 'clip-path' }}
           >
             {/* Backdrop / tap-to-close for mobile */}
             <div className="absolute inset-0 z-0 lg:hidden" onClick={() => setMenuOpen(false)} aria-hidden="true" />
