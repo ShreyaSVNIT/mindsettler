@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import GlassFocusLayer from '@/components/GlassFocusLayer';
+import { useFocusTrap } from '@/components/useFocusTrap';
 
 // Type-safe Message structure
 interface Message {
@@ -19,6 +21,9 @@ export default function ChatWidget() {
   ]);
   const [input, setInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Focus trap for chat modal
+  const focusRef = useFocusTrap(isOpen, () => setIsOpen(false));
 
   // Requirement: Scroll-based storytelling & smooth transitions [cite: 64, 66]
   useEffect(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
@@ -62,7 +67,10 @@ export default function ChatWidget() {
     <div className="fixed bottom-0 left-0 z-50 font-body">
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <>
+            <GlassFocusLayer show onClick={() => setIsOpen(false)} />
+            <motion.div
+              ref={focusRef}
             initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.9 }}
@@ -139,6 +147,7 @@ export default function ChatWidget() {
               </button>
             </div>
           </motion.div>
+          </>
         )}
       </AnimatePresence>
 
