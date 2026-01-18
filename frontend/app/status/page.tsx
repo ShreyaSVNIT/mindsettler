@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import BookingCard from "@/components/BookingCard";
+import BookingCard, { BookingPrimaryButton, BookingSecondaryButton } from "@/components/BookingCard";
 import { bookingAPI, statusHelpers } from "@/lib/api";
 import type { BookingStatusResponse } from "@/types";
 import {
@@ -202,12 +202,9 @@ function StatusPageContent() {
               className="w-full px-4 py-3 rounded-xl border-2 mb-4"
             />
 
-            <button
-                onClick={() => setAcknowledgementId(inputId.trim())}
-                className="w-full bg-[var(--color-text-body)] text-white px-6 py-3 rounded-full"
-              >
-                Check Status
-              </button>
+            <BookingPrimaryButton onClick={() => setAcknowledgementId(inputId.trim())}>
+              Check Status
+            </BookingPrimaryButton>
             </BookingCard>
         )}
 
@@ -231,17 +228,13 @@ function StatusPageContent() {
             {/* Example Actions Section */}
             {statusHelpers.canRequestCancellation(state.data.status) &&
              state.data.status !== "CANCELLED" && (
-              <button
-                onClick={handleRequestCancellation}
-                disabled={isCancelling || cancellationPending}
-                className="bg-[var(--color-text-body)] text-white px-6 py-3 rounded-full"
-              >
+              <BookingPrimaryButton onClick={handleRequestCancellation}>
                 {cancellationPending
                   ? "Cancellation Pending (Check Email)"
                   : isCancelling
                   ? "Processing..."
                   : "Request Cancellation"}
-              </button>
+              </BookingPrimaryButton>
             )}
 
             {cancellationPending && (

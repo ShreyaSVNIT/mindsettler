@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import BookingCard from "@/components/BookingCard";
+import BookingCard, { BookingPrimaryButton } from "@/components/BookingCard";
 import TitleHeader from "@/components/TitleHeader";
-import MagneticButton from "@/components/Button";
 import { BACKEND_URL } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
@@ -73,11 +72,9 @@ export default function CheckStatusPage() {
             placeholder="mindsettler.dev@gmail.com"
           />
           <div className="flex justify-center">
-            <MagneticButton
-              text={loading ? "Checking..." : "Check Status"}
-              onClick={!(loading || !email) ? handleCheckStatus : undefined}
-              variant="default"
-            />
+            <BookingPrimaryButton onClick={!(loading || !email) ? handleCheckStatus : undefined}>
+              {loading ? "Checking..." : "Check Status"}
+            </BookingPrimaryButton>
           </div>
           {status && (
             <p className="mt-6 text-lg font-body text-[var(--color-primary)] text-center">{status}</p>
