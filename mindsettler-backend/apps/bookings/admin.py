@@ -3,6 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.contrib import admin, messages
 from django.forms import SplitDateTimeWidget
 from django.db import models
+from django.db.models import Q
 
 # ─────────────────────────
 # ADMIN PANEL BRANDING
@@ -363,7 +364,10 @@ class BookingAdmin(admin.ModelAdmin):
         Fetch bookings that should appear on admin calendar
         """
         return Booking.objects.filter(
-            status__in=["APPROVED", "CONFIRMED"],
+            (
+                Q(status="CONFIRMED") |
+                (Q(status="APPROVED") & Q(mode="OFFLINE"))
+            ),
             approved_slot_start__isnull=False,
             approved_slot_end__isnull=False,
         ).select_related("psychologist", "corporate")
