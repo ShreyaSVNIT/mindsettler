@@ -18,9 +18,23 @@ export default function ContactOverlay({ initialOpen = false }: { initialOpen?: 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
-    // You can add your form submission logic here
+    try {
+      const res = await fetch('/api/send-contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error('Failed to send message');
+
+      // simple success UX (could be improved)
+      setFormData({ fullName: '', email: '', phone: '', hearAbout: '', message: '' });
+      setIsOpen(false);
+      // optionally show a toast
+    } catch (err) {
+      console.error('Contact send error:', err);
+      // fallback: still close and let user know via console
+    }
   };
 
   useEffect(() => {
