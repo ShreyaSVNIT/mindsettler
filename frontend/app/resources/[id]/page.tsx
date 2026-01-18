@@ -18,8 +18,34 @@ export default function ResourceDetailPage({ params }: { params: Promise<{ id: s
     useEffect(() => {
             window.scrollTo(0, 0);
             const found = resources.find(r => r.id === id);
-            Promise.resolve().then(() => setResource(found || null));
-            Promise.resolve().then(() => setLoading(false));
+            if (found) {
+                setResource(found);
+                setLoading(false);
+                return;
+            }
+
+            // fallback: try fetch from Sanity API route
+            (async () => {
+                try {
+                    // if id has sanity prefix, extract slug
+                    let slug = null;
+                    if (id.startsWith('sanity-blog-')) slug = id.replace('sanity-blog-', '');
+                    // if slug exists, call API
+                    if (slug) {
+                        const resp = await fetch(`/api/get-sanity-blog?slug=${encodeURIComponent(slug)}`);
+                        if (resp.ok) {
+                            const json = await resp.json();
+                            setResource(json as any);
+                            setLoading(false);
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    // ignore
+                }
+                setResource(null);
+                setLoading(false);
+            })();
     }, [id]);
 
     if (loading) return null;

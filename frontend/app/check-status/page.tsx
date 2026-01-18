@@ -62,7 +62,7 @@ export default function CheckStatusPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="bg-[var(--color-bg-lavender)] rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-primary)]/20 max-w-2xl mx-auto mt-12"
+          className="bg-[var(--color-bg-lavender)] rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-primary)]/20 max-w-2xl mx-auto mt-20"
         >
           <label className="block mb-4 font-body text-lg text-[var(--color-text-body)]">Email Address</label>
           <input
