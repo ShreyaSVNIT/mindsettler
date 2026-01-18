@@ -282,9 +282,7 @@ export default function MindSettlerJourney() {
 
         {/* Single CTA for the whole journey */}
         <div className="mt-12 flex justify-center">
-          <Link href="/resources" aria-label="Learn more resources">
-            <MagneticButton text="Learn More" />
-          </Link>
+          <MagneticButton text="Learn More" href="/resources" aria-label="Learn more resources" />
         </div>
       </div>
     </div>

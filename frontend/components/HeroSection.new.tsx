@@ -117,7 +117,7 @@ const HeroSection = () => {
           </p>
 
           <div className="flex items-center">
-            <MagneticButton text="Explore" onClick={() => (window.location.href = '/how-it-works')} aria-label="Explore how MindSettler works" />
+            <MagneticButton text="Explore" href="/how-it-works" aria-label="Explore how MindSettler works" />
           </div>
         </motion.div>
       )}

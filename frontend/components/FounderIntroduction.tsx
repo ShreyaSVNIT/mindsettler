@@ -211,9 +211,7 @@ export default function FounderIntroduction({
           transition={{ duration: 0.6, delay: 1 }}
           className="w-full mt-12 flex items-center justify-center"
         >
-          <a href="/resources" className="inline-block">
-            <MagneticButton text="Learn More" />
-          </a>
+          <MagneticButton text="Learn More" href="/resources" />
         </motion.div>
       </div>
     </section>

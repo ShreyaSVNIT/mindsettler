@@ -6,6 +6,7 @@ import CouchHero from '@/components/CouchHero';
 import SectionHeader from '@/components/SectionHeader';
 import { resources } from '@/src/data/resources';
 import ContentGrid from '@/components/ContentGrid';
+import HealingJourneySection from '@/components/HealingJourneySection';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ExternalLink, Play } from 'lucide-react';
@@ -43,7 +44,7 @@ export default function ResourcesPage() {
                 alignment="center"
                 layout="static"
                 backgroundColor="white"
-                className="min-h-screen"
+                    className="h-screen"
             />
 
             <section className="py-24 px-6 bg-white">
@@ -140,6 +141,8 @@ export default function ResourcesPage() {
             </section>
 
             <ContentGrid data={resources} backgroundColor="white" />
+
+            <HealingJourneySection />
         </main>
     );
 }

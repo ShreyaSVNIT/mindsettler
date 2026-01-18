@@ -58,9 +58,7 @@ export default function MissionStatement() {
               />
 
               <div className={styles.buttonWrapper}>
-                <Link href="/book">
-                  <MagneticButton text="BOOK A SESSION" />
-                </Link>
+                <MagneticButton text="BOOK A SESSION" href="/book" />
               </div>
             </div>
              <div className={styles.timelineSide}>

@@ -72,9 +72,7 @@ export default function NotFound() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="flex justify-center"
         >
-          <Link href="/home">
-            <MagneticButton text="Return Home" />
-          </Link>
+          <MagneticButton text="Return Home" href="/home" />
         </motion.div>
 
         {/* Back Link */}

@@ -68,10 +68,10 @@ export default function HealingJourneySection() {
                     transition={{ duration: 0.8, delay: 0.5 }}
                     className="mt-8 md:mt-10 lg:mt-12 pointer-events-auto flex justify-center"
                 >
-                    <MagneticButton
-                        text="BOOK A SESSION"
-                        onClick={() => router.push('/book')}
-                    />
+                        <MagneticButton
+                            text="BOOK A SESSION"
+                            href="/book"
+                        />
                 </motion.div>
             </div>
         </section>

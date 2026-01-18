@@ -263,9 +263,7 @@ export default function BookPage() {
               }}>
                 <MagneticButton text="Book a Session" />
               </div>
-              <a href="/check-status" className="mt-4 sm:mt-0">
-                <MagneticButton text="Check Status" />
-              </a>
+              <MagneticButton text="Check Status" href="/check-status" className="mt-4 sm:mt-0" />
             </div>
           </motion.div>
         </div>

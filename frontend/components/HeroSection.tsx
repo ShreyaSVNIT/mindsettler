@@ -135,8 +135,8 @@ const HeroSection: React.FC = () => {
           </p>
 
           <div className="flex items-center gap-4">
-            <MagneticButton text="Explore" onClick={() => (window.location.href = '/how-it-works')} aria-label="Explore how MindSettler works" />
-            <MagneticButton text="Book" onClick={() => (window.location.href = '/book')} aria-label="Book a session" />
+            <MagneticButton text="Explore" href="/how-it-works" aria-label="Explore how MindSettler works" />
+            <MagneticButton text="Book" href="/book" aria-label="Book a session" />
           </div>
         </motion.div>
       )}
