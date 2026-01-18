@@ -11,6 +11,7 @@ const HERO_VIDEO_POSTER =
 const HeroSection: React.FC = () => {
   const [showContent, setShowContent] = useState(false);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const parallaxRef = useRef<HTMLDivElement | null>(null);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -51,9 +52,38 @@ const HeroSection: React.FC = () => {
     };
   }, []);
 
+  // Parallax effect: move video slower than scroll
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (prefersReducedMotion) return;
+
+    let ticking = false;
+    const factor = 0.22; // slower rate than content
+
+    const onScroll = () => {
+      if (!parallaxRef.current) return;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.scrollY || window.pageYOffset;
+          // translate less than scroll for subtle parallax
+          const translateY = Math.round(scrolled * factor);
+          parallaxRef.current!.style.transform = `translate3d(0, calc(${translateY}px - 0px), 0)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    // run once to set initial position
+    onScroll();
+
+    return () => window.removeEventListener('scroll', onScroll);
+  }, [prefersReducedMotion]);
+
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black text-center py-12 md:py-24">
-      <div className="absolute inset-0 z-0">
+      <div ref={parallaxRef} className="absolute inset-0 z-0" style={{ willChange: 'transform' }}>
         <video
           loop
           muted

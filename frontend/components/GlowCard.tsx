@@ -217,6 +217,8 @@ export default function GlowCard({
     const card = cardRef.current;
     if (!card) return;
 
+    // keep hover/particle/magnetism logic here; view animations handled by consumer
+
     const handleMouseEnter = () => {
       isHoveredRef.current = true;
       if (enableParticles && !isTouchDevice && !reduceMotion) {
@@ -277,6 +279,7 @@ export default function GlowCard({
       if (enableParticles) {
         clearAllParticles();
       }
+      // no-op cleanup for view observer (handled by consumer components)
     };
   }, [updateGlowPosition, animateParticles, clearAllParticles, enableParticles, enableTilt, enableMagnetism, glowColor, isTouchDevice, reduceMotion]);
 
