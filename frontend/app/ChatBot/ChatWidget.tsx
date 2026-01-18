@@ -21,6 +21,7 @@ export default function ChatWidget() {
   ]);
   const [input, setInput] = useState('');
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   // Focus trap for chat modal
   const focusRef = useFocusTrap(isOpen, () => setIsOpen(false));
@@ -33,6 +34,13 @@ export default function ChatWidget() {
     if (typeof window === 'undefined') return;
     const evName = isOpen ? 'chat-opened' : 'chat-closed';
     window.dispatchEvent(new CustomEvent(evName));
+  }, [isOpen]);
+
+  // When the chat opens, autofocus the text input so typing goes there
+  useEffect(() => {
+    if (!isOpen) return;
+    const t = setTimeout(() => inputRef.current?.focus(), 50);
+    return () => clearTimeout(t);
   }, [isOpen]);
 
   const handleSend = async () => {
@@ -135,6 +143,7 @@ export default function ChatWidget() {
               <input
                 className="flex-1 bg-[var(--color-bg-subtle)] p-3 rounded-2xl text-sm md:text-base outline-none focus:ring-2 focus:ring-[var(--color-primary)]/20 text-[var(--color-text-body)] transition-all placeholder:text-[var(--color-text-body)]/60"
                 placeholder="How are you feeling?"
+                ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
