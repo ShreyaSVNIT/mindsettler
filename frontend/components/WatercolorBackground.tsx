@@ -7,7 +7,7 @@ export default function WatercolorBackground() {
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Base soft gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-pink-100/60 via-white/50 to-pink-200/50" />
-      
+
       {/* Watercolor blobs */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
@@ -19,7 +19,7 @@ export default function WatercolorBackground() {
           filter: "blur(80px)",
         }}
       />
-      
+
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -30,7 +30,7 @@ export default function WatercolorBackground() {
           filter: "blur(70px)",
         }}
       />
-      
+
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -73,7 +73,7 @@ export default function WatercolorBackground() {
         className="absolute top-[15%] right-[20%] w-2 h-2 rounded-full bg-amber-300/60 shadow-lg shadow-amber-200/50"
         style={{ filter: "blur(1px)" }}
       />
-      
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 0.5, 0.3] }}
@@ -81,7 +81,7 @@ export default function WatercolorBackground() {
         className="absolute top-[45%] right-[15%] w-1.5 h-1.5 rounded-full bg-amber-400/50 shadow-md shadow-amber-200/40"
         style={{ filter: "blur(0.5px)" }}
       />
-      
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 0.7, 0.5] }}
@@ -116,7 +116,7 @@ export default function WatercolorBackground() {
       />
 
       {/* Texture overlay for paper-like quality */}
-      <div 
+      <div
         className="absolute inset-0 opacity-[0.015]"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,

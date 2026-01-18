@@ -85,32 +85,12 @@ export default function FounderIntroduction({
           >
             <div className="relative">
               {/* Decorative background element */}
-              <motion.div
-                className="absolute -inset-4 bg-gradient-to-br from-[var(--color-primary)]/10 to-transparent rounded-3xl blur-2xl"
-                animate={{
-                  scale: [1, 1.08, 1],
-                  opacity: [0.4, 0.6, 0.4]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
+
 
               {/* Watch Introduction Tag */}
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.8 }}
-                className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10"
-              >
-                <div className="bg-white/90 backdrop-blur-sm px-6 py-2 rounded-full border border-[var(--color-text-body)]/20 shadow-lg">
-                  <span className="text-[var(--color-text-body)] text-sm font-body tracking-wider uppercase">
-                    Watch Introduction
-                  </span>
-                </div>
-              </motion.div>
+
+
+
 
               {/* Video Container */}
               <div className="relative bg-black rounded-3xl overflow-hidden shadow-2xl aspect-[9/16] w-full max-w-[420px] sm:max-w-[480px] mx-auto">
@@ -129,11 +109,7 @@ export default function FounderIntroduction({
                 >
                   Your browser does not support the video tag.
                 </video>
-                <style jsx>{`
-                  video::-webkit-media-controls-timeline {
-                    background-color: var(--color-bg-app);
-                  }
-                `}</style>
+
               </div>
             </div>
           </motion.div>

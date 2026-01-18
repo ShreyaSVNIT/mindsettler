@@ -72,18 +72,17 @@ export default function ContentGrid({
         <div className="flex flex-col gap-6 lg:flex-row lg:gap-12">
           {/* Mobile: horizontal category nav */}
           <div className="w-full lg:hidden">
-            <nav className="flex gap-3 overflow-x-auto pb-2 px-1">
+            <nav className="flex gap-3 overflow-x-auto overflow-y-hidden pb-2 px-1 no-scrollbar">
               {categories.map((cat) => {
                 const active = activeCategory === cat;
                 return (
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                      active
+                    className={`whitespace-nowrap px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${active
                         ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)]'
                         : 'text-[var(--color-text-body)]/70 bg-transparent'
-                    }`}
+                      }`}
                   >
                     {cat}
                   </button>
@@ -101,11 +100,10 @@ export default function ContentGrid({
                   <button
                     key={cat}
                     onClick={() => setActiveCategory(cat)}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${
-                      active
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-300 ${active
                         ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-semibold'
                         : 'text-[var(--color-text-body)]/70 hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-text-body)]'
-                    }`}
+                      }`}
                   >
                     {cat}
                   </button>
@@ -116,7 +114,7 @@ export default function ContentGrid({
 
           <div className="flex-1">
             {/* Mobile: horizontally scrollable cards with snap */}
-            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory px-2 sm:px-0 lg:hidden">
+            <div className="flex gap-4 overflow-x-auto overflow-y-hidden snap-x snap-mandatory px-2 sm:px-0 lg:hidden custom-scrollbar pb-4">
               {filtered.map((post, i) => (
                 <Link
                   key={post.id}

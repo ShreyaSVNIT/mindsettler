@@ -43,7 +43,7 @@ export default function ResourcesPage() {
                 alignment="center"
                 layout="static"
                 backgroundColor="white"
-                className="lg:h-screen"
+                className="min-h-screen"
             />
 
             <section className="py-24 px-6 bg-white">
@@ -66,41 +66,41 @@ export default function ResourcesPage() {
                         {/* Grid for desktop/tablet */}
                         <div className="hidden lg:grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                             {featured.map((item: any, idx: number) => {
-                                    const isLink = item.type === 'link';
-                                    const href = isLink && item.externalUrl ? item.externalUrl : `/resources/${item.id}`;
-                                    const external = isLink;
-                                    const imgSrc = chosenImages[idx % chosenImages.length] ?? item.imageUrl;
+                                const isLink = item.type === 'link';
+                                const href = isLink && item.externalUrl ? item.externalUrl : `/resources/${item.id}`;
+                                const external = isLink;
+                                const imgSrc = chosenImages[idx % chosenImages.length] ?? item.imageUrl;
 
-                                    return (
-                                        <motion.div
-                                            key={item.id}
-                                            initial={{ opacity: 0, y: 20 }}
-                                            whileInView={{ opacity: 1, y: 0 }}
-                                            viewport={{ once: true, amount: 0.2 }}
-                                            transition={{ duration: 0.6, delay: idx * 0.08 }}
+                                return (
+                                    <motion.div
+                                        key={item.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true, amount: 0.2 }}
+                                        transition={{ duration: 0.6, delay: idx * 0.08 }}
+                                    >
+                                        <Link
+                                            href={href}
+                                            target={external ? '_blank' : undefined}
+                                            rel={external ? 'noopener noreferrer' : undefined}
+                                            className="group block relative overflow-hidden rounded-2xl shadow-sm transition-transform duration-300 hover:shadow-md"
                                         >
-                                            <Link
-                                                href={href}
-                                                target={external ? '_blank' : undefined}
-                                                rel={external ? 'noopener noreferrer' : undefined}
-                                                className="group block relative overflow-hidden rounded-2xl shadow-sm transition-transform duration-300 hover:shadow-md"
-                                            >
-                                                <div className="relative w-full overflow-hidden aspect-[16/9] lg:max-h-[240px]">
-                                                    <Image src={imgSrc} alt={item.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                                                </div>
+                                            <div className="relative w-full overflow-hidden aspect-[16/9] lg:max-h-[240px]">
+                                                <Image src={imgSrc} alt={item.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                                            </div>
 
-                                                <div className="absolute left-4 bottom-4 right-4">
-                                                    <h3 className="mt-3 text-lg md:text-2xl lg:text-3xl font-title font-semibold text-white drop-shadow-md">{item.title}</h3>
-                                                </div>
-                                            </Link>
-                                        </motion.div>
-                                    );
+                                            <div className="absolute left-4 bottom-4 right-4">
+                                                <h3 className="mt-3 text-lg md:text-2xl lg:text-3xl font-title font-semibold text-white drop-shadow-md">{item.title}</h3>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                );
                             })}
                         </div>
 
                         {/* Horizontal snap scroller for small screens */}
                         <div className="lg:hidden -mx-6 px-6">
-                            <div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4">
+                            <div className="flex gap-4 overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-4 custom-scrollbar">
                                 {featured.map((item: any, idx: number) => {
                                     const isLink = item.type === 'link';
                                     const href = isLink && item.externalUrl ? item.externalUrl : `/resources/${item.id}`;
