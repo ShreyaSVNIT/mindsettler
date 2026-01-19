@@ -85,7 +85,7 @@ function VerifyEmailContent() {
     if (state.kind !== "success") return;
 
     try {
-      setState({ kind: "loading" });
+      // Removed setState({ kind: "loading" });
 
       const response = await bookingAPI.requestCancellation({
         acknowledgement_id: state.data.booking.acknowledgement_id,
@@ -99,9 +99,22 @@ function VerifyEmailContent() {
         alert("Your booking has been cancelled successfully.");
       }
 
-      // IMPORTANT: refetch verification instead of redirecting
-      const refreshed = await bookingAPI.verifyEmail(token!);
-      setState({ kind: "success", data: refreshed });
+      // Update local state to cancelled without refetching or redirecting
+      setState((prev) => {
+        if (prev.kind !== "success") return prev;
+        return {
+          kind: "success",
+          data: {
+            ...prev.data,
+            booking: {
+              ...prev.data.booking,
+              status: "CANCELLED",
+            },
+          },
+        };
+      });
+
+      // Removed refetch using verifyEmail(token!)
 
     } catch (err: any) {
       setState({
