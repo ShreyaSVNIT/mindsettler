@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback, Suspense } from "react";
-import BookingCard from "@/components/BookingCard";
+import BookingCard, { BookingPrimaryButton, BookingSecondaryButton } from "@/components/BookingCard";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
@@ -162,12 +162,11 @@ function VerifyEmailContent() {
                 The link may have expired or been used already. Please request a new verification email from the booking page.
               </p>
             </div>
-            <button
-              onClick={() => router.push("/book")}
-              className="mt-6 bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
-            >
-              Go to Booking Page
-            </button>
+            <div className="mt-6">
+              <BookingSecondaryButton onClick={() => router.push("/book")}>
+                Go to Booking Page
+              </BookingSecondaryButton>
+            </div>
           </BookingCard>
         )}
 
@@ -254,49 +253,31 @@ function VerifyEmailContent() {
               {/* Proceed to payment (only when approved & online) */}
               {state.data.booking.status === "APPROVED" &&
                !(state.data.booking.mode === "OFFLINE" && (state.data.booking as any).payment_mode === "OFFLINE") && (
-                <button
-                  onClick={() =>
-                    router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)
-                  }
-                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg"
-                >
+                <BookingPrimaryButton onClick={() => router.push(`/payment?id=${state.data.booking.acknowledgement_id}`)}>
                   Proceed to Payment
-                </button>
+                </BookingPrimaryButton>
               )}
 
               {/* Cancel booking — ALWAYS visible for non-terminal states */}
               {!["CANCELLED", "REJECTED", "COMPLETED"].includes(
                 state.data.booking.status
               ) && (
-                <button
-                  onClick={handleCancelBooking}
-                  className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all shadow-sm border border-[var(--color-primary)]/10"
-                >
+                <BookingSecondaryButton onClick={handleCancelBooking}>
                   Cancel Booking
-                </button>
+                </BookingSecondaryButton>
               )}
 
               {/* Google Calendar (confirmed only) */}
               {state.data.booking.status === "CONFIRMED" && calendarHref && (
-                <a
-                  href={calendarHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all shadow-lg inline-flex items-center justify-center"
-                >
+                <BookingPrimaryButton onClick={() => window.open(calendarHref || '#', '_blank')}>
                   Add to Google Calendar
-                </a>
+                </BookingPrimaryButton>
               )}
 
               {/* Home */}
-              <button
-                onClick={() => {
-                  window.location.href = "https://mindsettler.vercel.app/";
-                }}
-                className="bg-white hover:bg-[var(--color-bg-lavender)] text-[var(--color-primary)] font-body font-semibold px-8 py-3 rounded-full transition-all border-2 border-[var(--color-primary)]/10"
-              >
+              <BookingSecondaryButton onClick={() => { window.location.href = "https://mindsettler.vercel.app/"; }}>
                 Go to Home
-              </button>
+              </BookingSecondaryButton>
 
             </div>
           </BookingCard>

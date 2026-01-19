@@ -9,11 +9,30 @@ export function useFocusTrap(enabled: boolean, close: () => void) {
     const node = ref.current;
     if (!node) return;
 
-    // Focus first focusable element
-    const focusable = node.querySelectorAll<HTMLElement>(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-    if (focusable.length) focusable[0].focus();
+    // Prefer focusing an input/textarea first (better UX for chat modals).
+    const tryFocus = () => {
+      const firstInput = node.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea, [contenteditable]');
+      if (firstInput) {
+        firstInput.focus();
+        return true;
+      }
+
+      // Fallback: focus the first focusable element (buttons/links/etc.)
+      const focusable = node.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length) {
+        focusable[0].focus();
+        return true;
+      }
+      return false;
+    };
+
+    // Try immediately, then once more shortly after to account for animations/mount timing.
+    if (!tryFocus()) {
+      const id = window.setTimeout(() => tryFocus(), 50);
+      return () => window.clearTimeout(id);
+    }
 
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {

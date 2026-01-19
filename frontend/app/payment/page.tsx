@@ -93,12 +93,9 @@ function PaymentPageContent() {
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               Acknowledgement ID is missing. Please initiate payment from your email or booking status page.
             </p>
-            <button
-              onClick={() => router.push("/book")}
-              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
-            >
+            <BookingSecondaryButton onClick={() => router.push("/book")}>
               Go to Booking Page
-            </button>
+            </BookingSecondaryButton>
           </BookingCard>
         )}
 
