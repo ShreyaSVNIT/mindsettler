@@ -95,11 +95,11 @@ function VerifyEmailContent() {
         alert(
           "A cancellation verification email has been sent. Please check your inbox to complete the cancellation."
         );
-      } else {
-        alert("Your booking has been cancelled successfully.");
+        return;
       }
 
-      // Update local state to cancelled without refetching or redirecting
+      alert("Your booking has been cancelled successfully.");
+
       setState((prev) => {
         if (prev.kind !== "success") return prev;
         return {
