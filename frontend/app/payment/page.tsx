@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import BookingCard from "@/components/BookingCard";
+import BookingCard, { BookingPrimaryButton, BookingSecondaryButton } from "@/components/BookingCard";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { bookingAPI } from "@/lib/api";
@@ -93,12 +93,9 @@ function PaymentPageContent() {
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">
               Acknowledgement ID is missing. Please initiate payment from your email or booking status page.
             </p>
-            <button
-              onClick={() => router.push("/book")}
-              className="bg-[var(--color-primary)] hover:bg-[var(--color-primary)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
-            >
+            <BookingSecondaryButton onClick={() => router.push("/book")}>
               Go to Booking Page
-            </button>
+            </BookingSecondaryButton>
           </BookingCard>
         )}
 
@@ -153,19 +150,13 @@ function PaymentPageContent() {
               </p>
             </div>
 
-            <button
-              onClick={handleCompletePayment}
-              className="w-full bg-[var(--color-text-body)] hover:bg-[var(--color-text-body)]/90 text-white font-body font-semibold px-6 py-4 rounded-full transition-all shadow-lg"
-            >
+            <BookingPrimaryButton onClick={handleCompletePayment}>
               Complete Payment (Demo)
-            </button>
+            </BookingPrimaryButton>
 
-            <button
-              onClick={() => router.push(`/status?id=${state.acknowledgementId}`)}
-              className="w-full mt-3 bg-white hover:bg-gray-50 text-[var(--color-text-body)] font-body font-semibold px-6 py-3 rounded-full transition-all border-2 border-gray-200"
-            >
+            <BookingSecondaryButton onClick={() => router.push(`/status?id=${state.acknowledgementId}`)}>
               ← Go Back
-            </button>
+            </BookingSecondaryButton>
           </BookingCard>
         )}
 
@@ -193,16 +184,15 @@ function PaymentPageContent() {
                 <li>Psychologist details</li>
               </ul>
             </div>
-            <button
+            <BookingPrimaryButton
               onClick={() => {
                 alert(
                   "Your booking has been confirmed. Please check your email and open the verification link to view your booking details."
                 );
               }}
-              className="w-full bg-[var(--color-text-body)] hover:bg-[var(--color-text-body)]/90 text-white font-body font-semibold px-8 py-4 rounded-full transition-all shadow-lg"
             >
               Check Email for Booking Details
-            </button>
+            </BookingPrimaryButton>
           </BookingCard>
         )}
 
@@ -212,18 +202,12 @@ function PaymentPageContent() {
             <h2 className="font-title text-4xl md:text-5xl lg:text-6xl text-[var(--color-text-body)] mb-4">Payment Failed</h2>
             <p className="font-body text-lg text-[var(--color-text-body)] mb-6">{state.message}</p>
             <div className="flex gap-3 justify-center">
-              <button
-                onClick={() => setState({ kind: "idle" })}
-                className="bg-[var(--color-text-body)] hover:bg-[var(--color-text-body)]/90 text-white font-body font-semibold px-8 py-3 rounded-full transition-all"
-              >
-                Try Again
-              </button>
-              <button
-                onClick={() => router.push("/book")}
-                className="bg-white hover:bg-gray-50 text-[var(--color-text-body)] border-2 border-[var(--color-text-body)]/20 font-body font-semibold px-8 py-3 rounded-full transition-all"
-              >
-                Go to Booking
-              </button>
+              <div className="flex flex-col gap-3 w-full">
+                <BookingPrimaryButton onClick={() => setState({ kind: "idle" })}>
+                  Try Again
+                </BookingPrimaryButton>
+                <BookingSecondaryButton onClick={() => router.push("/book")}>Go to Booking</BookingSecondaryButton>
+              </div>
             </div>
           </BookingCard>
         )}

@@ -25,3 +25,29 @@ export default function BookingCard({ children, className = "", variant = "laven
     </motion.div>
   );
 }
+
+// Primary booking action button: used for payment/booking actions across the flow.
+export function BookingPrimaryButton({ children, onClick, className = '', type = 'button' }: { children: React.ReactNode; onClick?: () => void; className?: string; type?: 'button' | 'submit' | 'reset' }) {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className={`w-full bg-[var(--color-text-body)] hover:bg-[var(--color-text-body)]/90 text-white font-body font-semibold px-6 py-4 rounded-full transition-all shadow-lg ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Secondary booking action button: white / outline variant used for secondary actions.
+export function BookingSecondaryButton({ children, onClick, className = '', type = 'button' }: { children: React.ReactNode; onClick?: () => void; className?: string; type?: 'button' | 'submit' | 'reset' }) {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className={`w-full mt-3 bg-white hover:bg-gray-50 text-[var(--color-text-body)] font-body font-semibold px-6 py-3 rounded-full transition-all border-2 border-gray-200 ${className}`}
+    >
+      {children}
+    </button>
+  );
+}

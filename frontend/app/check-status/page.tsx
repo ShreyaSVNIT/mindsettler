@@ -1,9 +1,8 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import BookingCard from "@/components/BookingCard";
+import BookingCard, { BookingPrimaryButton } from "@/components/BookingCard";
 import TitleHeader from "@/components/TitleHeader";
-import MagneticButton from "@/components/Button";
 import { BACKEND_URL } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
@@ -62,7 +61,7 @@ export default function CheckStatusPage() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="bg-[var(--color-bg-lavender)] rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-primary)]/20 max-w-2xl mx-auto mt-12"
+          className="bg-[var(--color-bg-lavender)] rounded-3xl shadow-2xl p-8 md:p-12 border border-[var(--color-primary)]/20 max-w-2xl mx-auto mt-20"
         >
           <label className="block mb-4 font-body text-lg text-[var(--color-text-body)]">Email Address</label>
           <input
@@ -73,11 +72,9 @@ export default function CheckStatusPage() {
             placeholder="mindsettler.dev@gmail.com"
           />
           <div className="flex justify-center">
-            <MagneticButton
-              text={loading ? "Checking..." : "Check Status"}
-              onClick={!(loading || !email) ? handleCheckStatus : undefined}
-              variant="default"
-            />
+            <BookingPrimaryButton onClick={!(loading || !email) ? handleCheckStatus : undefined}>
+              {loading ? "Checking..." : "Check Status"}
+            </BookingPrimaryButton>
           </div>
           {status && (
             <p className="mt-6 text-lg font-body text-[var(--color-primary)] text-center">{status}</p>

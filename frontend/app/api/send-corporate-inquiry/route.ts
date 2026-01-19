@@ -1,5 +1,73 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Reuse same sending strategies as send-contact: SendGrid, SMTP, backend forward
+async function trySendViaSendGrid(payload: any) {
+  const apiKey = process.env.SENDGRID_API_KEY;
+  if (!apiKey) return false;
+  try {
+    const sgResp = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: [{ email: payload.to || 'mindsettler.dev@gmail.com' }] }],
+        from: { email: process.env.DEFAULT_FROM_EMAIL || 'mindsettler.dev@gmail.com', name: 'MindSettler' },
+        subject: payload.subject,
+        content: [{ type: 'text/plain', value: payload.text }],
+      }),
+    });
+    return sgResp.ok;
+  } catch (e) {
+    console.error('SendGrid send failed', e);
+    return false;
+  }
+}
+
+async function trySendViaSmtp(payload: any) {
+  try {
+    // @ts-ignore
+    const nodemailer = await import('nodemailer');
+    const user = process.env.SMTP_USER || process.env.GMAIL_USER;
+    const pass = process.env.SMTP_PASS || process.env.GMAIL_PASS;
+    if (!user || !pass) return false;
+
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user, pass },
+    });
+
+    await transporter.sendMail({
+      from: `MindSettler <${user}>`,
+      to: payload.to || 'mindsettler.dev@gmail.com',
+      subject: payload.subject,
+      text: payload.text,
+      html: payload.html,
+    });
+    return true;
+  } catch (e) {
+    console.error('SMTP send failed', e);
+    return false;
+  }
+}
+
+async function trySendViaBackend(payload: any) {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (!backendUrl) return false;
+  try {
+    const resp = await fetch(`${backendUrl}/api/send-email/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return resp.ok;
+  } catch (e) {
+    console.error('Forward to backend failed', e);
+    return false;
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -49,20 +117,12 @@ Best Time to Contact: ${bestTimeToContact || 'Not specified'}
 Submitted at: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
     `.trim();
 
-    // Send email using your backend or email service
-    // For now, we'll use a simple fetch to your backend
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8000';
-    
-    const response = await fetch(`${backendUrl}/api/send-email/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        to: 'mindsettler.dev@gmail.com',
-        subject: `Corporate Inquiry from ${companyName}`,
-        text: emailContent,
-        html: `
+    // Build a payload and try send via SendGrid, SMTP, or backend forward
+    const payload = {
+      to: 'mindsettler.dev@gmail.com',
+      subject: `Corporate Inquiry from ${companyName}`,
+      text: emailContent,
+      html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #F9D1D5; border-radius: 10px;">
             <h2 style="color: #E37383; border-bottom: 2px solid #E37383; padding-bottom: 10px;">New Corporate Wellness Inquiry</h2>
             
@@ -129,19 +189,23 @@ Submitted at: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
             </div>
           </div>
         `,
-      }),
-    });
+    };
 
-    if (!response.ok) {
-      // Fallback: Log to console in development
-      if (process.env.NODE_ENV === 'development') {
-        console.log('📧 Corporate Inquiry (Email Service Not Available):\n', emailContent);
-        return NextResponse.json({ success: true, message: 'Inquiry logged (dev mode)' });
-      }
-      throw new Error('Failed to send email');
+    // Try SendGrid
+    if (await trySendViaSendGrid(payload)) return NextResponse.json({ success: true, message: 'Sent via SendGrid' });
+
+    // Try SMTP
+    if (await trySendViaSmtp(payload)) return NextResponse.json({ success: true, message: 'Sent via SMTP' });
+
+    // Forward to backend
+    if (await trySendViaBackend(payload)) return NextResponse.json({ success: true, message: 'Forwarded to backend' });
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('📧 Corporate Inquiry (dev fallback):\n', emailContent);
+      return NextResponse.json({ success: true, message: 'Inquiry logged (dev mode)' });
     }
 
-    return NextResponse.json({ success: true, message: 'Inquiry sent successfully' });
+    throw new Error('Failed to send email');
   } catch (error) {
     console.error('Error sending corporate inquiry:', error);
     
