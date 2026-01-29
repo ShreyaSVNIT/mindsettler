@@ -183,6 +183,7 @@ export const statusHelpers = {
  */
 export async function pingBackends(): Promise<void> {
   const CHATBOT_BACKEND = process.env.NEXT_PUBLIC_CHATBOT_BACKEND_URL ?? "http://127.0.0.1:8000";
+  const CHATBOT_CHAT_ENDPOINT = "https://mindsettler-chatbot-backend.onrender.com/api/chat/";
 
   const normalize = (s: string) => s.replace(/\/$/, "");
   const rawTargets = [normalize(BACKEND_URL), normalize(CHATBOT_BACKEND)];
@@ -222,5 +223,16 @@ export async function pingBackends(): Promise<void> {
         }
       }
     }
+  }
+
+  // Silent POST warm-up for chatbot (preloads ML model)
+  try {
+    await fetch(CHATBOT_CHAT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: "ping" }),
+    });
+  } catch (_) {
+    // Intentionally ignored — warm-up only
   }
 }
