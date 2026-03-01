@@ -1,12 +1,13 @@
-from sentence_transformers import SentenceTransformer, util
-import torch
-import threading
 import os
-import threading
 import datetime
-import torch
 import numpy as np
+import threading
+import torch
 from sentence_transformers import SentenceTransformer, util
+
+# Set HuggingFace cache environment variables
+os.environ.setdefault("HF_HOME", "/app/.hf_cache")
+os.environ.setdefault("TRANSFORMERS_CACHE", "/app/.hf_cache")
 
 # ─────────────────────────
 # THREAD-SAFE SINGLETONS
@@ -31,7 +32,7 @@ def get_model():
         with _lock:
             if _model is None:
                 print("🔹 Loading SentenceTransformer model...")
-                _model = SentenceTransformer(MODEL_NAME)
+                _model = SentenceTransformer(MODEL_NAME, cache_folder=os.environ.get("HF_HOME"))
                 print("✅ Model loaded")
 
     return _model
@@ -379,6 +380,19 @@ INTENTS = {
     },
 }
 
+
+# ─────────────────────────
+# PRELOAD MODEL & EMBEDDINGS (Cold-start optimization)
+# ─────────────────────────
+try:
+    _model = SentenceTransformer(MODEL_NAME, cache_folder=os.environ.get("HF_HOME"))
+    _intent_embeddings = {
+        intent: _model.encode(data["examples"], convert_to_tensor=True)
+        for intent, data in INTENTS.items()
+    }
+    print("🚀 Chatbot model and embeddings preloaded")
+except Exception as e:
+    print("⚠️ Preload skipped:", e)
 
 # ─────────────────────────
 # INTENT EMBEDDINGS CACHE
